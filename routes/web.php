@@ -3,5 +3,17 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('main');
+})->name('main');
+
+Route::get('/orders', function () {
+    return view('orders');
+})->name('orders');
+
+Route::get('/history', function () {
+    return view('history');
+})->name('history');
+
+Route::get('/account', function () {
+    return view('account');
+})->name('account');
