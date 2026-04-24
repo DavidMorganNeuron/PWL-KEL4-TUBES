@@ -150,7 +150,7 @@ Konsep utama:
 
 ---
 
-## 🗄️ Struktur Database (Ringkasan)
+## 🗄️ Struktur Database
 
 Beberapa tabel utama:
 
@@ -244,7 +244,7 @@ Project ini telah disesuaikan berdasarkan masukan dosen:
 ## ⚙️ Cara Menjalankan Project
 
 ```bash
-git clone https://github.com/username/repository.git
+git clone https://github.com/DavidMorganNeuron/PWL-KEL4-TUBES.git
 cd repository
 composer install
 cp .env.example .env
