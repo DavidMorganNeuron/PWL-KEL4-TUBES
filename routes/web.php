@@ -7,8 +7,8 @@ Route::get('/', function () {
 })->name('main');
 
 Route::get('/orders', function () {
-    return view('orders');
-})->name('orders');
+    return view('orders.branch');
+})->name('orders.branch');
 
 Route::get('/history', function () {
     return view('history');

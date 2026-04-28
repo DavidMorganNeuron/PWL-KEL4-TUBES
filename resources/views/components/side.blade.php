@@ -4,7 +4,7 @@
     <a href="{{ route('main') }}">Main</a>
 </li>
         <li class="{{ request()->routeIs('orders*') ? 'active' : '' }}">
-            <a href="{{ route('orders') }}">Order</a>
+            <a href="{{ route('orders.branch') }}">Order</a>
         </li>
 
         <li class="{{ request()->routeIs('history*') ? 'active' : '' }}">
