@@ -6,7 +6,10 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-
+/*
+    Seeder Data Utama
+    Tujuan: Memasukkan data awal ke database kosong agar sistem bisa langsung digunakan/diuji
+*/
 class PodsSeeder extends Seeder
 {
     public function run(): void
