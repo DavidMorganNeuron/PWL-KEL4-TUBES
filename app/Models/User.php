@@ -2,47 +2,41 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/*
+    Model User
+    Merepresentasikan tabel 'users' di database. Model ini mengatur akun
+    untuk Admin, Manager, maupun Customer.
+*/
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Karena kita menggunakan penamaan id custom (id_users) 
+    // alih-alih bawaan Laravel ('id'), kita wajib memberi tahu Eloquent di sini agar tidak error.
+    protected $primaryKey = 'id_users'; 
+
+    // Daftar kolom yang diizinkan untuk diisi secara massal.
+    // Mencegah user nakal menyisipkan data ke kolom yang tidak seharusnya.
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'role_id', 'branch_id', 'name', 'email', 'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    /*
+        Relasi ke tabel Roles.
+        Fungsi ini memudahkan kita mengecek posisi user, misal: $user->role->name
+    */
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id', 'id_roles');
+    }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+    /*
+        Relasi ke tabel Branches.
+        Mengambil data cabang tempat staf/manager ditugaskan.
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+    public function branch() {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id_branches');
     }
 }
