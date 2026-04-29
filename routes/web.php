@@ -1,19 +1,65 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderFlowController;
+use App\Http\Controllers\PaymentController;
 
-Route::get('/', function () {
-    return view('main');
-})->name('main');
 
-Route::get('/orders', function () {
-    return view('orders.branch');
-})->name('orders.branch');
+// File Arsitektur URL (Web Routes) - memetakan semua alamat URL website Pod's ke fungsi yang tepat.
 
-Route::get('/history', function () {
-    return view('history');
-})->name('history');
+// pengecekan akun
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
 
-Route::get('/account', function () {
-    return view('account');
-})->name('account');
+
+// role = admin
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return 'Dashboard Admin Pusat';
+    })->name('dashboard');
+    // Rute lanjutan untuk Manajemen Produk, Promo, dan Validasi Request akan ditambahkan di sini nanti
+});
+
+
+// role = manager
+Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::get('/dashboard', function () {
+        return 'Dashboard Manager Cabang';
+    })->name('dashboard');
+    // Rute lanjutan untuk Kitchen Display System (KDS) dan Laporan akan ditambahkan di sini nanti
+});
+
+
+// role = customer
+Route::middleware(['auth', 'role:customer'])->group(function () {
+
+    // Halaman Statis & Akun
+    Route::get('/', function () {
+        return view('main');
+    })->name('main');
+    Route::get('/history', function () {
+        return view('history');
+    })->name('history');
+    Route::get('/account', function () {
+        return view('account');
+    })->name('account');
+
+    // Alur Pemesanan
+    Route::get('/order/branch', [OrderFlowController::class, 'branch'])->name('orders.branch');
+    Route::post('/order/branch', [OrderFlowController::class, 'setBranch']);
+
+    Route::get('/order/menu', [OrderFlowController::class, 'menu'])->name('orders.menu');
+    Route::post('/order/cart/add', [OrderFlowController::class, 'addToCart']);
+
+    Route::get('/order/checkout', [OrderFlowController::class, 'checkout'])->name('orders.checkout');
+    Route::post('/order/checkout', [OrderFlowController::class, 'storeOrder']);
+
+    // Alur Pembayaran
+    Route::get('/payment/{id}', [PaymentController::class, 'show']);
+    Route::post('/payment/{id}', [PaymentController::class, 'confirm']);
+    Route::get('/success/{id}', [PaymentController::class, 'success']);
+});
