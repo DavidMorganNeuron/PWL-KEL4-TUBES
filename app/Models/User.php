@@ -14,15 +14,26 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    // Karena kita menggunakan penamaan id custom (id_users) 
+    // Karena kita menggunakan penamaan id custom (id_users)
     // alih-alih bawaan Laravel ('id'), kita wajib memberi tahu Eloquent di sini agar tidak error.
-    protected $primaryKey = 'id_users'; 
+    protected $primaryKey = 'id_users';
 
     // Daftar kolom yang diizinkan untuk diisi secara massal.
     // Mencegah user nakal menyisipkan data ke kolom yang tidak seharusnya.
     protected $fillable = [
         'role_id', 'branch_id', 'name', 'email', 'password',
     ];
+
+    // Fungsi ini otomatis memotong nama lengkap menjadi maksimal 2 kata sebagai display name
+    // Cara memanggilnya di file blade: {{ Auth::user()->display_name }}
+    public function getDisplayNameAttribute()
+    {
+        // Pecah nama lengkap menjadi array berdasarkan spasi
+        $words = explode(' ', $this->name);
+        
+        // Ambil maksimal 2 kata pertama, lalu gabungkan kembali dengan spasi
+        return implode(' ', array_slice($words, 0, 2));
+    }
 
     /*
         Relasi ke tabel Roles.
