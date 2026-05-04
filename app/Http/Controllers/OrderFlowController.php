@@ -11,7 +11,6 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
 // Controller Alur Pemesanan - mengatur jalannya pelanggan dari pilih cabang sampai ke gerbang pembayaran.
 class OrderFlowController extends Controller
 {
@@ -20,7 +19,7 @@ class OrderFlowController extends Controller
     ======================= */
     public function branch() {
         $branches = Branch::all();
-        return view('orders.branch', compact('branches'));
+        return view('customer.orders.branch', compact('branches'));
     }
 
     public function setBranch(Request $request) {
@@ -41,7 +40,7 @@ class OrderFlowController extends Controller
         $products = Product::where('is_available', true)->get();
         $cart = session('cart', []);
 
-        return view('orders.menu', compact('products', 'cart'));
+        return view('customer.orders.menu', compact('products', 'cart'));
     }
 
     public function addToCart(Request $request) {
@@ -61,7 +60,7 @@ class OrderFlowController extends Controller
         if (!session('cart')) {
             return redirect('/order/menu');
         }
-        return view('orders.checkout');
+        return view('customer.orders.checkout');
     }
 
     /* =======================

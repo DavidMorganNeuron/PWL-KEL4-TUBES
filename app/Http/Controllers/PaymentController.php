@@ -8,13 +8,12 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-
 // Controller Pembayaran - mengatur eksekusi final ketika pengguna mengeklik "BAYAR".
 class PaymentController extends Controller
 {
     public function show($id) {
         $order = Order::findOrFail($id);
-        return view('orders.payment', compact('order'));
+        return view('customer.orders.payment', compact('order'));
     }
 
     public function confirm($id) {
@@ -68,6 +67,6 @@ class PaymentController extends Controller
 
     public function success($id) {
         $order = Order::findOrFail($id);
-        return view('orders.success', compact('order'));
+        return view('customer.orders.success', compact('order'));
     }
 }

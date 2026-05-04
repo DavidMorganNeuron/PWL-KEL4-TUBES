@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderFlowController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CustomerController;
 
 
 // File Arsitektur URL (Web Routes) - memetakan semua alamat URL website Pod's ke fungsi yang tepat.
@@ -41,29 +42,25 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 
 // role = customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
+    
+    // Halaman Utama menggunakan struktur folder baru
+    Route::get('/', function () { return view('customer.main'); })->name('main');
+    
+    // Fitur Akun & Riwayat (Tahap 8)
+    Route::get('/history', [CustomerController::class, 'history'])->name('history');
+    Route::get('/account', [CustomerController::class, 'account'])->name('account');
 
-    // Halaman Statis & Akun
-    Route::get('/', function () {
-        return view('main');
-    })->name('main');
-    Route::get('/history', function () {
-        return view('history');
-    })->name('history');
-    Route::get('/account', function () {
-        return view('account');
-    })->name('account');
-
-    // Alur Pemesanan
+    // (Rute OrderFlow dan Payment tetap sama seperti sebelumnya, 
+    // karena penyesuaian folder view sudah kita lakukan di dalam controllernya)
     Route::get('/order/branch', [OrderFlowController::class, 'branch'])->name('orders.branch');
     Route::post('/order/branch', [OrderFlowController::class, 'setBranch']);
-
+    
     Route::get('/order/menu', [OrderFlowController::class, 'menu'])->name('orders.menu');
     Route::post('/order/cart/add', [OrderFlowController::class, 'addToCart']);
-
+    
     Route::get('/order/checkout', [OrderFlowController::class, 'checkout'])->name('orders.checkout');
     Route::post('/order/checkout', [OrderFlowController::class, 'storeOrder']);
 
-    // Alur Pembayaran
     Route::get('/payment/{id}', [PaymentController::class, 'show']);
     Route::post('/payment/{id}', [PaymentController::class, 'confirm']);
     Route::get('/success/{id}', [PaymentController::class, 'success']);
