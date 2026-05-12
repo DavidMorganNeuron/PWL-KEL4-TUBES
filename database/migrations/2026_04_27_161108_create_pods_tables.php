@@ -41,8 +41,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id('id_users');
             $table->foreignId('role_id')->constrained('roles', 'id_roles')->cascadeOnDelete();
-            // branch_id bersifat nullable. Admin Pusat = null, Manager = wajib terikat 1 cabang
             $table->foreignId('branch_id')->nullable()->constrained('branches', 'id_branches')->cascadeOnDelete();
+            // branch_id bersifat nullable. Admin Pusat = null, Manager = wajib terikat 1 cabang
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
