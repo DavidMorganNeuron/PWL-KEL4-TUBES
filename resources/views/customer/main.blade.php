@@ -298,44 +298,6 @@
     </div>
 </section>
 
-{{-- ================================================================
-     SECTION 4: CTA FINAL
-================================================================ --}}
-<section style="background: #FBF6EE; padding: 5.5rem 0; text-align: center;" aria-label="Call to action akhir">
-    <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
-        <div style="max-width: 520px; margin: 0 auto;">
-            <h2 style="font-family: var(--font-serif); font-size: 2.75rem; font-weight: 900; color: #1C0F0A; line-height: 1.15; margin-bottom: 1rem;">
-                Ready for Your<br>
-                <span style="font-style: italic; color: #C8813B;">First Sip?</span>
-            </h2>
-            <p style="color: #A08060; font-weight: 300; line-height: 1.65; margin-bottom: 2.25rem;">
-                Pilih cabang, pilih menu, nikmati — semua dari genggaman tanganmu.
-            </p>
-            <a
-                href="{{ route('orders.branch') }}"
-                style="
-                    display: inline-block;
-                    padding: 1rem 2.75rem;
-                    border-radius: 9999px;
-                    background: #1C0F0A;
-                    color: #F5E9D3;
-                    font-size: 0.9375rem;
-                    font-weight: 600;
-                    letter-spacing: 0.04em;
-                    text-decoration: none;
-                    box-shadow: 0 12px 32px rgba(28,15,10,0.2);
-                    transition: background 0.2s, transform 0.1s;
-                "
-                onmouseover="this.style.background='#3D1F0F'"
-                onmouseout="this.style.background='#1C0F0A'"
-                onmousedown="this.style.transform='scale(0.96)'"
-                onmouseup="this.style.transform='scale(1)'"
-            >
-                Mulai Pesan Sekarang
-            </a>
-        </div>
-    </div>
-</section>
 
 @endsection
 
