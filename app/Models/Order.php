@@ -17,12 +17,18 @@ class Order extends Model
         'status', 'cancel_reason'
     ];
 
-    /*
-        Relasi (Has Many) ke rincian item belanja (OrderItems).
-        Memungkinkan kita memanggil isi keranjang dari cart, 
-        misal: menampilkan rincian Americano dan Oreo Shake pada struk pembayaran
-    */
-    public function items() {
+    public function items()
+    {
         return $this->hasMany(OrderItem::class, 'order_id', 'id_orders');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id_branches');
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'order_id', 'id_orders');
     }
 }

@@ -16,13 +16,13 @@ class CustomerController extends Controller
         return view('customer.account');
     }
 
-    public function history() {
-        // Mengambil pesanan milik user yang login, urutkan dari yang terbaru
-        $orders = Order::where('user_id', Auth::id())
+    public function history()
+    {
+        $orders = Order::with(['branch', 'items.product'])
+                       ->where('user_id', Auth::id())
                        ->orderBy('created_at', 'desc')
                        ->get();
 
-        // Memanggil file dari resources/views/customer/history.blade.php
         return view('customer.history', compact('orders'));
     }
 }

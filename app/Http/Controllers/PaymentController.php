@@ -3,70 +3,96 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Concerns\ResolvesStockTable;
 use App\Models\Order;
 use App\Models\Payment;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-// Controller Pembayaran - mengatur eksekusi final ketika pengguna mengeklik "BAYAR".
+
+// PaymentController - mengelola halaman pembayaran simulasi, pemotongan stok fisik, dan pencatatan stock_log.
 class PaymentController extends Controller
 {
-    public function show($id) {
-        $order = Order::findOrFail($id);
-        return view('customer.orders.payment', compact('order'));
+    use ResolvesStockTable;
+
+    public function show($id)
+    {
+        // pastikan order milik user yang login (authorization check)
+        $order = Order::with(['items.product', 'branch'])
+                      ->where('id_orders', $id)
+                      ->where('user_id', Auth::id())
+                      ->firstOrFail();
+
+        $payment = Payment::where('order_id', $id)->firstOrFail();
+
+        // arahkan ke success jika sudah dibayar sebelumnya
+        if ($order->status !== 'pending_payment') {
+            return redirect('/success/' . $id);
+        }
+
+        return view('customer.orders.payment', compact('order', 'payment'));
     }
 
-    public function confirm($id) {
-        $payment = Payment::where('order_id', $id)->firstOrFail();
-        $order = Order::findOrFail($id);
+    public function confirm($id)
+    {
+        $order = Order::with(['items.product', 'branch'])
+                      ->where('id_orders', $id)
+                      ->where('user_id', Auth::id())
+                      ->firstOrFail();
 
-        // Validasi keamanan: Pastikan nota ini benar-benar milik user yang sedang login
-        if ($order->user_id !== Auth::id()) {
-            abort(403, 'Akses ilegal.');
+        // jangan proses dua kali
+        if ($order->status !== 'pending_payment') {
+            return redirect('/success/' . $id);
         }
 
-        // Eksekusi 1: Update status pembayaran menjadi sukses
+        $payment = Payment::where('order_id', $id)
+                          ->where('status', 'pending')
+                          ->firstOrFail();
+
+        $stockTable = $this->resolveStockTable($order->branch->name);
+
+        // pembayaran selalu sukses
         $payment->update([
-            'status' => 'success',
-            'paid_at' => now()
+            'status'  => 'success',
+            'paid_at' => now(),
         ]);
 
-        // Eksekusi 2: Update status pesanan agar masuk ke layar Dapur (KDS)
-        $order->update([
-            'status' => 'paid'
-        ]);
+        $order->update(['status' => 'paid']);
 
-        // Persiapan menentukan nama tabel stok spesifik milik cabang terkait
-        $branchName = $order->branch->name;
-        $stockTable = 'stock_branch_' . strtolower(str_replace([' ', '.'], ['_', ''], $branchName));
-
-        // Ambil daftar barang dari nota, lalu lakukan pemotongan stok
+        // potong physical_qty + lepas reserved_qty + catat ke stock_log
         foreach ($order->items as $item) {
-            
-            // Eksekusi 3: Potong stok fisik di dapur, dan lepaskan tahanan stok sementara (reserved)
-            DB::table($stockTable)->where('product_id', $item->product_id)->update([
-                'physical_qty' => DB::raw("physical_qty - {$item->qty}"),
-                'reserved_qty' => DB::raw("reserved_qty - {$item->qty}")
-            ]);
+            DB::table($stockTable)
+              ->where('product_id', $item->product_id)
+              ->update([
+                  'physical_qty' => DB::raw('physical_qty - ' . (int) $item->qty),
+                  'reserved_qty' => DB::raw('reserved_qty - ' . (int) $item->qty),
+              ]);
 
-            // Eksekusi 4: Catat riwayat keluarnya barang ke tabel stock_log
             DB::table('stock_log')->insert([
-                'branch_id' => $order->branch_id,
-                'product_id' => $item->product_id,
-                'user_id' => Auth::id(),
-                'order_id' => $order->id_orders,
-                'activity_type' => 'sale', // Kode aktivitas penjualan
-                'quantity_change' => -$item->qty, // Diberi tanda minus karena stok berkurang
-                'created_at' => now(),
+                'branch_id'       => $order->branch_id,
+                'product_id'      => $item->product_id,
+                'user_id'         => Auth::id(),
+                'order_id'        => $order->id_orders,
+                'request_id'      => null,
+                'activity_type'   => 'sale',
+                'quantity_change' => -(int) $item->qty,
+                'created_at'      => now(),
             ]);
         }
 
-        // Transaksi berurutan selesai, arahkan ke halaman sukses
+        Log::info("PaymentController: Order #{$order->order_number} berhasil dibayar oleh user " . Auth::id());
+
         return redirect('/success/' . $id);
     }
 
-    public function success($id) {
-        $order = Order::findOrFail($id);
+    public function success($id)
+    {
+        $order = Order::with(['items.product', 'branch'])
+                      ->where('id_orders', $id)
+                      ->where('user_id', Auth::id())
+                      ->firstOrFail();
+
         return view('customer.orders.success', compact('order'));
     }
 }
