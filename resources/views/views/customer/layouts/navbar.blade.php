@@ -1,7 +1,7 @@
 {{-- NAVBAR --}}
 <nav
     id="main-navbar"
-    style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: #1C0F0A; box-shadow: 0 4px 24px rgba(0,0,0,0.35);"
+    style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: #1C0F0A; box-shadow: 0 4px 24px rgba(0,0,0,0.45);"
     aria-label="Navigasi utama Pod's"
 >
     <div style="width: 1280px; margin: 0 auto; height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem;">
@@ -10,7 +10,7 @@
         <a
             href="{{ route('main') }}"
             class="font-serif"
-            style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; color: #F5E9D3; text-decoration: none; transition: color 0.2s;"
+            style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; color: #F5E9D3; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 0.5rem;"
             aria-label="Pod's — Kembali ke halaman utama"
             onmouseover="this.style.color='#C8813B'"
             onmouseout="this.style.color='#F5E9D3'"
@@ -18,71 +18,51 @@
             Pod's
         </a>
 
-        {{-- NAVIGASI TENGAH: link statis, selalu tampil --}}
+        {{-- NAVIGASI TENGAH: link statis, selalu tampil di desktop --}}
         <ul style="display: flex; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0;" role="list">
+
+            @php
+                /* definisi item nav: [route_name, label, route_pattern_untuk_active_check] */
+                $navItems = [
+                    ['main',          'Home',    'main'],
+                    ['orders.branch', 'Order',   'orders*'],
+                    ['history',       'History', 'history*'],
+                    ['account',       'Account', 'account*'],
+                ];
+            @endphp
+
+            @foreach($navItems as [$routeName, $label, $pattern])
+            @php $isActive = request()->routeIs($pattern); @endphp
             <li>
                 <a
-                    href="{{ route('main') }}"
+                    href="{{ route($routeName) }}"
                     style="font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: color 0.2s;
-                           color: {{ request()->routeIs('main') ? '#C8813B' : 'rgba(245,233,211,0.75)' }};"
-                    {{ request()->routeIs('main') ? 'aria-current="page"' : '' }}
+                           color: {{ $isActive ? '#C8813B' : 'rgba(245,233,211,0.75)' }};
+                           {{ $isActive ? 'border-bottom: 1.5px solid #C8813B; padding-bottom: 2px;' : '' }}"
+                    {{ $isActive ? 'aria-current="page"' : '' }}
                     onmouseover="this.style.color='#C8813B'"
-                    onmouseout="this.style.color='{{ request()->routeIs('main') ? '#C8813B' : 'rgba(245,233,211,0.75)' }}'"
+                    onmouseout="this.style.color='{{ $isActive ? '#C8813B' : 'rgba(245,233,211,0.75)' }}'"
                 >
-                    Home
+                    {{ $label }}
                 </a>
             </li>
-            <li>
-                <a
-                    href="{{ route('orders.branch') }}"
-                    style="font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: color 0.2s;
-                           color: {{ request()->routeIs('orders*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }};"
-                    {{ request()->routeIs('orders*') ? 'aria-current="page"' : '' }}
-                    onmouseover="this.style.color='#C8813B'"
-                    onmouseout="this.style.color='{{ request()->routeIs('orders*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }}'"
-                >
-                    Order
-                </a>
-            </li>
-            <li>
-                <a
-                    href="{{ route('history') }}"
-                    style="font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: color 0.2s;
-                           color: {{ request()->routeIs('history*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }};"
-                    {{ request()->routeIs('history*') ? 'aria-current="page"' : '' }}
-                    onmouseover="this.style.color='#C8813B'"
-                    onmouseout="this.style.color='{{ request()->routeIs('history*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }}'"
-                >
-                    History
-                </a>
-            </li>
-            <li>
-                <a
-                    href="{{ route('account') }}"
-                    style="font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: color 0.2s;
-                           color: {{ request()->routeIs('account*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }};"
-                    {{ request()->routeIs('account*') ? 'aria-current="page"' : '' }}
-                    onmouseover="this.style.color='#C8813B'"
-                    onmouseout="this.style.color='{{ request()->routeIs('account*') ? '#C8813B' : 'rgba(245,233,211,0.75)' }}'"
-                >
-                    Account
-                </a>
-            </li>
+            @endforeach
+
         </ul>
 
-        {{-- KANAN: CTA + auth --}}
+        {{-- KANAN: sapaan + Call To Action + logout --}}
         <div style="display: flex; align-items: center; gap: 1rem;">
 
             @auth
-                {{-- sapaan: selalu tampil di desktop --}}
-                <span style="font-size: 0.8125rem; color: rgba(245,233,211,0.55); font-weight: 300;">
+                {{-- sapaan user: selalu tampil, tidak collapse --}}
+                <span style="font-size: 0.8125rem; color: rgba(245,233,211,0.5); font-weight: 300; white-space: nowrap;">
                     Hello, <span style="font-weight: 500; color: #F5E9D3;">{{ Auth::user()->display_name }}</span>
                 </span>
 
-                {{-- CTA order --}}
+                {{-- CTA order: pill karamel --}}
                 <a
                     href="{{ route('orders.branch') }}"
-                    style="display: inline-flex; align-items: center; padding: 0.5rem 1.25rem; border-radius: 9999px; background: #C8813B; color: #1C0F0A; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.04em; text-decoration: none; transition: background 0.2s, transform 0.1s;"
+                    style="display: inline-flex; align-items: center; padding: 0.5rem 1.25rem; border-radius: 9999px; background: #C8813B; color: #1C0F0A; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.04em; text-decoration: none; transition: background 0.2s, transform 0.1s; white-space: nowrap;"
                     onmouseover="this.style.background='#D99045'"
                     onmouseout="this.style.background='#C8813B'"
                     onmousedown="this.style.transform='scale(0.96)'"
@@ -91,12 +71,11 @@
                     Order Now
                 </a>
 
-                {{-- form logout tersembunyi — disubmit via JS setelah SwalModal --}}
+                {{-- form logout  --}}
                 <form id="navbar-logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                     @csrf
                 </form>
 
-                {{-- tombol logout: ikon + teks, selalu tampil di desktop --}}
                 <button
                     type="button"
                     id="btn-navbar-logout"
@@ -134,7 +113,7 @@
     </div>
 </nav>
 
-{{-- SCRIPT NAVBAR: hanya satu fungsi — konfirmasi logout via SwalModal --}}
+{{-- SCRIPT NAVBAR: konfirmasi logout via SwalModal --}}
 <script>
 (function () {
     const btn  = document.getElementById('btn-navbar-logout');
@@ -142,7 +121,7 @@
     if (!btn || !form) return;
 
     btn.addEventListener('click', function () {
-        /* level a: swal modal — logout adalah aksi destruktif (sesi diakhiri) */
+        /* swal modal: logout adalah aksi destruktif (sesi diakhiri) */
         window.SwalModal.fire({
             title:             'Yakin ingin keluar?',
             text:              'Sesi aktif akan diakhiri.',

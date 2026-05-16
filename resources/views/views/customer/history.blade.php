@@ -1,6 +1,6 @@
 {{-- CUSTOMER HISTORY: riwayat pesanan pelanggan --}}
 {{-- status: pending_payment | paid | cooking | completed | canceled --}}
-@extends('layout.app')
+@extends('customer.layouts.app')
 
 @section('title', "History — Pod's")
 
@@ -96,7 +96,7 @@
                     aria-label="Tabel riwayat pesanan kamu di Pod's"
                 >
 
-                    {{-- THEAD: background espresso, teks krem muted --}}
+                    {{-- THEAD --}}
                     <thead>
                         <tr style="background: #1C0F0A;">
                             <th scope="col" style="padding: 1rem 1.375rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,233,211,0.55); white-space: nowrap;">
@@ -120,7 +120,7 @@
                         </tr>
                     </thead>
 
-                    {{-- TBODY: divider krem tipis antar baris --}}
+                    {{-- TBODY --}}
                     <tbody>
                         @foreach($orders as $order)
                         <tr
@@ -129,7 +129,7 @@
                             onmouseout="this.style.background='transparent'"
                         >
 
-                            {{-- nomor pesanan: monospace untuk keterbacaan kode --}}
+                            {{-- nomor pesanan --}}
                             <td style="padding: 1rem 1.375rem;">
                                 <span style="font-family: 'Courier New', Courier, monospace; font-size: 0.875rem; font-weight: 600; color: #1C0F0A; letter-spacing: -0.01em;">
                                     #{{ $order->order_number }}
@@ -181,9 +181,9 @@
                                 </span>
                             </td>
 
-                            {{-- status badge: partial reusable --}}
+                            {{-- status badge --}}
                             <td style="padding: 1rem 1.375rem; text-align: center;">
-                                @include('customer._partials.status_badge', ['status' => $order->status])
+                                @include('customer.layouts.status_badge', ['status' => $order->status])
                             </td>
 
                         </tr>
@@ -236,7 +236,7 @@
                     ['canceled',        ''],
                 ] as [$s, $keterangan])
                 <div role="listitem" style="display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
-                    @include('customer._partials.status_badge', ['status' => $s])
+                    @include('customer.layouts.status_badge', ['status' => $s])
                     <span style="font-size: 0.75rem; color: #A08060;">{{ $keterangan }}</span>
                 </div>
                 @endforeach
@@ -252,7 +252,7 @@
 
 @push('head-scripts')
 <style>
-    /* font mono untuk nomor pesanan — lebih keterbacaan kode alfanumerik */
+    /* font mono untuk nomor pesanan */
     .font-mono { font-family: 'Courier New', Courier, monospace; letter-spacing: -0.01em; }
 </style>
 @endpush

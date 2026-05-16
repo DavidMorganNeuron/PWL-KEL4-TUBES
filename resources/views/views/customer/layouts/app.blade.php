@@ -6,19 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', "Pod's — Where Every Cup Tells a Story")</title>
 
-    {{-- google fonts: playfair display (serif) + dm sans (body) --}}
+    {{-- FONTS: playfair display (heading serif) + dm sans (body) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- sweetalert2 cdn — di head agar SwalModal tersedia saat navbar script berjalan --}}
+    {{-- SWEETALERT2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         /* ================================================================
-           DESIGN GLOBAL — satu sumber untuk seluruh proyek
+           DESIGN TOKENS — satu sumber untuk seluruh role customer
         ================================================================ */
         :root {
             --font-serif:    'Playfair Display', Georgia, serif;
@@ -39,10 +39,11 @@
             min-width: var(--layout-w);
             scroll-behavior: smooth;
         }
+
         body {
             font-family: var(--font-sans);
-            background-color: var(--pods-offwhite);
-            color: var(--pods-espresso);
+            background-color: var(--pods-espresso);
+            color: var(--pods-cream);
             min-width: var(--layout-w);
             overflow-x: auto;
             min-height: 100vh;
@@ -54,12 +55,16 @@
 
         h1, h2, h3, .font-serif { font-family: var(--font-serif); }
 
-        /* focus ring global: karamel, konsisten di seluruh site */
-        *:focus-visible { outline: 2px solid #C8813B; outline-offset: 3px; border-radius: 4px; }
+        /* focus ring global: karamel konsisten di seluruh site customer */
+        *:focus-visible {
+            outline: 2px solid #C8813B;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
 
         /* ================================================================
            KOMPONEN SHARED: pods-input
-           didefinisikan di sini agar tidak duplikat di setiap halaman.
+           didefinisikan di sini agar tidak duplikat di setiap halaman
         ================================================================ */
         .pods-input {
             width: 100%;
@@ -98,25 +103,25 @@
 </head>
 <body>
 
-    {{-- NAVBAR: fixed solid, di-include sebelum main --}}
-    @include('layout.navbar')
+    {{-- NAVBAR: fixed solid --}}
+    @include('customer.layouts.navbar')
 
-    {{-- MAIN CONTENT WRAPPER --}}
+    {{-- MAIN CONTENT WRAPPER: padding-top mengkompensasi navbar fixed --}}
     <main style="flex: 1; padding-top: var(--navbar-h);">
         @yield('content')
     </main>
 
     {{-- FOOTER --}}
-    @include('layout.footer')
+    @include('customer.layouts.footer')
 
     {{-- ================================================================
-         VARIASI NOTIFIKASI
-         SwalModal  — aksi kritikal (konfirmasi, pembayaran berhasil)
-         SwalToast  — feedback non-blocking (sukses CRUD)
-         Inline @error — validasi form (di blade masing-masing, bukan di sini)
+         VARIASI NOTIFIKASI:
+         SwalModal  — aksi kritikal: konfirmasi delete/logout, pembayaran berhasil
+         SwalToast  — feedback non-blocking: sukses CRUD
+         Inline error — validasi form: di blade masing-masing
     ================================================================ --}}
     <script>
-        /* toast global — dipanggil via window.SwalToast.fire() */
+        /* toast global: non-blocking, top-end, auto-dismiss */
         window.SwalToast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -131,7 +136,7 @@
             },
         });
 
-        /* modal global — dipanggil via window.SwalModal.fire() */
+        /* modal global: aksi kritikal yang butuh konfirmasi eksplisit */
         window.SwalModal = Swal.mixin({
             confirmButtonColor: '#C8813B',
             background: '#FBF6EE',
@@ -139,6 +144,7 @@
         });
     </script>
 
+    {{-- toast: feedback sukses non-blocking (misal: item ditambah ke keranjang) --}}
     @if (session('toast'))
     <script>
         window.SwalToast.fire({
@@ -148,6 +154,7 @@
     </script>
     @endif
 
+    {{-- modal success: konfirmasi aksi kritikal berhasil (misal: pembayaran berhasil) --}}
     @if (session('success'))
     <script>
         window.SwalModal.fire({
@@ -158,6 +165,7 @@
     </script>
     @endif
 
+    {{-- modal error: kesalahan server/bisnis yang perlu diketahui user --}}
     @if (session('error'))
     <script>
         window.SwalModal.fire({

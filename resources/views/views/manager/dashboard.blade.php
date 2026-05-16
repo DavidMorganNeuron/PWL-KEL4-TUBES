@@ -1,0 +1,251 @@
+{{-- MANAGER DASHBOARD --}}
+@extends('manager.layouts.app')
+
+@section('title', "Dashboard — Pod's Manager")
+@section('page-title', 'Dashboard')
+
+@section('content')
+
+@php
+    /* data dummy: statistik ringkasan harian */
+    $statCards = [
+        [
+            'label'   => 'Pendapatan Hari Ini',
+            'value'   => 'Rp 3.480.000',
+            'delta'   => '+12% vs kemarin',
+            'up'      => true,
+            'icon'    => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+            'accent'  => '#C8813B',
+            'bg'      => 'rgba(200,129,59,0.08)',
+        ],
+        [
+            'label'   => 'Total Pesanan',
+            'value'   => '47 Pesanan',
+            'delta'   => '+5 vs kemarin',
+            'up'      => true,
+            'icon'    => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>',
+            'accent'  => '#2563EB',
+            'bg'      => 'rgba(37,99,235,0.07)',
+        ],
+        [
+            'label'   => 'Pesanan Aktif',
+            'value'   => '6 Antrean',
+            'delta'   => '3 paid · 3 cooking',
+            'up'      => null,
+            'icon'    => '<path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>',
+            'accent'  => '#7C3AED',
+            'bg'      => 'rgba(124,58,237,0.07)',
+        ],
+        [
+            'label'   => 'Stok Kritis',
+            'value'   => '3 Produk',
+            'delta'   => 'Perlu restock segera',
+            'up'      => false,
+            'icon'    => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>',
+            'accent'  => '#DC2626',
+            'bg'      => 'rgba(220,38,38,0.07)',
+        ],
+    ];
+
+    /* best seller hari ini */
+    $bestSellers = [
+        ['rank' => 1, 'name' => 'Caramel Macchiato',   'qty' => 28, 'revenue' => 'Rp 728.000'],
+        ['rank' => 2, 'name' => 'Iced Americano',       'qty' => 21, 'revenue' => 'Rp 441.000'],
+        ['rank' => 3, 'name' => 'Brown Sugar Latte',    'qty' => 19, 'revenue' => 'Rp 551.000'],
+        ['rank' => 4, 'name' => 'Croissant Almond',     'qty' => 14, 'revenue' => 'Rp 336.000'],
+        ['rank' => 5, 'name' => 'Matcha Latte',         'qty' => 11, 'revenue' => 'Rp 319.000'],
+    ];
+
+    /* stok sedikit (physical_qty rendah) */
+    $criticalStocks = [
+        ['name' => 'Susu Oat (1L)',        'physical_qty' => 2,  'unit' => 'pcs'],
+        ['name' => 'Sirup Karamel (500ml)', 'physical_qty' => 3,  'unit' => 'botol'],
+        ['name' => 'Biji Kopi Arabika',    'physical_qty' => 5,  'unit' => 'kg'],
+    ];
+
+    /* aktivitas pesanan terakhir */
+    $recentOrders = [
+        ['order_number' => 'ORD-2026-0047', 'customer' => 'Andi Wijaya',    'status' => 'cooking',   'total' => 'Rp 95.000',  'time' => '14:22'],
+        ['order_number' => 'ORD-2026-0046', 'customer' => 'Sari Dewi',      'status' => 'completed', 'total' => 'Rp 52.000',  'time' => '14:18'],
+        ['order_number' => 'ORD-2026-0045', 'customer' => 'Benny Kusuma',   'status' => 'completed', 'total' => 'Rp 130.000', 'time' => '14:10'],
+        ['order_number' => 'ORD-2026-0044', 'customer' => 'Diana Putri',    'status' => 'paid',      'total' => 'Rp 78.000',  'time' => '14:05'],
+        ['order_number' => 'ORD-2026-0043', 'customer' => 'Rizky Hamdani',  'status' => 'canceled',  'total' => 'Rp 45.000',  'time' => '13:58'],
+    ];
+
+    /* status badge */
+    $badgeCfg = [
+        'paid'      => ['bg' => '#DBEAFE', 'text' => '#1E40AF', 'dot' => '#2563EB', 'label' => 'Lunas'],
+        'cooking'   => ['bg' => '#FEF3C7', 'text' => '#92400E', 'dot' => '#D97706', 'label' => 'Dimasak', 'pulse' => true],
+        'completed' => ['bg' => '#D1FAE5', 'text' => '#065F46', 'dot' => '#059669', 'label' => 'Selesai'],
+        'canceled'  => ['bg' => '#FEE2E2', 'text' => '#991B1B', 'dot' => '#DC2626', 'label' => 'Dibatalkan'],
+    ];
+@endphp
+
+<div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
+<div style="max-width: 1024px;">
+
+    {{-- ================================================================
+         SECTION 1: STAT CARDS
+    ================================================================ --}}
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+        @foreach($statCards as $i => $stat)
+        <div
+            class="mgr-card mgr-animate"
+            style="padding: 1.25rem 1.375rem; animation-delay: {{ $i * 0.06 }}s;"
+        >
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.875rem;">
+                <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pods-muted); line-height: 1.3; max-width: 110px;">
+                    {{ $stat['label'] }}
+                </p>
+                <div style="width: 34px; height: 34px; border-radius: 8px; background: {{ $stat['bg'] }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="{{ $stat['accent'] }}" stroke-width="2" aria-hidden="true">
+                        {!! $stat['icon'] !!}
+                    </svg>
+                </div>
+            </div>
+            <p class="font-serif" style="font-size: 1.375rem; font-weight: 700; color: var(--pods-espresso); line-height: 1.1; margin-bottom: 0.375rem; font-variant-numeric: tabular-nums;">
+                {{ $stat['value'] }}
+            </p>
+            <p style="font-size: 0.75rem; font-weight: 400; color: {{ $stat['up'] === true ? '#059669' : ($stat['up'] === false ? '#DC2626' : 'var(--pods-muted)') }};">
+                @if($stat['up'] === true) ↑ @elseif($stat['up'] === false) ↓ @endif
+                {{ $stat['delta'] }}
+            </p>
+        </div>
+        @endforeach
+    </div>
+
+    {{-- ================================================================
+         SECTION 2: Best Seller + Stok Sedikit
+    ================================================================ --}}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.75rem;">
+
+        {{-- BEST SELLER HARI INI --}}
+        <div class="mgr-card mgr-animate" style="animation-delay: 0.24s; overflow: hidden;">
+            <div style="padding: 1.125rem 1.375rem 0.75rem; border-bottom: 1px solid #F0E8DC; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <p style="font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pods-muted); margin-bottom: 0.125rem;">Hari Ini</p>
+                    <h2 class="font-serif" style="font-size: 1rem; font-weight: 700; color: var(--pods-espresso);">Best Seller</h2>
+                </div>
+                <a href="{{ route('manager.report') }}" style="font-size: 0.75rem; color: var(--pods-caramel); font-weight: 500; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                    Lihat Laporan →
+                </a>
+            </div>
+            <ul style="list-style: none; margin: 0; padding: 0.5rem 0;" role="list">
+                @foreach($bestSellers as $item)
+                <li style="display: flex; align-items: center; gap: 0.875rem; padding: 0.625rem 1.375rem; {{ !$loop->last ? 'border-bottom: 1px solid #F8F0E6;' : '' }}">
+                    {{-- nomor peringkat --}}
+                    <span style="width: 22px; height: 22px; border-radius: 50%; background: {{ $item['rank'] === 1 ? 'var(--pods-caramel)' : '#EDE0CC' }}; color: {{ $item['rank'] === 1 ? '#1C0F0A' : 'var(--pods-muted)' }}; font-size: 0.6875rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        {{ $item['rank'] }}
+                    </span>
+                    <div style="flex: 1; min-width: 0;">
+                        <p style="font-size: 0.875rem; font-weight: 500; color: var(--pods-espresso); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item['name'] }}</p>
+                        <p style="font-size: 0.75rem; color: var(--pods-muted); font-weight: 300;">{{ $item['revenue'] }}</p>
+                    </div>
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--pods-espresso); white-space: nowrap; font-variant-numeric: tabular-nums;">{{ $item['qty'] }} pcs</span>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+
+        {{-- STOK SEDIKIT --}}
+        <div class="mgr-card mgr-animate" style="animation-delay: 0.3s; overflow: hidden;">
+            <div style="padding: 1.125rem 1.375rem 0.75rem; border-bottom: 1px solid #F0E8DC; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <p style="font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #DC2626; margin-bottom: 0.125rem;">Perlu Perhatian</p>
+                    <h2 class="font-serif" style="font-size: 1rem; font-weight: 700; color: var(--pods-espresso);">Stok Kritis</h2>
+                </div>
+                <a href="{{ route('manager.request_form') }}" class="pods-btn-primary" style="font-size: 0.75rem; padding: 0.4375rem 0.875rem;">
+                    + Ajukan Restock
+                </a>
+            </div>
+
+            @if(count($criticalStocks) > 0)
+            <ul style="list-style: none; margin: 0; padding: 0.5rem 0;" role="list" aria-label="Daftar stok kritis">
+                @foreach($criticalStocks as $stk)
+                <li style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.375rem; {{ !$loop->last ? 'border-bottom: 1px solid #F8F0E6;' : '' }}">
+                    <div style="display: flex; align-items: center; gap: 0.625rem;">
+                        <span style="width: 7px; height: 7px; border-radius: 9999px; background: #DC2626; flex-shrink: 0; animation: kds-pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite;" aria-hidden="true"></span>
+                        <p style="font-size: 0.875rem; font-weight: 500; color: var(--pods-espresso);">{{ $stk['name'] }}</p>
+                    </div>
+                    <span style="font-size: 0.875rem; font-weight: 700; color: #DC2626; font-variant-numeric: tabular-nums;">
+                        {{ $stk['physical_qty'] }} {{ $stk['unit'] }}
+                    </span>
+                </li>
+                @endforeach
+            </ul>
+            <div style="padding: 0.75rem 1.375rem; background: #FFF8F0; border-top: 1px solid #F0E8DC;">
+                <p style="font-size: 0.75rem; color: var(--pods-muted); font-weight: 300;">
+                    Ajukan restock ke Admin Pusat agar stok segera dipulihkan.
+                </p>
+            </div>
+            @else
+            <div style="padding: 2.5rem 1.375rem; text-align: center;">
+                <p style="font-size: 0.875rem; color: var(--pods-muted); font-weight: 300;">Semua stok dalam kondisi aman ✓</p>
+            </div>
+            @endif
+        </div>
+
+    </div>
+
+    {{-- ================================================================
+         SECTION 3: AKTIVITAS PESANAN TERBARU
+    ================================================================ --}}
+    <div class="mgr-card mgr-animate" style="animation-delay: 0.36s; overflow: hidden;">
+        <div style="padding: 1.125rem 1.375rem 0.75rem; border-bottom: 1px solid #F0E8DC; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <p style="font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pods-muted); margin-bottom: 0.125rem;">Real-time</p>
+                <h2 class="font-serif" style="font-size: 1rem; font-weight: 700; color: var(--pods-espresso);">Aktivitas Pesanan Terbaru</h2>
+            </div>
+            <a href="{{ route('manager.kds') }}" style="font-size: 0.75rem; color: var(--pods-caramel); font-weight: 500; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                Buka KDS →
+            </a>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;" role="table" aria-label="Tabel aktivitas pesanan terbaru">
+                <thead>
+                    <tr style="background: #FBF6EE;">
+                        <th style="padding: 0.625rem 1.375rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pods-muted); white-space: nowrap;">No. Pesanan</th>
+                        <th style="padding: 0.625rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pods-muted);">Pelanggan</th>
+                        <th style="padding: 0.625rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pods-muted);">Status</th>
+                        <th style="padding: 0.625rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pods-muted); text-align: right;">Total</th>
+                        <th style="padding: 0.625rem 1.375rem 0.625rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pods-muted); text-align: right;">Waktu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($recentOrders as $order)
+                    @php
+                        $bc = $badgeCfg[$order['status']] ?? ['bg' => '#F3F4F6', 'text' => '#374151', 'dot' => '#9CA3AF', 'label' => $order['status']];
+                    @endphp
+                    <tr style="border-top: 1px solid #F0E8DC; {{ !$loop->last ? '' : '' }}" onmouseover="this.style.background='#FFFBF4'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 0.875rem 1.375rem; font-size: 0.8125rem; font-weight: 600; color: var(--pods-espresso); white-space: nowrap; font-variant-numeric: tabular-nums;">{{ $order['order_number'] }}</td>
+                        <td style="padding: 0.875rem 1rem; font-size: 0.875rem; color: var(--pods-espresso);">{{ $order['customer'] }}</td>
+                        <td style="padding: 0.875rem 1rem;">
+                            <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 7px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 600; background: {{ $bc['bg'] }}; color: {{ $bc['text'] }}; white-space: nowrap;">
+                                <span style="width: 5px; height: 5px; border-radius: 9999px; background: {{ $bc['dot'] }}; {{ isset($bc['pulse']) && $bc['pulse'] ? 'animation: kds-pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite;' : '' }}" aria-hidden="true"></span>
+                                {{ $bc['label'] }}
+                            </span>
+                        </td>
+                        <td style="padding: 0.875rem 1rem; font-size: 0.875rem; font-weight: 600; color: var(--pods-espresso); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;">{{ $order['total'] }}</td>
+                        <td style="padding: 0.875rem 1.375rem 0.875rem 1rem; font-size: 0.8125rem; color: var(--pods-muted); text-align: right; font-variant-numeric: tabular-nums;">{{ $order['time'] }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</div>
+
+@push('head-scripts')
+<style>
+    /* animasi denyut dot dipakai ulang dari partial order_card */
+    @keyframes kds-pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.4; transform: scale(0.85); }
+    }
+</style>
+@endpush
+
+@endsection

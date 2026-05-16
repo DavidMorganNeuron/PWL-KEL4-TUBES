@@ -1,52 +1,51 @@
-{{-- PARTIAL: STATUS BADGE PESANAN --}}
-{{-- reusable di: history.blade.php, orders/payment.blade.php, orders/success.blade.php --}}
+{{-- STATUS BADGE PESANAN --}}
 {{-- variabel wajib: $status (string) --}}
 @php
     /* map setiap status ke konfigurasi visual & aksesibilitas */
     $statusConfig = [
         'pending_payment' => [
-            'bg'    => '#FEF3C7',  // amber-100
-            'text'  => '#92400E',  // amber-800
-            'dot'   => '#D97706',  // amber-600
+            'bg'    => '#FEF3C7', // warna amber
+            'text'  => '#92400E',
+            'dot'   => '#D97706',
             'label' => 'Menunggu Bayar',
             'a11y'  => 'Status: Menunggu Pembayaran',
             'pulse' => false,
         ],
         'paid' => [
-            'bg'    => '#DBEAFE',  // blue-100
-            'text'  => '#1E40AF',  // blue-800
-            'dot'   => '#2563EB',  // blue-600
+            'bg'    => '#DBEAFE', // warna biru
+            'text'  => '#1E40AF',
+            'dot'   => '#2563EB',
             'label' => 'Lunas',
             'a11y'  => 'Status: Sudah Dibayar, Menunggu Dimasak',
             'pulse' => false,
         ],
         'cooking' => [
-            'bg'    => '#EDE9FE',  // violet-100
-            'text'  => '#5B21B6',  // violet-800
-            'dot'   => '#7C3AED',  // violet-600
+            'bg'    => '#EDE9FE', // warna violet
+            'text'  => '#5B21B6',
+            'dot'   => '#7C3AED',
             'label' => 'Dimasak',
             'a11y'  => 'Status: Sedang Disiapkan di Dapur',
-            'pulse' => true,  /* indikator aktif: dot berdenyut */
+            'pulse' => true,  /* dot berdenyut: indikator proses aktif */
         ],
         'completed' => [
-            'bg'    => '#D1FAE5',  // emerald-100
-            'text'  => '#065F46',  // emerald-800
-            'dot'   => '#059669',  // emerald-600
+            'bg'    => '#D1FAE5', // warna emerald
+            'text'  => '#065F46',
+            'dot'   => '#059669',
             'label' => 'Selesai',
             'a11y'  => 'Status: Pesanan Selesai',
             'pulse' => false,
         ],
         'canceled' => [
-            'bg'    => '#FEE2E2',  // red-100
-            'text'  => '#991B1B',  // red-800
-            'dot'   => '#DC2626',  // red-600
+            'bg'    => '#FEE2E2', // warna merah
+            'text'  => '#991B1B',
+            'dot'   => '#DC2626',
             'label' => 'Dibatalkan',
             'a11y'  => 'Status: Pesanan Dibatalkan',
             'pulse' => false,
         ],
     ];
 
-    /* fallback aman untuk status yang tidak terdaftar */
+    /* fallback aman untuk status yang tidak terdaftar di konfigurasi */
     $cfg = $statusConfig[$status] ?? [
         'bg'    => '#F3F4F6',
         'text'  => '#374151',
@@ -57,12 +56,11 @@
     ];
 @endphp
 
-{{-- keyframes pulse: didefinisikan inline agar tidak bergantung pada Tailwind --}}
-{{-- @once memastikan style ini hanya di-output satu kali per halaman --}}
+{{-- @once: keyframes hanya di-output satu kali meski badge dirender berkali-kali di satu halaman --}}
 @once
 @push('head-scripts')
 <style>
-    /* animasi denyut: hanya untuk dot status 'cooking' */
+    /* animasi denyut: eksklusif untuk dot status 'cooking' */
     @keyframes pods-pulse {
         0%, 100% { opacity: 1; transform: scale(1); }
         50%       { opacity: 0.45; transform: scale(0.88); }
@@ -90,7 +88,7 @@
         user-select: none;
     "
 >
-    {{-- dot indikator status: pulse hanya saat cooking --}}
+    {{-- dot indikator: pulse hanya aktif saat status cooking --}}
     <span
         aria-hidden="true"
         style="

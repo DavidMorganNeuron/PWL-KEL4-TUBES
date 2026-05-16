@@ -1,6 +1,5 @@
 {{-- CUSTOMER ACCOUNT: halaman profil pelanggan --}}
-{{-- layout: 3 kolom statis — identitas (kiri) + detail & aksi (kanan 2 kolom) --}}
-@extends('layout.app')
+@extends('customer.layouts.app')
 
 @section('title', "Account — Pod's")
 
@@ -35,7 +34,7 @@
 
                 {{-- KARTU: Avatar + Nama --}}
                 <div style="background: #FFFFFF; border-radius: 1.125rem; border: 1px solid #EDE0CC; box-shadow: 0 1px 4px rgba(28,15,10,0.06); overflow: hidden;">
-                    {{-- banner espresso: header dekoratif kartu --}}
+                    {{-- header dekoratif kartu --}}
                     <div style="height: 80px; background: linear-gradient(135deg, #1C0F0A 0%, #3D1F0F 100%);"></div>
 
                     <div style="padding: 0 1.5rem 1.5rem;">
@@ -233,7 +232,7 @@
                             <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300;">Semua data keranjang aktif akan direset.</p>
                         </div>
 
-                        {{-- form logout tersembunyi — disubmit via JS setelah SwalModal --}}
+                        {{-- form logout --}}
                         <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                             @csrf
                         </form>
@@ -280,7 +279,7 @@
     if (!btn || !form) return;
 
     btn.addEventListener('click', function () {
-        /* level a: swal modal — logout adalah aksi destruktif */
+        /* swal modal — logout adalah aksi destruktif */
         window.SwalModal.fire({
             title:             'Yakin ingin keluar?',
             text:              'Semua data keranjang aktif akan dihapus dari sesi ini.',

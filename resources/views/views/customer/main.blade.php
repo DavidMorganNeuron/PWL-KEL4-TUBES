@@ -1,6 +1,6 @@
-{{-- CUSTOMER MAIN: landing page — hero + featured menu + why us + cta final --}}
+{{-- CUSTOMER MAIN: landing page --}}
 {{-- menggunakan master layout app.blade.php --}}
-@extends('layout.app')
+@extends('customer.layouts.app')
 
 @section('title', "Main Page — Pod's")
 
@@ -91,7 +91,7 @@
             Freshly brewed coffee, warm atmosphere, and a place you'll always come back to.
         </p>
 
-        {{-- dua tombol CTA side-by-side — STATIS, tidak ada kolom vertikal di layar kecil --}}
+        {{-- dua tombol CTA side-by-side --}}
         <div
             style="
                 display: flex;

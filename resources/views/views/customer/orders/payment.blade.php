@@ -1,6 +1,6 @@
-@extends('layout.app')
+@extends('customer.layouts.app')
 
-@section('title', "Pembayaran — Pod's")
+@section('title', "Payment — Pod's")
 
 @section('content')
 
@@ -11,7 +11,6 @@
     ================================================================ --}}
     <div style="background: #3D1F0F; padding: 2.25rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
-            @include('customer._partials.order_stepper', ['currentStep' => 4])
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin: 1.75rem 0 0.375rem;">
                 Langkah 4 dari 4
             </p>
@@ -115,7 +114,7 @@
                 </div>
             </div>
 
-            {{-- KARTU: Tombol Konfirmasi —  aksi finansial destruktif, wajib SwalModal --}}
+            {{-- KARTU: Tombol Konfirmasi --}}
             <div style="background: #FFFFFF; border-radius: 1.125rem; border: 1px solid #EDE0CC; box-shadow: 0 1px 4px rgba(28,15,10,0.05); padding: 1.5rem;">
                 <h2 style="font-size: 0.9375rem; font-weight: 700; color: #1C0F0A; margin-bottom: 0.375rem;">
                     Sudah Selesai Membayar?
@@ -124,7 +123,7 @@
                     Klik tombol di bawah setelah pembayaran berhasil. Stok akan dipotong dan pesanan masuk ke dapur.
                 </p>
 
-                {{-- form konfirmasi: disubmit via JS setelah SwalModal --}}
+                {{-- form konfirmasi --}}
                 <form id="form-payment-confirm" method="POST" action="/payment/{{ $order->id_orders }}" style="display: none;">
                     @csrf
                 </form>
@@ -195,7 +194,7 @@
                 {{-- status badge order --}}
                 <div style="padding: 0.875rem 1.375rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EDE0CC;">
                     <span style="font-size: 0.8125rem; color: #A08060;">Status</span>
-                    @include('customer._partials.status_badge', ['status' => $order->status])
+                    @include('customer.layouts.status_badge', ['status' => $order->status])
                 </div>
 
                 {{-- total final --}}

@@ -1,6 +1,6 @@
-@extends('layout.app')
+@extends('customer.layouts.app')
 
-@section('title', "Pilih Cabang — Pod's")
+@section('title', "Branch — Pod's")
 
 @section('content')
 
@@ -11,7 +11,6 @@
     ================================================================ --}}
     <div style="background: #3D1F0F; padding: 2.25rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
-            @include('customer._partials.order_stepper', ['currentStep' => 1])
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin: 1.75rem 0 0.375rem;">
                 Langkah 1 dari 4
             </p>
@@ -25,7 +24,7 @@
     </div>
 
     {{-- ================================================================
-         FORM PILIH CABANG: grid 3 kolom statis
+         FORM PILIH CABANG
     ================================================================ --}}
     <div style="width: 1280px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem;">
 

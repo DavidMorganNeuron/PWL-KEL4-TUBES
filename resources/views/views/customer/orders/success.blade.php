@@ -1,8 +1,7 @@
 {{-- ORDERS/SUCCESS: struk digital + navigasi post-order --}}
-{{-- data: $order (Order with items.product, branch) --}}
-@extends('layout.app')
+@extends('customer.layouts.app')
 
-@section('title', "Pesanan Berhasil — Pod's")
+@section('title', "Success — Pod's")
 
 @section('content')
 
@@ -10,15 +9,13 @@
 
     <div style="width: 1280px; margin: 0 auto; padding: 3.5rem 2.5rem 5rem; display: grid; grid-template-columns: 1fr 480px 1fr; gap: 2rem;">
 
-        {{-- kolom kiri: spacer kosong --}}
         <div></div>
 
         {{-- ==========================================
-             STRUK DIGITAL: kolom tengah 480px
+             STRUK DIGITAL
         ========================================== --}}
         <div>
 
-            {{-- animasi masuk: fade + scale --}}
             <div style="animation: receipt-enter 0.5s cubic-bezier(0.22,1,0.36,1) both;">
 
                 {{-- header sukses: banner espresso + ikon centang --}}
@@ -50,7 +47,7 @@
                         Pesanan kamu sedang disiapkan oleh tim Pod's.
                     </p>
 
-                    {{-- nomor pesanan: monospace menonjol --}}
+                    {{-- nomor pesanan --}}
                     <div style="
                         display: inline-block;
                         margin-top: 1.25rem;
@@ -122,7 +119,7 @@
                     {{-- status badge --}}
                     <div style="padding: 1rem 1.75rem; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #EDE0CC;">
                         <span style="font-size: 0.8125rem; color: #A08060;">Status Pesanan</span>
-                        @include('customer._partials.status_badge', ['status' => $order->status])
+                        @include('customer.layouts.status_badge', ['status' => $order->status])
                     </div>
                 </div>
 
@@ -187,7 +184,6 @@
             </div>
         </div>
 
-        {{-- kolom kanan: spacer kosong --}}
         <div></div>
 
     </div>
@@ -212,7 +208,7 @@
 
 @push('scripts')
 <script>
-/* level a: swal modal — menyambut pelanggan setelah pembayaran berhasil */
+/* swal modal — menyambut pelanggan setelah pembayaran berhasil */
 (function () {
     window.SwalModal.fire({
         icon:              'success',
