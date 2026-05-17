@@ -1,4 +1,4 @@
-{{-- ── HALAMAN DAFTAR: Desktop-only layout edge-to-edge 40% gambar, 60% form --}}
+{{-- HALAMAN DAFTAR --}}
 <!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
@@ -136,7 +136,7 @@
                 </h2>
             </div>
 
-            {{-- ── FORM REGISTER --}}
+            {{-- FORM REGISTER --}}
             <form
                 method="POST"
                 action="{{ route('register') }}"
@@ -299,7 +299,7 @@
                     @enderror
                 </div>
 
-                {{-- cta: tombol submit karamel --}}
+                {{-- tombol submit karamel --}}
                 <button
                     type="submit"
                     style="width: 100%; padding: 0.875rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em; background: #C8813B; color: #1C0F0A; border: none; cursor: pointer; transition: background 0.2s, transform 0.1s;"
@@ -336,5 +336,27 @@
 
 </div>
 
+<script>
+/* toggle visibilitas password: mengontrol #password dan #password-confirm sekaligus */
+(function () {
+    var btn     = document.getElementById("toggle-pwd");
+    var pwdA    = document.getElementById("password");
+    var pwdB    = document.getElementById("password-confirm");
+    var eyeOpen = document.getElementById("eye-open");
+    var eyeOff  = document.getElementById("eye-off");
+    if (!btn || !pwdA) return;
+    var visible = false;
+    btn.addEventListener("click", function () {
+        visible = !visible;
+        var t = visible ? "text" : "password";
+        pwdA.type = t;
+        if (pwdB) pwdB.type = t;
+        eyeOpen.style.display = visible ? "none" : "block";
+        eyeOff.style.display  = visible ? "block" : "none";
+        btn.setAttribute("aria-pressed", String(visible));
+        btn.setAttribute("aria-label", visible ? "Sembunyikan password" : "Tampilkan password");
+    });
+}());
+</script>
 </body>
 </html>

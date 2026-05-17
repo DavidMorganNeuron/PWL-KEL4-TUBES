@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', "Menu — Pod's")
+@section('title', "Pilih Menu — Pod's")
 
 @section('content')
 
@@ -20,11 +20,53 @@
             <p style="font-size: 0.875rem; color: rgba(245,233,211,0.5); font-weight: 300;">
                 Tambahkan item ke keranjang, lalu lanjut ke checkout.
             </p>
+
+            {{-- SEARCH + FILTER KATEGORI --}}
+            <div style="margin-top: 1.5rem; display: flex; align-items: center; gap: 0.875rem; flex-wrap: nowrap;">
+
+                {{-- search bar --}}
+                <div style="position: relative; flex: 1; max-width: 380px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="rgba(245,233,211,0.4)" stroke-width="2" aria-hidden="true" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); pointer-events:none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input
+                        type="search"
+                        id="menu-search"
+                        placeholder="Cari menu..."
+                        autocomplete="off"
+                        style="width:100%; padding:0.6rem 1rem 0.6rem 2.5rem; border-radius:9999px; border:1.5px solid rgba(245,233,211,0.15); background:rgba(255,255,255,0.07); color:#F5E9D3; font-family:var(--font-sans); font-size:0.875rem; outline:none; transition:border-color 0.15s;"
+                        onfocus="this.style.borderColor='rgba(200,129,59,0.6)'"
+                        onblur="this.style.borderColor='rgba(245,233,211,0.15)'"
+                        aria-label="Cari menu"
+                    >
+                </div>
+
+                {{-- filter tab kategori --}}
+                <div style="display:flex; gap:0.5rem; flex-wrap: nowrap;">
+                    <button type="button" class="menu-cat-tab menu-cat-active" data-cat="all"
+                        style="padding:0.45rem 1rem; border-radius:9999px; border:1.5px solid #C8813B; background:#C8813B; color:#1C0F0A; font-size:0.8125rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:all 0.15s;">
+                        Semua
+                    </button>
+                    @foreach($products->pluck('category.name')->unique()->filter()->sort() as $catName)
+                    <button type="button" class="menu-cat-tab" data-cat="{{ $catName }}"
+                        style="padding:0.45rem 1rem; border-radius:9999px; border:1.5px solid rgba(245,233,211,0.2); background:transparent; color:rgba(245,233,211,0.7); font-size:0.8125rem; font-weight:500; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+                        onmouseover="if(!this.classList.contains('menu-cat-active')){this.style.borderColor='rgba(200,129,59,0.5)';this.style.color='#F5E9D3';}"
+                        onmouseout="if(!this.classList.contains('menu-cat-active')){this.style.borderColor='rgba(245,233,211,0.2)';this.style.color='rgba(245,233,211,0.7)';}">
+                        {{ $catName }}
+                    </button>
+                    @endforeach
+                </div>
+
+            </div>
+
+            {{-- notifikasi hasil search --}}
+            <p id="menu-search-result" style="font-size:0.8125rem; color:rgba(245,233,211,0.5); margin-top:0.75rem; display:none;" aria-live="polite"></p>
+
         </div>
     </div>
 
     {{-- ================================================================
-         MAIN LAYOUT: 2 kolom statis (katalog kiri + cart kanan)
+         MAIN LAYOUT: katalog kiri + cart kanan
     ================================================================ --}}
     <div style="width: 1280px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; display: flex; gap: 1.75rem; align-items: flex-start;">
 
@@ -39,7 +81,7 @@
             @endphp
 
             @forelse($grouped as $categoryName => $items)
-            <div style="margin-bottom: 2.5rem;">
+            <div class="menu-category-group" data-group="{{ $categoryName }}" style="margin-bottom: 2.5rem;">
 
                 {{-- judul kategori --}}
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.125rem;">
@@ -52,13 +94,16 @@
                     </span>
                 </div>
 
-                {{-- grid produk --}}
+                {{-- grid produk: 3 kolom statis --}}
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
                     @foreach($items as $product)
                     @php
                         $qtyInCart = $cart[(string)$product->id_products] ?? 0;
                     @endphp
                     <article
+                        class="menu-product-card"
+                        data-name="{{ strtolower($product->name) }}"
+                        data-cat="{{ $product->category->name ?? '' }}"
                         style="
                             background: #FFFFFF;
                             border-radius: 1rem;
@@ -146,7 +191,7 @@
         </div>
 
         {{-- ==========================================
-             KOLOM KANAN: Cart Panel
+             KOLOM KANAN: Cart
         ========================================== --}}
         <aside
             style="
@@ -279,3 +324,74 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    var searchInput  = document.getElementById('menu-search');
+    var resultNotice = document.getElementById('menu-search-result');
+    var catTabs      = document.querySelectorAll('.menu-cat-tab');
+    var cards        = document.querySelectorAll('.menu-product-card');
+    var groups       = document.querySelectorAll('.menu-category-group');
+
+    var activeCat = 'all';
+    var searchVal = '';
+
+    function applyFilter() {
+        var visible = 0;
+
+        cards.forEach(function (card) {
+            var nameMatch = card.dataset.name.includes(searchVal);
+            var catMatch  = activeCat === 'all' || card.dataset.cat === activeCat;
+            var show      = nameMatch && catMatch;
+
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+
+        /* sembunyikan grup kategori yang semua produknya tersembunyi */
+        groups.forEach(function (group) {
+            var groupCat     = group.dataset.group;
+            var hasVisible   = false;
+
+            group.querySelectorAll('.menu-product-card').forEach(function (c) {
+                if (c.style.display !== 'none') hasVisible = true;
+            });
+
+            group.style.display = hasVisible ? '' : 'none';
+        });
+    }
+
+    var debounceTimer;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+            searchVal = searchInput.value.trim().toLowerCase();
+            applyFilter();
+        }, 250);
+    });
+
+    catTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            activeCat = tab.dataset.cat;
+
+            catTabs.forEach(function (t) {
+                t.classList.remove('menu-cat-active');
+                t.style.background   = 'transparent';
+                t.style.borderColor  = 'rgba(245,233,211,0.2)';
+                t.style.color        = 'rgba(245,233,211,0.7)';
+                t.style.fontWeight   = '500';
+            });
+
+            tab.classList.add('menu-cat-active');
+            tab.style.background   = '#C8813B';
+            tab.style.borderColor  = '#C8813B';
+            tab.style.color        = '#1C0F0A';
+            tab.style.fontWeight   = '600';
+
+            applyFilter();
+        });
+    });
+}());
+</script>
+@endpush

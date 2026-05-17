@@ -145,7 +145,7 @@ class OrderFlowController extends Controller
     public function storeOrder(Request $request)
     {
         $request->validate([
-            'payment_method' => ['required', 'string', 'in:qris,ewallet'],
+            'payment_method' => ['required', 'string', 'in:qris,ewallet,QRIS,E_Wallet'],
         ]);
 
         $cart = session('cart', []);
@@ -231,7 +231,7 @@ class OrderFlowController extends Controller
         // buat record payment
         Payment::create([
             'order_id' => $order->id_orders,
-            'method'   => $request->payment_method,
+            'method'   => $request->payment_method === 'qris' ? 'QRIS' : 'E_Wallet',
             'status'   => 'pending',
         ]);
 

@@ -18,7 +18,7 @@
                 Pilih Cabang
             </h1>
             <p style="font-size: 0.875rem; color: rgba(245,233,211,0.5); font-weight: 300;">
-                Pilih lokasi Pod's yang ingin kamu kunjungi hari ini.
+                Pilih lokasi Pod's yang ingin kamu pesan hari ini.
             </p>
         </div>
     </div>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderFlowController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ManagerController;
 
 // login, register, logout
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -30,45 +31,27 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // role = manager
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
-    Route::get('/dashboard', function () {
-        return redirect()->route('manager.dashboard');
-    })->name('dashboard');
-
+ 
+    // dashboard
+    Route::get('/dashboard', [ManagerController::class, 'dashboard'])->name('dashboard');
+ 
     // kitchen display system
-    Route::get('/kds', function () {
-        return view('manager.kds');
-    })->name('kds');
-
-    // monitoring stok lokal
-    Route::get('/stock', function () {
-        return view('manager.stock');
-    })->name('stock');
-
-    // request restock
-    Route::get('/request_form', function () {
-        return view('manager.request_form');
-    })->name('request_form');
-    Route::post('/request_form', function () {
-        return back()->with('toast', 'Pengajuan berhasil dikirim!');
-    })->name('request_form.store');
-
-    // laporan penjualan cabang
-    Route::get('/report', function () {
-        return view('manager.report');
-    })->name('report');
-
+    Route::get('/kds', [ManagerController::class, 'kds'])->name('kds');
+ 
     // aksi status pesanan
-    Route::patch('/orders/{id}/cook', function ($id) {
-        return back()->with('toast', 'Pesanan mulai dimasak.');
-    })->name('orders.cook');
-
-    Route::patch('/orders/{id}/complete', function ($id) {
-        return back()->with('toast', 'Pesanan selesai dan siap diambil!');
-    })->name('orders.complete');
-
-    Route::patch('/orders/{id}/cancel', function ($id) {
-        return back()->with('toast', 'Pesanan berhasil dibatalkan.');
-    })->name('orders.cancel');
+    Route::post('/orders/{id}/cook',   [ManagerController::class, 'cookOrder'])->name('orders.cook');
+    Route::post('/orders/{id}/done',   [ManagerController::class, 'doneOrder'])->name('orders.done');
+    Route::post('/orders/{id}/cancel', [ManagerController::class, 'cancelOrder'])->name('orders.cancel');
+ 
+    // monitoring stok lokal
+    Route::get('/stock', [ManagerController::class, 'stock'])->name('stock');
+ 
+    // laporan penjualan
+    Route::get('/report', [ManagerController::class, 'report'])->name('report');
+ 
+    // pengajuan restock
+    Route::get('/request',  [ManagerController::class, 'requestForm'])->name('request_form');
+    Route::post('/request', [ManagerController::class, 'storeRequest'])->name('request_form.store');
 });
 
 
@@ -96,4 +79,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/payment/{id}', [PaymentController::class, 'show']);
     Route::post('/payment/{id}', [PaymentController::class, 'confirm']);
     Route::get('/success/{id}', [PaymentController::class, 'success']);
+
+    // dipanggil saat customer meninggalkan halaman payment
+    Route::post('/payment/{id}/abandon', [PaymentController::class, 'abandon'])->name('payment.abandon');
 });

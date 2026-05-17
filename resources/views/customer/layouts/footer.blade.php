@@ -82,12 +82,8 @@
                 </p>
                 <dl style="display: flex; flex-direction: column; gap: 0.375rem;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem;">
-                        <dt style="font-size: 0.8125rem; color: rgba(245,233,211,0.5);">Senin – Jumat</dt>
-                        <dd style="font-size: 0.8125rem; color: rgba(245,233,211,0.75); font-weight: 500;">07.00 – 22.00</dd>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; gap: 1rem;">
-                        <dt style="font-size: 0.8125rem; color: rgba(245,233,211,0.5);">Sabtu – Minggu</dt>
-                        <dd style="font-size: 0.8125rem; color: rgba(245,233,211,0.75); font-weight: 500;">08.00 – 23.00</dd>
+                        <dt style="font-size: 0.8125rem; color: rgba(245,233,211,0.5);">Senin - Minggu</dt>
+                        <dd style="font-size: 0.8125rem; color: rgba(245,233,211,0.75); font-weight: 500;">07.00 - 22.00</dd>
                     </div>
                     {{-- catatan khusus cabang --}}
                     <p style="font-size: 0.75rem; color: rgba(245,233,211,0.3); margin-top: 0.5rem; font-style: italic;">

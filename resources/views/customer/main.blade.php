@@ -126,7 +126,6 @@
                 onmouseup="this.style.transform='scale(1)'"
             >
                 Order Now
-                <span id="cta-hero-arrow" style="display: inline-block; margin-left: 0.5rem; transition: transform 0.2s;">→</span>
             </a>
 
             {{-- sekunder: outline cream --}}
@@ -172,7 +171,7 @@
                 Crafted with Passion
             </h2>
             <p style="color: #A08060; font-weight: 300; max-width: 380px; margin: 0 auto; line-height: 1.65;">
-                Setiap cangkir adalah karya — biji kopi pilihan, tangan yang penuh cinta.
+                Setiap cangkir adalah karya yang dibuat dengan penuh cinta.
             </p>
         </div>
 
@@ -225,7 +224,7 @@
                             onmouseout="this.style.textDecoration='none'"
                             aria-label="Pesan {{ $name }}"
                         >
-                            Order →
+                            Order
                         </a>
                     </div>
                 </div>

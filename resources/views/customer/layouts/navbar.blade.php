@@ -124,7 +124,7 @@
         /* swal modal: logout adalah aksi destruktif (sesi diakhiri) */
         window.SwalModal.fire({
             title:             'Yakin ingin keluar?',
-            text:              'Sesi aktif akan diakhiri.',
+            text:              'Semua data keranjang akan hilang.',
             icon:              'warning',
             showCancelButton:  true,
             confirmButtonText: 'Ya, Logout',

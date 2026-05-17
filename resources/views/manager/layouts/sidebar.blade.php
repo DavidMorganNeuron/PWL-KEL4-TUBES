@@ -32,19 +32,18 @@
                 Cabang Aktif
             </p>
             <p style="font-size: 0.875rem; font-weight: 600; color: #F5E9D3; margin-bottom: 0.125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                Dr. Mansyur
+                {{ Auth::user()->branch->name ?? 'Tidak Diketahui' }}
             </p>
             <p style="font-size: 0.75rem; font-weight: 300; color: rgba(245,233,211,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                Manager: Budi Santoso
+                {{ Auth::user()->name }}
             </p>
         </div>
     </div>
 
-    {{-- MENU UTAMA: navigasi halaman-halaman manager --}}
+    {{-- MENU UTAMA --}}
     <div style="padding: 1rem 0.75rem; flex: 1;">
 
         @php
-            /* definisi item navigasi: [route_name, label, icon_path, route_pattern] */
             $sidebarItems = [
                 [
                     'route'   => 'manager.dashboard',
@@ -104,17 +103,7 @@
                     onmouseover="if(!{{ $isActive ? 'true' : 'false' }}) { this.style.background='rgba(245,233,211,0.06)'; this.style.color='#F5E9D3'; }"
                     onmouseout="if(!{{ $isActive ? 'true' : 'false' }}) { this.style.background='transparent'; this.style.color='rgba(245,233,211,0.65)'; }"
                 >
-                    {{-- ikon SVG inline per menu item --}}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17" height="17"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        aria-hidden="true"
-                        style="flex-shrink: 0; opacity: {{ $isActive ? '1' : '0.7' }};"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" style="flex-shrink: 0; opacity: {{ $isActive ? '1' : '0.7' }};">
                         {!! $item['icon'] !!}
                     </svg>
                     {{ $item['label'] }}
@@ -127,7 +116,6 @@
     {{-- FOOTER SIDEBAR: tombol logout --}}
     <div style="padding: 1rem 0.75rem 1.25rem; border-top: 1px solid rgba(245,233,211,0.07); flex-shrink: 0;">
 
-        {{-- form logout --}}
         <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
             @csrf
         </form>
@@ -164,7 +152,6 @@
 
 </nav>
 
-{{-- SCRIPT SIDEBAR: konfirmasi logout via SwalModal --}}
 <script>
 (function () {
     const btn  = document.getElementById('btn-sidebar-logout');
@@ -172,7 +159,6 @@
     if (!btn || !form) return;
 
     btn.addEventListener('click', function () {
-        /* swal modal: logout adalah aksi destruktif (sesi diakhiri) */
         window.SwalModal.fire({
             title:             'Yakin ingin keluar?',
             text:              'Sesi manager akan diakhiri.',

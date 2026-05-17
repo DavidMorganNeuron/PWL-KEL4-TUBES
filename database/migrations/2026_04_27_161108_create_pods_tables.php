@@ -106,6 +106,7 @@ return new class extends Migration
             $table->foreignId('manager_id')->constrained('users', 'id_users'); // Siapa yang minta
             $table->foreignId('admin_id')->nullable()->constrained('users', 'id_users'); // Siapa yang ACC
             $table->integer('requested_qty');
+            $table->text('notes')->nullable();
             // Alur bisnis: pending -> disetujui (stok otomatis nambah) atau ditolak
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();

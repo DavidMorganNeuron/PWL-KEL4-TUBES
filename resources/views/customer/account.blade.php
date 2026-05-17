@@ -64,7 +64,7 @@
                         <p style="font-size: 0.875rem; color: #A08060; font-weight: 300;">Pelanggan Pod's</p>
 
                         {{-- badge member aktif --}}
-                        <div style="
+                        {{-- <div style="
                             margin-top: 1rem;
                             display: inline-flex; align-items: center; gap: 0.375rem;
                             background: rgba(200,129,59,0.12); color: #C8813B;
@@ -75,7 +75,7 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                             </svg>
                             Member Aktif
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -229,7 +229,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;">
                         <div>
                             <p style="font-size: 0.9375rem; font-weight: 500; color: #1C0F0A; margin-bottom: 0.2rem;">Keluar dari akun ini</p>
-                            <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300;">Semua data keranjang aktif akan direset.</p>
+                            <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300;">Semua data keranjang akan direset.</p>
                         </div>
 
                         {{-- form logout --}}
@@ -282,7 +282,7 @@
         /* swal modal — logout adalah aksi destruktif */
         window.SwalModal.fire({
             title:             'Yakin ingin keluar?',
-            text:              'Semua data keranjang aktif akan dihapus dari sesi ini.',
+            text:              'Semua data keranjang akan hilang.',
             icon:              'warning',
             showCancelButton:  true,
             confirmButtonText: 'Ya, Logout',
