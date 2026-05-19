@@ -24,7 +24,7 @@
             {{-- KOLOM 2: Navigasi cepat --}}
             <nav aria-label="Navigasi footer" style="min-width: 140px;">
                 <p style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #C8813B; margin-bottom: 1rem;">
-                    Fiture
+                    Features
                 </p>
                 <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.625rem;" role="list">
                     <li>
