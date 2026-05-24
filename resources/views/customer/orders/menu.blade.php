@@ -130,10 +130,18 @@
                         </div>
                         @endif
 
-                        {{-- thumbnail --}}
-                        <div style="height: 130px; background: linear-gradient(135deg, rgba(61,31,15,0.08) 0%, rgba(200,129,59,0.16) 100%); display: flex; align-items: center; justify-content: center;" aria-hidden="true">
+                        {{-- gambar produk: pakai accessor image_url dari Product model --}}
+                        <div style="height: 130px; background: linear-gradient(135deg, rgba(61,31,15,0.08) 0%, rgba(200,129,59,0.16) 100%); display: flex; align-items: center; justify-content: center; overflow: hidden;" aria-hidden="true">
                             @if($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                            <img
+                                src="{{ $product->image_url }}"
+                                alt="{{ $product->name }}"
+                                style="width: 100%; height: 100%; object-fit: cover;"
+                                loading="lazy"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            >
+                            {{-- placeholder jika gambar gagal dimuat --}}
+                            <span style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.3;">☕</span>
                             @else
                             <span style="font-size: 2.5rem; opacity: 0.3;">☕</span>
                             @endif
@@ -360,7 +368,6 @@
 
             group.style.display = hasVisible ? '' : 'none';
         });
-    }
 
     var debounceTimer;
     searchInput.addEventListener('input', function () {

@@ -205,17 +205,3 @@
     }
 </style>
 @endpush
-
-@push('scripts')
-<script>
-/* swal modal — menyambut pelanggan setelah pembayaran berhasil */
-(function () {
-    window.SwalModal.fire({
-        icon:              'success',
-        title:             'Pembayaran Berhasil!',
-        text:              'Pesanan #{{ $order->order_number }} sudah diterima. Silakan tunggu pesananmu siap.',
-        confirmButtonText: 'Oke, Mengerti',
-    });
-}());
-</script>
-@endpush

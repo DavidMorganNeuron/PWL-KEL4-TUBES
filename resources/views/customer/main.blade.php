@@ -180,7 +180,7 @@
             @foreach([
                 ['Signature Espresso', 'Coffee',     'Rp 35.000', 'Pekat, bold, dan tak terlupakan. Karakter kopi yang sesungguhnya.'],
                 ['Iced Caramel Latte', 'Coffee',     'Rp 42.000', 'Karamel manis, susu dingin yang lembut di setiap tegukan.'],
-                ['Matcha Oreo Shake',  'Non-Coffee', 'Rp 38.000', 'Matcha premium bertemu oreo renyah — perpaduan tak terduga.'],
+                ['Matcha Oreo Shake',  'Non-Coffee', 'Rp 38.000', 'Matcha premium bertemu oreo renyah, sebuah perpaduan tak terduga.'],
             ] as [$name, $category, $price, $desc])
             <article
                 style="

@@ -47,13 +47,6 @@
             </span>
         </div>
 
-        {{-- indikator live: countdown berbasis meta refresh 30 detik --}}
-        <div style="display: flex; align-items: center; gap: 0.625rem; background: #FFFDF9; border: 1px solid #EDE0CC; border-radius: 9999px; padding: 0.375rem 1rem;">
-            <span style="width: 7px; height: 7px; border-radius: 9999px; background: #059669; animation: kds-dot-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;" aria-hidden="true"></span>
-            <span style="font-size: 0.75rem; font-weight: 500; color: var(--pods-espresso);">Live</span>
-            <span id="kds-refresh-countdown" style="font-size: 0.75rem; color: var(--pods-muted); font-variant-numeric: tabular-nums;">· refresh dalam 30s</span>
-        </div>
-
     </div>
 
     {{-- ================================================================

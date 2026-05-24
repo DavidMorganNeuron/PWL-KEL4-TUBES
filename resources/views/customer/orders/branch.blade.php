@@ -9,7 +9,7 @@
     {{-- ================================================================
          PAGE HEADER: background espresso + judul
     ================================================================ --}}
-    <div style="background: #3D1F0F; padding: 2.25rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
+    <div style="background: #3D1F0F; padding: 0.75rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin: 1.75rem 0 0.375rem;">
                 Langkah 1 dari 4

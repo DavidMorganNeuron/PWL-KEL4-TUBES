@@ -153,7 +153,7 @@
             </ul>
             <div style="padding: 0.75rem 1.375rem; background: #FFF8F0; border-top: 1px solid #F0E8DC;">
                 <p style="font-size: 0.75rem; color: var(--pods-muted); font-weight: 300;">
-                    Ajukan restock ke Admin Pusat agar stok segera dipulihkan.
+                    Lakukan pengajuan restock ke Admin Pusat
                 </p>
             </div>
             @else

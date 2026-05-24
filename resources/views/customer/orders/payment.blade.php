@@ -9,7 +9,7 @@
     {{-- ================================================================
          PAGE HEADER
     ================================================================ --}}
-    <div style="background: #3D1F0F; padding: 2.25rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
+    <div style="background: #3D1F0F; padding: 0.75rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin: 1.75rem 0 0.375rem;">
                 Langkah 4 dari 4
@@ -70,7 +70,7 @@
                             <div>
                                 <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.25rem;">Scan QR Code</p>
                                 <p style="font-size: 0.875rem; color: #A08060; font-weight: 300; line-height: 1.6;">
-                                    Buka aplikasi dompet digital dan scan QR Code di meja kasir cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
+                                    Buka app pembayaran digital dan scan QR Code di front desk kasir cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
                                 </p>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                             <div>
                                 <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.25rem;">E-Wallet</p>
                                 <p style="font-size: 0.875rem; color: #A08060; font-weight: 300; line-height: 1.6;">
-                                    Lakukan pembayaran via GoPay, OVO, atau Dana di kasir cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
+                                    Lakukan pembayaran via GoPay, OVO, atau Dana di front desk cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
                                 </p>
                             </div>
                         </div>

@@ -198,7 +198,6 @@
         {{-- TOP SELLER KOLOM KANAN --}}
         <div class="mgr-card mgr-animate" style="animation-delay: 0.3s; overflow: hidden;">
             <div style="padding: 1.125rem 1.375rem 0.75rem; border-bottom: 1px solid #F0E8DC;">
-                <p style="font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pods-muted); margin-bottom: 0.125rem;">Periode Terpilih</p>
                 <h2 class="font-serif" style="font-size: 1rem; font-weight: 700; color: var(--pods-espresso);">Top Seller</h2>
             </div>
 

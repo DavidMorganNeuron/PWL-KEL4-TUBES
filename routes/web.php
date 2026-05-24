@@ -22,10 +22,50 @@ Route::middleware(['auth'])->group(function () {
 
 // role = admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return 'Dashboard Admin Pusat';
-    })->name('dashboard');
-    // Rute lanjutan untuk Manajemen Produk, Promo, dan Validasi Request akan ditambahkan di sini nanti ya ges
+    // dashboard eksekutif global
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+ 
+    // manajemen katalog
+    Route::prefix('catalogs')->name('catalogs.')->group(function () {
+        Route::get('/', fn() => view('admin.catalogs.product'))->name('index');
+        Route::get('/create', fn() => view('admin.catalogs.form'))->name('create');
+        Route::get('/{id}/edit', fn() => view('admin.catalogs.form'))->name('edit');
+ 
+        // redirect
+        Route::post('/', fn() => redirect()->route('admin.catalogs.index'))->name('store');
+        Route::put('/{id}', fn() => redirect()->route('admin.catalogs.index'))->name('update');
+        Route::patch('/{id}/toggle', fn() => redirect()->route('admin.catalogs.index'))->name('toggle');
+        Route::delete('/{id}', fn() => redirect()->route('admin.catalogs.index'))->name('destroy');
+    });
+ 
+    // manajemen promo
+    Route::prefix('promos')->name('promos.')->group(function () {
+        Route::get('/', fn() => view('admin.promos.promo'))->name('index');
+        Route::get('/create', fn() => view('admin.promos.form'))->name('create');
+        Route::get('/{id}/edit', fn() => view('admin.promos.form'))->name('edit');
+ 
+        Route::post('/', fn() => redirect()->route('admin.promos.index'))->name('store');
+        Route::put('/{id}', fn() => redirect()->route('admin.promos.index'))->name('update');
+        Route::delete('/{id}', fn() => redirect()->route('admin.promos.index'))->name('destroy');
+    });
+ 
+    // validasi request
+    Route::prefix('requests')->name('requests.')->group(function () {
+        Route::get('/', fn() => view('admin.requests.request'))->name('index');
+        Route::get('/{id}', fn() => view('admin.requests.show'))->name('show');
+ 
+        Route::patch('/{id}/approve', fn() => redirect()->route('admin.requests.index'))->name('approve');
+        Route::patch('/{id}/reject', fn() => redirect()->route('admin.requests.index'))->name('reject');
+    });
+ 
+    // data manajer cabang
+    Route::get('/managers', fn() => view('admin.managers.manager'))->name('managers.index');
+ 
+    // laporan
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/sales', fn() => view('admin.reports.sales'))->name('sales');
+        Route::get('/assets', fn() => view('admin.reports.assets'))->name('assets');
+    });
 });
 
 
