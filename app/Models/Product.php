@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 
 // Model Product - menampilkan katalog menu yang tersedia di sistem Pod's
@@ -19,6 +20,20 @@ class Product extends Model
         'base_price',
         'is_available'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_available' => 'boolean',
+            'base_price'   => 'decimal:2',
+        ];
+    }
+
+    // path URL publik penuh via storage link
+    public function getImageUrlAttribute($value)
+    {
+        return $value ? Storage::url($value) : null;
+    }
 
     /*
         Relasi Belongs To ke tabel Categories

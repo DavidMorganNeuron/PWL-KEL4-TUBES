@@ -6,53 +6,7 @@
 
 @section('content')
 
-@php
-    /* 3 manager, masing-masing satu per cabang */
-    $managers = [
-        [
-            'id'          => 2,
-            'name'        => 'Budi Santoso',
-            'email'       => 'budi@pods.id',
-            'branch'      => 'Dr. Mansyur',
-            'address'     => 'Jl. dr. Mansyur No.27, Medan',
-            'is_open'     => true,
-            'open_time'   => null,
-            'close_time'  => null,
-            'always_open' => true,
-            'joined_at'   => '2025-03-01',
-            'orders_today'=> 47,
-            'revenue_mtd' => 68500000,
-        ],
-        [
-            'id'          => 3,
-            'name'        => 'Siti Rahayu',
-            'email'       => 'siti@pods.id',
-            'branch'      => 'Jamin Ginting',
-            'address'     => 'Jl. Jamin Ginting No.112, Medan',
-            'is_open'     => true,
-            'open_time'   => '07:00',
-            'close_time'  => '22:00',
-            'always_open' => false,
-            'joined_at'   => '2025-03-01',
-            'orders_today'=> 31,
-            'revenue_mtd' => 51200000,
-        ],
-        [
-            'id'          => 4,
-            'name'        => 'Ahmad Fauzan',
-            'email'       => 'ahmad@pods.id',
-            'branch'      => 'Gatot Subroto',
-            'address'     => 'Jl. Gatot Subroto No.78, Medan',
-            'is_open'     => false,
-            'open_time'   => '07:00',
-            'close_time'  => '22:00',
-            'always_open' => false,
-            'joined_at'   => '2025-03-01',
-            'orders_today'=> 0,
-            'revenue_mtd' => 28550000,
-        ],
-    ];
-@endphp
+
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 

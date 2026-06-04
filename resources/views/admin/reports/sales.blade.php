@@ -7,51 +7,11 @@
 @section('content')
 
 @php
-    /* data dummy: ringkasan global */
     $globalSummary = [
-        ['label' => 'Total Pendapatan Global', 'value' => 'Rp 148.250.000', 'sub' => 'Semua cabang, bulan ini',      'icon' => '💰'],
-        ['label' => 'Total Transaksi Selesai', 'value' => '1.842',          'sub' => 'Dari 1.897 total order',       'icon' => '🧾'],
-        ['label' => 'Total Diskon Diberikan',  'value' => 'Rp 9.340.000',   'sub' => 'Dari program promo aktif',     'icon' => '🏷'],
-        ['label' => 'Rata-rata per Transaksi', 'value' => 'Rp 80.483',      'sub' => 'Dari transaksi selesai',       'icon' => '📊'],
-    ];
-
-    /* data dummy: pendapatan per cabang */
-    $perBranch = [
-        ['branch' => 'Dr. Mansyur',   'completed' => 842,  'canceled' => 12, 'revenue' => 68500000, 'discount' => 4200000, 'net' => 64300000],
-        ['branch' => 'Jamin Ginting', 'completed' => 621,  'canceled' => 8,  'revenue' => 51200000, 'discount' => 3100000, 'net' => 48100000],
-        ['branch' => 'Gatot Subroto', 'completed' => 379,  'canceled' => 5,  'revenue' => 28550000, 'discount' => 2040000, 'net' => 26510000],
-    ];
-
-    $totalRevenue = array_sum(array_column($perBranch, 'revenue'));
-
-    /* data dummy: top seller per cabang (top 3) */
-    $topSellersPerBranch = [
-        'Dr. Mansyur' => [
-            ['name' => 'Caramel Macchiato', 'qty' => 218, 'revenue' => 6104000],
-            ['name' => 'Iced Americano',    'qty' => 187, 'revenue' => 4114000],
-            ['name' => 'Brown Sugar Latte', 'qty' => 156, 'revenue' => 4524000],
-        ],
-        'Jamin Ginting' => [
-            ['name' => 'Matcha Latte',      'qty' => 143, 'revenue' => 4147000],
-            ['name' => 'Caramel Macchiato', 'qty' => 122, 'revenue' => 3416000],
-            ['name' => 'Chocolate Frappe',  'qty' => 98,  'revenue' => 2940000],
-        ],
-        'Gatot Subroto' => [
-            ['name' => 'Iced Americano',    'qty' => 113, 'revenue' => 2486000],
-            ['name' => 'Cold Brew',         'qty' => 87,  'revenue' => 2262000],
-            ['name' => 'Brown Sugar Latte', 'qty' => 76,  'revenue' => 2204000],
-        ],
-    ];
-
-    /* data dummy: tabel transaksi lintas cabang terbaru */
-    $recentTransactions = [
-        ['order_number' => 'PODS-20260517-BB0004', 'branch' => 'Dr. Mansyur',   'customer' => 'Andi Wijaya',   'status' => 'cooking',   'grand_total' => 95000,  'date' => '17 Mei 2026, 14:22'],
-        ['order_number' => 'PODS-20260517-BB0003', 'branch' => 'Dr. Mansyur',   'customer' => 'Sari Dewi',    'status' => 'cooking',   'grand_total' => 52000,  'date' => '17 Mei 2026, 14:18'],
-        ['order_number' => 'PODS-20260517-JG0012', 'branch' => 'Jamin Ginting', 'customer' => 'Rina Susanti', 'status' => 'completed', 'grand_total' => 78000,  'date' => '17 Mei 2026, 14:05'],
-        ['order_number' => 'PODS-20260517-GS0008', 'branch' => 'Gatot Subroto', 'customer' => 'Dodi Prasetya','status' => 'completed', 'grand_total' => 130000, 'date' => '17 Mei 2026, 13:58'],
-        ['order_number' => 'PODS-20260517-BB0002', 'branch' => 'Dr. Mansyur',   'customer' => 'Benny Kusuma', 'status' => 'completed', 'grand_total' => 130000, 'date' => '17 Mei 2026, 14:10'],
-        ['order_number' => 'PODS-20260517-JG0011', 'branch' => 'Jamin Ginting', 'customer' => 'Lina Hartati', 'status' => 'canceled',  'grand_total' => 45000,  'date' => '17 Mei 2026, 13:45'],
-        ['order_number' => 'PODS-20260517-BB0001', 'branch' => 'Dr. Mansyur',   'customer' => 'Diana Putri',  'status' => 'paid',      'grand_total' => 78000,  'date' => '17 Mei 2026, 14:05'],
+        ['label' => 'Total Pendapatan Global', 'value' => 'Rp ' . number_format($totalRevenue, 0, ',', '.'), 'sub' => 'Semua cabang, periode terpilih',      'icon' => '💰'],
+        ['label' => 'Total Transaksi Selesai', 'value' => number_format($totalOrders, 0, ',', '.'),          'sub' => 'Dari ' . number_format($totalOrdersAll, 0, ',', '.') . ' total order',       'icon' => '🧾'],
+        ['label' => 'Total Diskon Diberikan',  'value' => 'Rp ' . number_format($totalDiscount, 0, ',', '.'),   'sub' => 'Dari program promo aktif',     'icon' => '🏷'],
+        ['label' => 'Rata-rata per Transaksi', 'value' => 'Rp ' . number_format($avgPerTransaction, 0, ',', '.'),      'sub' => 'Dari transaksi selesai',       'icon' => '📊'],
     ];
 
     $statusCfg = [

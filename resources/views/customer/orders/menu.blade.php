@@ -132,7 +132,7 @@
 
                         {{-- gambar produk: pakai accessor image_url dari Product model --}}
                         <div style="height: 130px; background: linear-gradient(135deg, rgba(61,31,15,0.08) 0%, rgba(200,129,59,0.16) 100%); display: flex; align-items: center; justify-content: center; overflow: hidden;" aria-hidden="true">
-                            @if($product->image_url)
+                            @if($product->getRawOriginal('image_url'))
                             <img
                                 src="{{ $product->image_url }}"
                                 alt="{{ $product->name }}"

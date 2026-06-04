@@ -7,22 +7,7 @@
 @section('content')
 
 @php
-    $products = [
-        ['id' => 1,  'category' => 'Kopi',     'name' => 'Caramel Macchiato', 'base_price' => 28000, 'is_available' => true,  'image' => true],
-        ['id' => 2,  'category' => 'Kopi',     'name' => 'Iced Americano',    'base_price' => 22000, 'is_available' => true,  'image' => true],
-        ['id' => 3,  'category' => 'Kopi',     'name' => 'Brown Sugar Latte', 'base_price' => 29000, 'is_available' => true,  'image' => false],
-        ['id' => 4,  'category' => 'Kopi',     'name' => 'Cold Brew',         'base_price' => 26000, 'is_available' => false, 'image' => false],
-        ['id' => 5,  'category' => 'Kopi',     'name' => 'Cappuccino',        'base_price' => 25000, 'is_available' => true,  'image' => true],
-        ['id' => 6,  'category' => 'Non-Kopi', 'name' => 'Matcha Latte',      'base_price' => 29000, 'is_available' => true,  'image' => true],
-        ['id' => 7,  'category' => 'Non-Kopi', 'name' => 'Taro Latte',        'base_price' => 28000, 'is_available' => true,  'image' => false],
-        ['id' => 8,  'category' => 'Non-Kopi', 'name' => 'Chocolate Frappe',  'base_price' => 30000, 'is_available' => false, 'image' => true],
-        ['id' => 9,  'category' => 'Makanan',  'name' => 'Croissant Plain',   'base_price' => 22000, 'is_available' => true,  'image' => false],
-        ['id' => 10, 'category' => 'Makanan',  'name' => 'Croissant Almond',  'base_price' => 24000, 'is_available' => true,  'image' => true],
-        ['id' => 11, 'category' => 'Makanan',  'name' => 'Banana Cake',       'base_price' => 20000, 'is_available' => true,  'image' => false],
-        ['id' => 12, 'category' => 'Non-Kopi', 'name' => 'Oreo Shake',        'base_price' => 26000, 'is_available' => false, 'image' => false],
-    ];
-    $categories = array_unique(array_column($products, 'category'));
-    sort($categories);
+    $categories = $products->pluck('category.name')->unique()->filter()->sort()->values();
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
@@ -33,8 +18,8 @@
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
         <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
             @php
-                $totalActive   = count(array_filter($products, fn($p) => $p['is_available']));
-                $totalInactive = count($products) - $totalActive;
+                $totalActive   = $products->where('is_available', true)->count();
+                $totalInactive = $products->count() - $totalActive;
             @endphp
             <div style="display:flex; align-items:center; gap:0.5rem; background:#D1FAE5; border-radius:9999px; padding:0.375rem 0.875rem 0.375rem 0.625rem;">
                 <span style="width:7px; height:7px; border-radius:9999px; background:#059669;" aria-hidden="true"></span>
@@ -92,18 +77,18 @@
                     @foreach($products as $idx => $product)
                     <tr
                         class="product-row"
-                        data-category="{{ $product['category'] }}"
+                        data-category="{{ $product->category->name ?? '' }}"
                         style="border-top:1px solid #F0E8DC; transition:background 0.15s;"
                         onmouseover="this.style.background='#FFFBF4'"
                         onmouseout="this.style.background='transparent'"
                     >
-                        <td style="padding:1rem 1.5rem; font-size:0.8125rem; color:var(--pods-muted); font-weight:300; font-variant-numeric:tabular-nums;">{{ $idx + 1 }}</td>
+                        <td style="padding:1rem 1.5rem; font-size:0.8125rem; color:var(--pods-muted); font-weight:300; font-variant-numeric:tabular-nums;">{{ $loop->iteration }}</td>
 
                         {{-- thumbnail gambar produk --}}
                         <td style="padding:0.75rem 1rem;">
-                            @if($product['image'])
-                            <div style="width:44px; height:44px; border-radius:8px; background:#EDE0CC; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                                <span style="font-size:1.25rem;" aria-hidden="true">☕</span>
+                            @if($product->getRawOriginal('image_url'))
+                            <div style="width:44px; height:44px; border-radius:8px; overflow:hidden;">
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
                             </div>
                             @else
                             <div style="width:44px; height:44px; border-radius:8px; background:#F5ECE0; border:1.5px dashed #D4C4AE; display:flex; align-items:center; justify-content:center;" title="Belum ada gambar">
@@ -114,60 +99,60 @@
                             @endif
                         </td>
 
-                        <td style="padding:1rem; font-size:0.9375rem; font-weight:500; color:var(--pods-espresso); white-space:nowrap;">{{ $product['name'] }}</td>
+                        <td style="padding:1rem; font-size:0.9375rem; font-weight:500; color:var(--pods-espresso); white-space:nowrap;">{{ $product->name }}</td>
 
                         <td style="padding:1rem;">
                             <span style="display:inline-block; padding:2px 10px; border-radius:9999px; background:rgba(200,129,59,0.1); border:1px solid rgba(200,129,59,0.2); font-size:0.6875rem; font-weight:600; color:#92400E; white-space:nowrap;">
-                                {{ $product['category'] }}
+                                {{ $product->category->name ?? '-' }}
                             </span>
                         </td>
 
                         <td style="padding:1rem; font-size:0.9375rem; font-weight:600; color:var(--pods-espresso); text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;">
-                            Rp {{ number_format($product['base_price'], 0, ',', '.') }}
+                            Rp {{ number_format($product->base_price, 0, ',', '.') }}
                         </td>
 
                         {{-- fitur kill is_available --}}
                         <td style="padding:1rem; text-align:center;">
-                            <form method="POST" action="{{ route('admin.catalogs.toggle', $product['id']) }}" class="toggle-form" style="display:inline;">
+                            <form method="POST" action="{{ route('admin.catalogs.toggle', $product->id_products) }}" class="toggle-form" style="display:inline;">
                                 @csrf
                                 @method('PATCH')
                                 <button
                                     type="button"
                                     class="kill-switch-btn"
-                                    data-product-id="{{ $product['id'] }}"
-                                    data-product-name="{{ $product['name'] }}"
-                                    data-active="{{ $product['is_available'] ? '1' : '0' }}"
+                                    data-product-id="{{ $product->id_products }}"
+                                    data-product-name="{{ $product->name }}"
+                                    data-active="{{ $product->is_available ? '1' : '0' }}"
                                     role="switch"
-                                    aria-checked="{{ $product['is_available'] ? 'true' : 'false' }}"
-                                    aria-label="{{ $product['is_available'] ? 'Nonaktifkan' : 'Aktifkan' }} {{ $product['name'] }}"
+                                    aria-checked="{{ $product->is_available ? 'true' : 'false' }}"
+                                    aria-label="{{ $product->is_available ? 'Nonaktifkan' : 'Aktifkan' }} {{ $product->name }}"
                                     style="
                                         display: inline-flex; align-items: center; gap: 0.5rem;
                                         padding: 0.3125rem 0.75rem; border-radius: 9999px; border: none; cursor: pointer;
                                         font-size: 0.75rem; font-weight: 600; transition: all 0.2s;
-                                        background: {{ $product['is_available'] ? '#D1FAE5' : '#FEE2E2' }};
-                                        color: {{ $product['is_available'] ? '#065F46' : '#991B1B' }};
+                                        background: {{ $product->is_available ? '#D1FAE5' : '#FEE2E2' }};
+                                        color: {{ $product->is_available ? '#065F46' : '#991B1B' }};
                                     "
                                 >
-                                    <span style="width:8px; height:8px; border-radius:9999px; background:{{ $product['is_available'] ? '#059669' : '#DC2626' }}; flex-shrink:0;" aria-hidden="true"></span>
-                                    {{ $product['is_available'] ? 'Aktif' : 'Nonaktif' }}
+                                    <span style="width:8px; height:8px; border-radius:9999px; background:{{ $product->is_available ? '#059669' : '#DC2626' }}; flex-shrink:0;" aria-hidden="true"></span>
+                                    {{ $product->is_available ? 'Aktif' : 'Nonaktif' }}
                                 </button>
                             </form>
                         </td>
 
                         <td style="padding:1rem 1.5rem 1rem 1rem;">
                             <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <a href="{{ route('admin.catalogs.edit', $product['id']) }}" class="pods-btn-ghost" style="font-size:0.8125rem; padding:0.375rem 0.875rem;" aria-label="Edit {{ $product['name'] }}">
+                                <a href="{{ route('admin.catalogs.edit', $product->id_products) }}" class="pods-btn-ghost" style="font-size:0.8125rem; padding:0.375rem 0.875rem;" aria-label="Edit {{ $product->name }}">
                                     Edit
                                 </a>
-                                <form method="POST" action="{{ route('admin.catalogs.destroy', $product['id']) }}" class="delete-form" style="display:inline;">
+                                <form method="POST" action="{{ route('admin.catalogs.destroy', $product->id_products) }}" class="delete-form" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button
                                         type="button"
                                         class="pods-btn-danger delete-btn"
-                                        data-product-name="{{ $product['name'] }}"
+                                        data-product-name="{{ $product->name }}"
                                         style="font-size:0.8125rem; padding:0.375rem 0.875rem;"
-                                        aria-label="Hapus {{ $product['name'] }}"
+                                        aria-label="Hapus {{ $product->name }}"
                                     >
                                         Hapus
                                     </button>
@@ -181,8 +166,8 @@
         </div>
 
         <div style="padding:0.75rem 1.5rem; background:#FBF6EE; border-top:1px solid #EDE0CC; display:flex; justify-content:space-between; align-items:center;">
-            <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
-                Menampilkan <span id="product-count">{{ count($products) }}</span> dari {{ count($products) }} produk
+                <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
+                Menampilkan <span id="product-count">{{ $products->count() }}</span> dari {{ $products->count() }} produk
             </p>
             <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
                 Data diperbarui: {{ now()->format('d M Y, H:i') }} WIB

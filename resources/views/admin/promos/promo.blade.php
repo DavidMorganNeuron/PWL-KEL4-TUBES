@@ -7,56 +7,9 @@
 @section('content')
 
 @php
-    $promos = [
-        [
-            'id'             => 1,
-            'name'           => 'Happy Hour',
-            'branch'         => null,
-            'discount_type'  => 'percentage',
-            'discount_value' => 15,
-            'start_date'     => '2026-05-01',
-            'end_date'       => '2026-05-31',
-            'is_active'      => true,
-            'products'       => ['Caramel Macchiato', 'Iced Americano', 'Matcha Latte'],
-        ],
-        [
-            'id'             => 2,
-            'name'           => 'Weekend Deal',
-            'branch'         => 'Dr. Mansyur',
-            'discount_type'  => 'nominal',
-            'discount_value' => 5000,
-            'start_date'     => '2026-05-10',
-            'end_date'       => '2026-05-25',
-            'is_active'      => true,
-            'products'       => ['Croissant Plain', 'Croissant Almond', 'Banana Cake'],
-        ],
-        [
-            'id'             => 3,
-            'name'           => 'Grand Opening',
-            'branch'         => 'Gatot Subroto',
-            'discount_type'  => 'percentage',
-            'discount_value' => 20,
-            'start_date'     => '2026-04-01',
-            'end_date'       => '2026-04-30',
-            'is_active'      => false,
-            'products'       => ['Cold Brew', 'Cappuccino'],
-        ],
-        [
-            'id'             => 4,
-            'name'           => 'Ramadan Special',
-            'branch'         => null,
-            'discount_type'  => 'nominal',
-            'discount_value' => 10000,
-            'start_date'     => '2026-03-01',
-            'end_date'       => '2026-03-31',
-            'is_active'      => false,
-            'products'       => ['Matcha Latte', 'Taro Latte', 'Chocolate Frappe', 'Oreo Shake'],
-        ],
-    ];
-
-    $today  = now()->format('Y-m-d');
-    $active = array_filter($promos, fn($p) => $p['is_active']);
-    $inactive = array_filter($promos, fn($p) => !$p['is_active']);
+    $today    = now()->format('Y-m-d');
+    $active   = $promos->filter(fn($p) => $p['is_active']);
+    $inactive = $promos->filter(fn($p) => !$p['is_active']);
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">

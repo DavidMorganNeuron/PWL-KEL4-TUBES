@@ -7,26 +7,6 @@
 @section('content')
 
 @php
-    /* data dummy: satu pengajuan lengkap */
-    $request = [
-        'id'            => 3,
-        'branch'        => 'Dr. Mansyur',
-        'branch_id'     => 1,
-        'manager'       => 'Budi Santoso',
-        'product'       => 'Matcha Latte',
-        'product_id'    => 6,
-        'requested_qty' => 30,
-        'status'        => 'pending',
-        'notes'         => 'Stok matcha latte hampir habis, banyak customer memesan hari ini.',
-        'created_at'    => '2026-05-17 08:45',
-    ];
-
-    /* data dummy: stok fisik produk di cabang tersebut saat ini */
-    $currentStock = [
-        'physical_qty'  => 3,
-        'reserved_qty'  => 0,
-    ];
-
     $isPending = $request['status'] === 'pending';
 
     $statusCfg = [

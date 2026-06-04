@@ -7,36 +7,6 @@
 @section('content')
 
 @php
-    $globalStocks = [
-        /* Dr. Mansyur */
-        ['branch' => 'Dr. Mansyur',   'category' => 'Kopi',     'product' => 'Biji Kopi Arabika',    'physical_qty' => 5,   'reserved_qty' => 0],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Kopi',     'product' => 'Biji Kopi Robusta',    'physical_qty' => 18,  'reserved_qty' => 2],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Susu',     'product' => 'Susu Oat (1L)',         'physical_qty' => 2,   'reserved_qty' => 0],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Susu',     'product' => 'Susu Full Cream (1L)', 'physical_qty' => 24,  'reserved_qty' => 4],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Sirup',    'product' => 'Sirup Karamel',         'physical_qty' => 3,   'reserved_qty' => 0],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Makanan',  'product' => 'Croissant Plain',       'physical_qty' => 30,  'reserved_qty' => 6],
-        ['branch' => 'Dr. Mansyur',   'category' => 'Makanan',  'product' => 'Croissant Almond',      'physical_qty' => 22,  'reserved_qty' => 3],
-        /* Jamin Ginting */
-        ['branch' => 'Jamin Ginting', 'category' => 'Kopi',     'product' => 'Biji Kopi Arabika',    'physical_qty' => 22,  'reserved_qty' => 0],
-        ['branch' => 'Jamin Ginting', 'category' => 'Kopi',     'product' => 'Biji Kopi Robusta',    'physical_qty' => 18,  'reserved_qty' => 1],
-        ['branch' => 'Jamin Ginting', 'category' => 'Susu',     'product' => 'Susu Oat (1L)',         'physical_qty' => 15,  'reserved_qty' => 0],
-        ['branch' => 'Jamin Ginting', 'category' => 'Susu',     'product' => 'Susu Full Cream (1L)', 'physical_qty' => 20,  'reserved_qty' => 2],
-        ['branch' => 'Jamin Ginting', 'category' => 'Sirup',    'product' => 'Sirup Karamel',         'physical_qty' => 12,  'reserved_qty' => 0],
-        ['branch' => 'Jamin Ginting', 'category' => 'Makanan',  'product' => 'Croissant Plain',       'physical_qty' => 35,  'reserved_qty' => 4],
-        ['branch' => 'Jamin Ginting', 'category' => 'Makanan',  'product' => 'Croissant Almond',      'physical_qty' => 28,  'reserved_qty' => 2],
-        /* Gatot Subroto */
-        ['branch' => 'Gatot Subroto', 'category' => 'Kopi',     'product' => 'Biji Kopi Arabika',    'physical_qty' => 18,  'reserved_qty' => 0],
-        ['branch' => 'Gatot Subroto', 'category' => 'Kopi',     'product' => 'Biji Kopi Robusta',    'physical_qty' => 7,   'reserved_qty' => 0],
-        ['branch' => 'Gatot Subroto', 'category' => 'Susu',     'product' => 'Susu Oat (1L)',         'physical_qty' => 9,   'reserved_qty' => 0],
-        ['branch' => 'Gatot Subroto', 'category' => 'Susu',     'product' => 'Susu Full Cream (1L)', 'physical_qty' => 11,  'reserved_qty' => 1],
-        ['branch' => 'Gatot Subroto', 'category' => 'Sirup',    'product' => 'Sirup Karamel',         'physical_qty' => 6,   'reserved_qty' => 0],
-        ['branch' => 'Gatot Subroto', 'category' => 'Makanan',  'product' => 'Croissant Plain',       'physical_qty' => 25,  'reserved_qty' => 3],
-        ['branch' => 'Gatot Subroto', 'category' => 'Makanan',  'product' => 'Croissant Almond',      'physical_qty' => 15,  'reserved_qty' => 1],
-    ];
-
-    $threshold = 10; /* ambang batas stok kritis */
-
-    /* helper: level stok */
     $stockLevel = function (int $qty) use ($threshold): array {
         $ratio = $qty / max($threshold, 1);
         if ($ratio <= 0.3) return ['level' => 'critical', 'label' => 'Kritis',  'bar' => '#DC2626', 'bg' => '#FEE2E2', 'text' => '#991B1B'];
@@ -44,22 +14,6 @@
         if ($ratio <= 0.9) return ['level' => 'medium',   'label' => 'Sedang',  'bar' => '#2563EB', 'bg' => '#DBEAFE', 'text' => '#1E40AF'];
         return                     ['level' => 'safe',     'label' => 'Aman',    'bar' => '#059669', 'bg' => '#D1FAE5', 'text' => '#065F46'];
     };
-
-    /* agregasi global: total fisik dan ditahan */
-    $totalPhysical  = array_sum(array_column($globalStocks, 'physical_qty'));
-    $totalReserved  = array_sum(array_column($globalStocks, 'reserved_qty'));
-    $totalAvailable = $totalPhysical - $totalReserved;
-    $criticalCount  = count(array_filter($globalStocks, fn($s) => $s['physical_qty'] < $threshold));
-
-    /* grup per cabang untuk tabel breakdown */
-    $byBranch = [];
-    foreach ($globalStocks as $s) {
-        $byBranch[$s['branch']][] = $s;
-    }
-
-    /* filter kategori unik */
-    $categories = array_unique(array_column($globalStocks, 'category'));
-    sort($categories);
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">

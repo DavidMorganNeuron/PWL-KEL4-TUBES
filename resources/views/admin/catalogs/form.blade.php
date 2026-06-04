@@ -7,17 +7,10 @@
 @section('content')
 
 @php
-    /* daftar kategori untuk dropdown */
-    $categories = [
-        ['id' => 1, 'name' => 'Kopi'],
-        ['id' => 2, 'name' => 'Non-Kopi'],
-        ['id' => 3, 'name' => 'Makanan'],
-    ];
-
-    /* simulasi mode edit vs create */
+    /* deteksi mode edit vs create */
     $isEdit   = isset($product);
     $formAction = $isEdit
-        ? route('admin.catalogs.update', $product['id'])
+        ? route('admin.catalogs.update', $product->id_products)
         : route('admin.catalogs.store');
 @endphp
 
@@ -40,7 +33,7 @@
                 Katalog Menu
             </p>
             <h2 class="font-serif" style="font-size:1.0625rem; font-weight:700; color:#F5E9D3;">
-                {{ $isEdit ? 'Edit: ' . ($product['name'] ?? '') : 'Tambah Produk Baru' }}
+                {{ $isEdit ? 'Edit: ' . ($product->name ?? '') : 'Tambah Produk Baru' }}
             </h2>
         </div>
 
@@ -57,65 +50,65 @@
                 @method('PUT')
                 @endif
 
-                {{-- upload gambar --}}
-                <div style="margin-bottom:1.75rem;">
-                    <label style="display:block; font-size:0.8125rem; font-weight:600; color:var(--pods-espresso); margin-bottom:0.5rem;">
-                        Gambar Produk
-                        <span style="font-size:0.75rem; font-weight:300; color:var(--pods-muted);">(JPG/PNG, maks. 2MB)</span>
-                    </label>
+                    {{-- upload gambar --}}
+                    <div style="margin-bottom:1.75rem;">
+                        <label style="display:block; font-size:0.8125rem; font-weight:600; color:var(--pods-espresso); margin-bottom:0.5rem;">
+                            Gambar Produk
+                            <span style="font-size:0.75rem; font-weight:300; color:var(--pods-muted);">(JPG/PNG, maks. 2MB)</span>
+                        </label>
 
-                    {{-- preview gambar --}}
-                    <div
-                        id="image-drop-zone"
-                        style="border:2px dashed #D4C4AE; border-radius:12px; background:#FFFBF4; padding:2rem; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s; position:relative; overflow:hidden;"
-                        onclick="document.getElementById('image-input').click()"
-                        onmouseover="this.style.borderColor='#C8813B'; this.style.background='rgba(200,129,59,0.04)';"
-                        onmouseout="this.style.borderColor='#D4C4AE'; this.style.background='#FFFBF4';"
-                    >
-                        {{-- placeholder --}}
-                        <div id="image-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#D4C4AE" stroke-width="1.5" style="margin:0 auto 0.75rem;" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            <p style="font-size:0.875rem; font-weight:500; color:var(--pods-muted); margin-bottom:0.25rem;">
-                                Klik untuk pilih gambar
-                            </p>
-                            <p style="font-size:0.75rem; color:#C4A882; font-weight:300;">atau seret file ke sini</p>
+                        {{-- preview gambar --}}
+                        <div
+                            id="image-drop-zone"
+                            style="border:2px dashed #D4C4AE; border-radius:12px; background:#FFFBF4; padding:2rem; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s; position:relative; overflow:hidden;"
+                            onclick="document.getElementById('image-input').click()"
+                            onmouseover="this.style.borderColor='#C8813B'; this.style.background='rgba(200,129,59,0.04)';"
+                            onmouseout="this.style.borderColor='#D4C4AE'; this.style.background='#FFFBF4';"
+                        >
+                            {{-- placeholder --}}
+                            <div id="image-placeholder" {{ $isEdit && $product->getRawOriginal('image_url') ? 'style=display:none' : '' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#D4C4AE" stroke-width="1.5" style="margin:0 auto 0.75rem;" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <p style="font-size:0.875rem; font-weight:500; color:var(--pods-muted); margin-bottom:0.25rem;">
+                                    Klik untuk pilih gambar
+                                </p>
+                                <p style="font-size:0.75rem; color:#C4A882; font-weight:300;">atau seret file ke sini</p>
+                            </div>
+
+                            {{-- preview gambar setelah dipilih --}}
+                            <div id="image-preview-wrap" {{ $isEdit && $product->getRawOriginal('image_url') ? '' : 'style=display:none' }}>
+                                <img id="image-preview" src="{{ $isEdit && $product->getRawOriginal('image_url') ? $product->image_url : '' }}" alt="Preview gambar produk" style="max-height:180px; max-width:100%; object-fit:contain; border-radius:8px;">
+                                <button
+                                    type="button"
+                                    id="btn-remove-image"
+                                    style="position:absolute; top:0.5rem; right:0.5rem; background:#1C0F0A; border:none; border-radius:6px; padding:0.375rem 0.625rem; font-size:0.75rem; font-weight:600; color:#F5E9D3; cursor:pointer;"
+                                    onclick="event.stopPropagation(); removeImage();"
+                                >
+                                    × Hapus
+                                </button>
+                            </div>
                         </div>
 
-                        {{-- preview gambar setelah dipilih --}}
-                        <div id="image-preview-wrap" style="display:none;">
-                            <img id="image-preview" src="" alt="Preview gambar produk" style="max-height:180px; max-width:100%; object-fit:contain; border-radius:8px;">
-                            <button
-                                type="button"
-                                id="btn-remove-image"
-                                style="position:absolute; top:0.5rem; right:0.5rem; background:#1C0F0A; border:none; border-radius:6px; padding:0.375rem 0.625rem; font-size:0.75rem; font-weight:600; color:#F5E9D3; cursor:pointer;"
-                                onclick="event.stopPropagation(); removeImage();"
-                            >
-                                × Hapus
-                            </button>
-                        </div>
+                        <input
+                            type="file"
+                            id="image-input"
+                            name="image"
+                            accept=".jpg,.jpeg,.png"
+                            style="display:none;"
+                        >
+
+                        @error('image')
+                        <p style="font-size:0.8125rem; color:#DC2626; margin-top:0.375rem;">{{ $message }}</p>
+                        @enderror
+
+                        {{-- jika edit: tampilkan info gambar yang ada --}}
+                        @if($isEdit && $product->getRawOriginal('image_url'))
+                        <p id="existing-image-note" style="font-size:0.75rem; color:var(--pods-muted); margin-top:0.375rem;">
+                            ℹ Gambar saat ini: <code style="font-size:0.75rem;">{{ $product->getRawOriginal('image_url') }}</code>. Upload baru untuk mengganti.
+                        </p>
+                        @endif
                     </div>
-
-                    <input
-                        type="file"
-                        id="image-input"
-                        name="image"
-                        accept=".jpg,.jpeg,.png"
-                        style="display:none;"
-                    >
-
-                    @error('image')
-                    <p style="font-size:0.8125rem; color:#DC2626; margin-top:0.375rem;">{{ $message }}</p>
-                    @enderror
-
-                    {{-- jika edit: tampilkan info gambar yang ada --}}
-                    @if($isEdit && !empty($product['image']))
-                    <p id="existing-image-note" style="font-size:0.75rem; color:var(--pods-muted); margin-top:0.375rem;">
-                        ℹ Gambar saat ini: <code style="font-size:0.75rem;">{{ $product['image'] }}</code>. Upload baru untuk mengganti.
-                    </p>
-                    @endif
-                </div>
 
                 {{-- nama produk --}}
                 <div style="margin-bottom:1.375rem;">
@@ -126,7 +119,7 @@
                         type="text"
                         id="name"
                         name="name"
-                        value="{{ old('name', $product['name'] ?? '') }}"
+                        value="{{ old('name', $isEdit ? $product->name : '') }}"
                         placeholder="Contoh: Caramel Macchiato"
                         required
                         style="width:100%; padding:0.6875rem 1rem; border:1.5px solid {{ $errors->has('name') ? '#DC2626' : '#D4C4AE' }}; border-radius:10px; background:#FFFDF9; color:var(--pods-espresso); font-family:var(--font-sans); font-size:0.9375rem; transition:border-color 0.15s, box-shadow 0.15s; {{ $errors->has('name') ? 'box-shadow:0 0 0 3px rgba(220,38,38,0.12);' : '' }}"
@@ -151,10 +144,10 @@
                         onfocus="this.style.borderColor='#C8813B'; this.style.boxShadow='0 0 0 3px rgba(200,129,59,0.18)';"
                         onblur="this.style.borderColor='{{ $errors->has('category_id') ? '#DC2626' : '#D4C4AE' }}'; this.style.boxShadow='none';"
                     >
-                        <option value="" disabled {{ !old('category_id', $product['category_id'] ?? null) ? 'selected' : '' }}>-- Pilih Kategori --</option>
+                        <option value="" disabled {{ !old('category_id', $isEdit ? $product->category_id : null) ? 'selected' : '' }}>-- Pilih Kategori --</option>
                         @foreach($categories as $cat)
-                        <option value="{{ $cat['id'] }}" {{ old('category_id', $product['category_id'] ?? null) == $cat['id'] ? 'selected' : '' }}>
-                            {{ $cat['name'] }}
+                        <option value="{{ $cat->id_categories }}" {{ old('category_id', $isEdit ? $product->category_id : null) == $cat->id_categories ? 'selected' : '' }}>
+                            {{ $cat->name }}
                         </option>
                         @endforeach
                     </select>
@@ -174,7 +167,7 @@
                             type="number"
                             id="base_price"
                             name="base_price"
-                            value="{{ old('base_price', $product['base_price'] ?? '') }}"
+                            value="{{ old('base_price', $isEdit ? $product->base_price : '') }}"
                             placeholder="25000"
                             min="1000"
                             max="999999"
@@ -201,7 +194,7 @@
                             id="is_available"
                             name="is_available"
                             value="1"
-                            {{ old('is_available', $product['is_available'] ?? true) ? 'checked' : '' }}
+                            {{ old('is_available', $isEdit ? $product->is_available : true) ? 'checked' : '' }}
                             style="width:1rem; height:1rem; accent-color:#C8813B; cursor:pointer;"
                         >
                         <span style="font-size:0.875rem; font-weight:500; color:var(--pods-espresso);">Aktif (tersedia di menu)</span>

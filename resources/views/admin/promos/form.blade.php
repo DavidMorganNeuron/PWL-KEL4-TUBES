@@ -9,37 +9,8 @@
 @php
     $isEdit     = isset($promo);
     $formAction = $isEdit ? route('admin.promos.update', $promo['id']) : route('admin.promos.store');
-
-    /* data dummy: daftar produk untuk assign promo */
-    $allProducts = [
-        ['id' => 1,  'category' => 'Kopi',     'name' => 'Caramel Macchiato'],
-        ['id' => 2,  'category' => 'Kopi',     'name' => 'Iced Americano'],
-        ['id' => 3,  'category' => 'Kopi',     'name' => 'Brown Sugar Latte'],
-        ['id' => 4,  'category' => 'Kopi',     'name' => 'Cold Brew'],
-        ['id' => 5,  'category' => 'Kopi',     'name' => 'Cappuccino'],
-        ['id' => 6,  'category' => 'Non-Kopi', 'name' => 'Matcha Latte'],
-        ['id' => 7,  'category' => 'Non-Kopi', 'name' => 'Taro Latte'],
-        ['id' => 8,  'category' => 'Non-Kopi', 'name' => 'Chocolate Frappe'],
-        ['id' => 9,  'category' => 'Makanan',  'name' => 'Croissant Plain'],
-        ['id' => 10, 'category' => 'Makanan',  'name' => 'Croissant Almond'],
-        ['id' => 11, 'category' => 'Makanan',  'name' => 'Banana Cake'],
-        ['id' => 12, 'category' => 'Non-Kopi', 'name' => 'Oreo Shake'],
-    ];
-
-    /* data dummy: cabang untuk pilihan cakupan lokal */
-    $branches = [
-        ['id' => 1, 'name' => 'Dr. Mansyur'],
-        ['id' => 2, 'name' => 'Jamin Ginting'],
-        ['id' => 3, 'name' => 'Gatot Subroto'],
-    ];
-
-    /* grup produk per kategori untuk checkbox */
-    $productsByCategory = [];
-    foreach ($allProducts as $p) {
-        $productsByCategory[$p['category']][] = $p;
-    }
-
-    $selectedProducts = old('product_ids', $promo['product_ids'] ?? []);
+    $initialSelected = isset($selectedProducts) ? $selectedProducts : [];
+    $selectedProducts = old('product_ids', $initialSelected);
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">

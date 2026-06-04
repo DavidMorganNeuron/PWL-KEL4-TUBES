@@ -7,20 +7,11 @@
 @section('content')
 
 @php
-    $requests = [
-        ['id' => 4,  'branch' => 'Dr. Mansyur',   'manager' => 'Budi Santoso',    'product' => 'Americano',          'requested_qty' => 25,  'status' => 'pending',  'notes' => null,               'created_at' => '2026-05-17 11:30'],
-        ['id' => 3,  'branch' => 'Dr. Mansyur',   'manager' => 'Budi Santoso',    'product' => 'Matcha Latte',        'requested_qty' => 30,  'status' => 'pending',  'notes' => 'Stok habis mendesak', 'created_at' => '2026-05-17 08:45'],
-        ['id' => 2,  'branch' => 'Jamin Ginting', 'manager' => 'Siti Rahayu',     'product' => 'Taro Latte',          'requested_qty' => 10,  'status' => 'rejected', 'notes' => 'Stok pusat habis', 'created_at' => '2026-05-12 14:20'],
-        ['id' => 1,  'branch' => 'Dr. Mansyur',   'manager' => 'Budi Santoso',    'product' => 'Oreo Shake',          'requested_qty' => 20,  'status' => 'approved', 'notes' => null,               'created_at' => '2026-05-14 09:10'],
-        ['id' => 5,  'branch' => 'Gatot Subroto', 'manager' => 'Ahmad Fauzan',    'product' => 'Sirup Karamel',       'requested_qty' => 15,  'status' => 'approved', 'notes' => null,               'created_at' => '2026-05-11 16:00'],
-        ['id' => 6,  'branch' => 'Jamin Ginting', 'manager' => 'Siti Rahayu',     'product' => 'Biji Kopi Arabika',   'requested_qty' => 8,   'status' => 'rejected', 'notes' => 'Pengajuan duplikat', 'created_at' => '2026-05-10 10:30'],
-    ];
-
     $tabs = [
-        'all'      => ['label' => 'Semua',     'count' => count($requests)],
-        'pending'  => ['label' => 'Pending',   'count' => count(array_filter($requests, fn($r) => $r['status'] === 'pending'))],
-        'approved' => ['label' => 'Disetujui', 'count' => count(array_filter($requests, fn($r) => $r['status'] === 'approved'))],
-        'rejected' => ['label' => 'Ditolak',   'count' => count(array_filter($requests, fn($r) => $r['status'] === 'rejected'))],
+        'all'      => ['label' => 'Semua',     'count' => $requests->count()],
+        'pending'  => ['label' => 'Pending',   'count' => $requests->filter(fn($r) => $r['status'] === 'pending')->count()],
+        'approved' => ['label' => 'Disetujui', 'count' => $requests->filter(fn($r) => $r['status'] === 'approved')->count()],
+        'rejected' => ['label' => 'Ditolak',   'count' => $requests->filter(fn($r) => $r['status'] === 'rejected')->count()],
     ];
 
     $statusCfg = [

@@ -6,6 +6,9 @@ use App\Http\Controllers\OrderFlowController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromoController;
+use App\Http\Controllers\AdminController;
 
 // login, register, logout
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -23,48 +26,47 @@ Route::middleware(['auth'])->group(function () {
 // role = admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // dashboard eksekutif global
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
  
     // manajemen katalog
     Route::prefix('catalogs')->name('catalogs.')->group(function () {
-        Route::get('/', fn() => view('admin.catalogs.product'))->name('index');
-        Route::get('/create', fn() => view('admin.catalogs.form'))->name('create');
-        Route::get('/{id}/edit', fn() => view('admin.catalogs.form'))->name('edit');
- 
-        // redirect
-        Route::post('/', fn() => redirect()->route('admin.catalogs.index'))->name('store');
-        Route::put('/{id}', fn() => redirect()->route('admin.catalogs.index'))->name('update');
-        Route::patch('/{id}/toggle', fn() => redirect()->route('admin.catalogs.index'))->name('toggle');
-        Route::delete('/{id}', fn() => redirect()->route('admin.catalogs.index'))->name('destroy');
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
+
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::put('/{id}', [ProductController::class, 'update'])->name('update');
+        Route::patch('/{id}/toggle', [ProductController::class, 'toggleAvailability'])->name('toggle');
+        Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
     });
  
     // manajemen promo
     Route::prefix('promos')->name('promos.')->group(function () {
-        Route::get('/', fn() => view('admin.promos.promo'))->name('index');
-        Route::get('/create', fn() => view('admin.promos.form'))->name('create');
-        Route::get('/{id}/edit', fn() => view('admin.promos.form'))->name('edit');
- 
-        Route::post('/', fn() => redirect()->route('admin.promos.index'))->name('store');
-        Route::put('/{id}', fn() => redirect()->route('admin.promos.index'))->name('update');
-        Route::delete('/{id}', fn() => redirect()->route('admin.promos.index'))->name('destroy');
+        Route::get('/', [PromoController::class, 'index'])->name('index');
+        Route::get('/create', [PromoController::class, 'create'])->name('create');
+        Route::get('/{id}/edit', [PromoController::class, 'edit'])->name('edit');
+
+        Route::post('/', [PromoController::class, 'store'])->name('store');
+        Route::put('/{id}', [PromoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [PromoController::class, 'destroy'])->name('destroy');
     });
  
     // validasi request
     Route::prefix('requests')->name('requests.')->group(function () {
-        Route::get('/', fn() => view('admin.requests.request'))->name('index');
-        Route::get('/{id}', fn() => view('admin.requests.show'))->name('show');
- 
-        Route::patch('/{id}/approve', fn() => redirect()->route('admin.requests.index'))->name('approve');
-        Route::patch('/{id}/reject', fn() => redirect()->route('admin.requests.index'))->name('reject');
+        Route::get('/', [AdminController::class, 'requests'])->name('index');
+        Route::get('/{id}', [AdminController::class, 'showRequest'])->name('show');
+
+        Route::patch('/{id}/approve', [AdminController::class, 'approveRequest'])->name('approve');
+        Route::patch('/{id}/reject', [AdminController::class, 'rejectRequest'])->name('reject');
     });
  
     // data manajer cabang
-    Route::get('/managers', fn() => view('admin.managers.manager'))->name('managers.index');
+    Route::get('/managers', [AdminController::class, 'managers'])->name('managers.index');
  
     // laporan
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sales', fn() => view('admin.reports.sales'))->name('sales');
-        Route::get('/assets', fn() => view('admin.reports.assets'))->name('assets');
+        Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
+        Route::get('/assets', [AdminController::class, 'assets'])->name('assets');
     });
 });
 

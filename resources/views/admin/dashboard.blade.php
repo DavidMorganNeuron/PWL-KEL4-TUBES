@@ -7,38 +7,12 @@
 @section('content')
 
 @php
-    /* data dummy: statistik global dari seluruh cabang */
     $globalStats = [
-        ['label' => 'Total Pendapatan Global',  'value' => 'Rp 148.250.000', 'sub' => 'Semua cabang bulan ini',    'icon' => '💰', 'accent' => '#C8813B', 'bg' => 'rgba(200,129,59,0.08)'],
-        ['label' => 'Total Pesanan Selesai',    'value' => '1.842',           'sub' => 'Transaksi berhasil',        'icon' => '🧾', 'accent' => '#2563EB', 'bg' => 'rgba(37,99,235,0.07)'],
-        ['label' => 'Produk Aktif',             'value' => '12 Produk',       'sub' => '3 kategori tersedia',       'icon' => '☕', 'accent' => '#059669', 'bg' => 'rgba(5,150,105,0.07)'],
-        ['label' => 'Request Pending',          'value' => '2 Pengajuan',     'sub' => 'Menunggu validasi admin',   'icon' => '⏳', 'accent' => '#DC2626', 'bg' => 'rgba(220,38,38,0.07)'],
+        ['label' => 'Total Pendapatan Global',  'value' => 'Rp ' . number_format($totalRevenue, 0, ',', '.'), 'sub' => 'Semua cabang bulan ini',    'icon' => '💰'],
+        ['label' => 'Total Pesanan Selesai',    'value' => number_format($totalOrders, 0, ',', '.'),           'sub' => 'Transaksi berhasil',        'icon' => '🧾'],
+        ['label' => 'Produk Aktif',             'value' => $activeProducts . ' Produk',                        'sub' => 'Tersedia di menu',        'icon' => '☕'],
+        ['label' => 'Request Pending',          'value' => $pendingRequests . ' Pengajuan',                    'sub' => 'Menunggu validasi admin',   'icon' => '⏳'],
     ];
-
-    /* data dummy: pendapatan per cabang */
-    $branchRevenue = [
-        ['name' => 'Dr. Mansyur',   'revenue' => 68500000, 'orders' => 842, 'pct' => 46],
-        ['name' => 'Jamin Ginting', 'revenue' => 51200000, 'orders' => 621, 'pct' => 35],
-        ['name' => 'Gatot Subroto', 'revenue' => 28550000, 'orders' => 379, 'pct' => 19],
-    ];
-
-    /* data dummy: top seller overall */
-    $topSellersOverall = [
-        ['rank' => 1, 'name' => 'Caramel Macchiato', 'qty' => 524, 'revenue' => 14672000],
-        ['rank' => 2, 'name' => 'Iced Americano',    'qty' => 487, 'revenue' => 10714000],
-        ['rank' => 3, 'name' => 'Brown Sugar Latte', 'qty' => 412, 'revenue' => 11948000],
-        ['rank' => 4, 'name' => 'Matcha Latte',      'qty' => 298, 'revenue' =>  8642000],
-        ['rank' => 5, 'name' => 'Croissant Almond',  'qty' => 251, 'revenue' =>  6024000],
-    ];
-
-    /* data dummy: top seller per cabang */
-    $topSellerPerBranch = [
-        'Dr. Mansyur'   => [['name' => 'Caramel Macchiato', 'qty' => 218], ['name' => 'Iced Americano',    'qty' => 187], ['name' => 'Brown Sugar Latte', 'qty' => 156]],
-        'Jamin Ginting' => [['name' => 'Matcha Latte',      'qty' => 143], ['name' => 'Caramel Macchiato', 'qty' => 122], ['name' => 'Chocolate Frappe',  'qty' => 98]],
-        'Gatot Subroto' => [['name' => 'Iced Americano',    'qty' => 113], ['name' => 'Cold Brew',         'qty' => 87],  ['name' => 'Brown Sugar Latte', 'qty' => 76]],
-    ];
-
-    $totalRevenue = array_sum(array_column($branchRevenue, 'revenue'));
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">

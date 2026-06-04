@@ -26,6 +26,12 @@ class Promo extends Model
         'is_active'  => 'boolean',
     ];
 
+    // relasi ke cabang (null = nasional)
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id_branches');
+    }
+
     // relasi ke produk yang mendapatkan promo ini
     public function products()
     {
