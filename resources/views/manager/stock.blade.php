@@ -27,9 +27,7 @@
 
 <div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
 
-    {{-- ================================================================
-         SECTION 1: RINGKASAN LEVEL STOK + CTA
-    ================================================================ --}}
+         {{-- SECTION 1: RINGKASAN LEVEL STOK + CTA --}}
     <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.75rem;">
 
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
@@ -56,9 +54,7 @@
         </a>
     </div>
 
-    {{-- ================================================================
-         SECTION 2: FILTER KATEGORI
-    ================================================================ --}}
+         {{-- SECTION 2: FILTER KATEGORI --}}
     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
         <button type="button" class="stock-filter-tab stock-tab-active" data-filter="all"
             style="padding: 0.4375rem 1rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 600; border: 1.5px solid #C8813B; background: #C8813B; color: #1C0F0A; cursor: pointer; transition: all 0.15s;">
@@ -74,9 +70,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         SECTION 3: TABEL STOK LOKAL
-    ================================================================ --}}
+         {{-- SECTION 3: TABEL STOK LOKAL --}}
     <div class="mgr-card mgr-animate" style="overflow: hidden;">
         <div style="overflow-x: auto;">
             <table id="stock-table" style="width: 100%; border-collapse: collapse; text-align: left;" role="table" aria-label="Tabel stok tersedia lokal cabang">

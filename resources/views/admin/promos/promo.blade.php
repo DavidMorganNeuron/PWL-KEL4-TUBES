@@ -14,9 +14,8 @@
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- ================================================================
-         HEADER: ringkasan + CTA tambah promo
-    ================================================================ --}}
+         {{-- HEADER: ringkasan + CTA tambah promo --}}
+
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
             <div style="display:flex; align-items:center; gap:0.5rem; background:#D1FAE5; border-radius:9999px; padding:0.375rem 0.875rem 0.375rem 0.625rem;">
@@ -36,9 +35,8 @@
         </a>
     </div>
 
-    {{-- ================================================================
-         TABEL PROMO
-    ================================================================ --}}
+         {{-- TABEL PROMO --}}
+         
     <div class="adm-card adm-animate" style="overflow:hidden;">
         <div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; text-align:left;" role="table" aria-label="Tabel manajemen promo">

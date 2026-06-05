@@ -12,9 +12,8 @@
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- ================================================================
-         HEADER: stat ringkasan + aksi tambah produk
-    ================================================================ --}}
+         {{-- HEADER: stat ringkasan + aksi tambah produk --}}
+
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
         <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
             @php
@@ -38,9 +37,8 @@
         </a>
     </div>
 
-    {{-- ================================================================
-         TABEL PRODUK
-    ================================================================ --}}
+         {{-- TABEL PRODUK --}}
+         
     <div class="adm-card adm-animate" style="overflow:hidden;">
         <div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; text-align:left;" role="table" aria-label="Tabel manajemen produk">

@@ -17,7 +17,7 @@ $branch = $branch ?? null;
         @csrf
         @if($isEdit) @method('PUT') @endif
 
-        {{-- INFORMASI CABANG --}}
+        {{-- Informasi Cabang --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Informasi Cabang
@@ -106,7 +106,7 @@ $branch = $branch ?? null;
         </div>
 
         @if(!$isEdit)
-        {{-- INFORMASI MANAGER (CREATE ONLY) --}}
+        {{-- Informasi Manager (Create Only) --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Informasi Manager
@@ -145,7 +145,7 @@ $branch = $branch ?? null;
             </div>
         </div>
 
-        {{-- STOK AWAL (CREATE ONLY) --}}
+        {{-- Stok Awal (Create Only) --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Stok Awal
@@ -182,14 +182,14 @@ $branch = $branch ?? null;
         </div>
         @endif
 
-        {{-- ERROR GLOBAL --}}
+        {{-- Error Global --}}
         @error('error')
         <div style="padding:0.875rem 1rem; background:#FEE2E2; border:1px solid #FECACA; border-radius:8px; color:#991B1B; font-size:0.8125rem; margin-bottom:1.25rem;">
             {{ $message }}
         </div>
         @enderror
 
-        {{-- TOMBOL --}}
+        {{-- Tombol --}}
         <div style="display:flex; align-items:center; gap:0.75rem;">
             <button type="submit" class="pods-btn-primary">
                 {{ $isEdit ? 'Simpan Perubahan' : 'Buat Cabang' }}

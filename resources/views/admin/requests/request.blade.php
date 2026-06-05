@@ -23,9 +23,7 @@
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- ================================================================
-         TAB FILTER STATUS
-    ================================================================ --}}
+         {{-- TAB FILTER STATUS --}}
     <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; align-items:center;">
         @foreach($tabs as $key => $tab)
         <button
@@ -44,9 +42,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         TABEL PENGAJUAN
-    ================================================================ --}}
+         {{-- TABEL PENGAJUAN --}}
     <div class="adm-card adm-animate" style="overflow:hidden;">
         <div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; text-align:left;" role="table" aria-label="Tabel antrean pengajuan restock">
@@ -105,7 +101,7 @@
 
                         <td style="padding:1rem 1.5rem 1rem 1rem;">
                             <a href="{{ route('admin.requests.show', $req['id']) }}" class="pods-btn-ghost" style="font-size:0.8125rem; padding:0.375rem 0.875rem; white-space:nowrap;">
-                                {{ $req['status'] === 'pending' ? 'Review →' : 'Detail →' }}
+                                {{ $req['status'] === 'pending' ? 'Review' : 'Detail' }}
                             </a>
                         </td>
                     </tr>

@@ -22,7 +22,7 @@
         </a>
     </div>
 
-    {{-- TABEL CABANG --}}
+    {{-- Tabel Cabang --}}
     <div class="adm-card" style="overflow:hidden;">
         <table style="width:100%; border-collapse:collapse; font-size:0.8125rem;">
             <thead>

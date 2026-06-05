@@ -15,7 +15,7 @@ $otherBranches = $otherBranches ?? [];
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- WARNING BOX --}}
+    {{-- Untuk munculin peringatan --}}
     <div style="padding:1rem 1.25rem; background:#FEF2F2; border:1.5px solid #FECACA; border-radius:10px; margin-bottom:1.5rem; display:flex; align-items:flex-start; gap:0.75rem;">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#DC2626" stroke-width="2" aria-hidden="true" style="flex-shrink:0; margin-top:1px;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54-3.37 1.54-3.37 1.54 0a2 2 0 01-1.54-2V5a2 2 0 00-2-2H6.646a2 2 0 00-2 2v12a2 2 0 001.54 2z"/>
@@ -29,7 +29,7 @@ $otherBranches = $otherBranches ?? [];
     <form method="POST" action="{{ route('admin.branches.executeClose', $branch['id_branches']) }}" style="max-width:800px;">
         @csrf
 
-        {{-- RINGKASAN CABANG --}}
+        {{-- Ringkasan Cabang --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Ringkasan Cabang
@@ -50,7 +50,7 @@ $otherBranches = $otherBranches ?? [];
             </div>
         </div>
 
-        {{-- RINGKASAN ORDER AKTIF --}}
+        {{-- Ringkasan Order Aktif --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Order Aktif
@@ -61,7 +61,7 @@ $otherBranches = $otherBranches ?? [];
             </div>
         </div>
 
-        {{-- RINGKASAN STOK --}}
+        {{-- Ringkasan Stok --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Stok Tersisa
@@ -88,7 +88,7 @@ $otherBranches = $otherBranches ?? [];
             </table>
         </div>
 
-        {{-- PILIHAN TRANSFER STOK --}}
+        {{-- Pilihan Transfer Stok --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Transfer Stok
@@ -106,7 +106,7 @@ $otherBranches = $otherBranches ?? [];
             </div>
         </div>
 
-        {{-- KONFIRMASI --}}
+        {{-- Konfirmasi --}}
         <div class="adm-card" style="padding:1.5rem; margin-bottom:1.25rem;">
             <h2 class="font-serif" style="font-size:1.125rem; font-weight:700; color:var(--pods-espresso); margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #EDE0CC;">
                 Konfirmasi
@@ -124,14 +124,14 @@ $otherBranches = $otherBranches ?? [];
             </div>
         </div>
 
-        {{-- ERROR GLOBAL --}}
+        {{-- Error Global --}}
         @error('error')
         <div style="padding:0.875rem 1rem; background:#FEE2E2; border:1px solid #FECACA; border-radius:8px; color:#991B1B; font-size:0.8125rem; margin-bottom:1.25rem;">
             {{ $message }}
         </div>
         @enderror
 
-        {{-- TOMBOL AKSI --}}
+        {{-- Tombol Aksi --}}
         <div style="display:flex; align-items:center; gap:0.75rem;">
             <button type="button" id="btn-execute-close" class="pods-btn-danger" style="padding:0.625rem 1.5rem; font-size:0.875rem;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">

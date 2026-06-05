@@ -14,9 +14,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // ==========================================
         // AUTENTIKASI USER DAN CABANG
-        // ==========================================
         
         // Tabel ini menentukan hak akses (Role-Based Access Control)
         // Hanya ada 3 aktor: admin (pusat), manager (cabang), dan customer (pelanggan)
@@ -49,9 +47,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================================
         // KATALOG PRODUK
-        // ==========================================
         
         // Mengelompokkan menu (misal: Coffee, Non-Coffee, Food)
         Schema::create('categories', function (Blueprint $table) {
@@ -64,21 +60,19 @@ return new class extends Migration
             $table->id('id_products');
             $table->foreignId('category_id')->constrained('categories', 'id_categories')->cascadeOnDelete();
             $table->string('name');
-            // Menyimpan path gambar yang diunggah Admin. Nullable jika gambar belum tersedia
+            // Menyimpan path gambar yang udah diunggah Admin. Akan Nullable jika gambar belum tersedia
             $table->string('image_url')->nullable();
             $table->decimal('base_price', 15, 2);
-            // Fitur Tutup Menu Global. Jika false, menu ini otomatis hilang dari semua cabang
+            // Fitur Tutup Menu Global. Jika false, menu ini akan otomatis hilang dari semua cabang
             $table->boolean('is_available')->default(true);
         });
 
-        // ==========================================
         // PROMOSI
-        // ==========================================
         
         // Mesin diskon otomatis
         Schema::create('promos', function (Blueprint $table) {
             $table->id('id_promos');
-            // Jika branch_id terisi, promo hanya berlaku di cabang tersebut. Jika null = promo global
+            // Jika branch_id sudah terisi,  promo hanya akan berlaku di cabang tersebut. Lalu Jika null = promo global
             $table->foreignId('branch_id')->nullable()->constrained('branches', 'id_branches')->cascadeOnDelete();
             $table->string('name');
             $table->enum('discount_type', ['percentage', 'nominal']);
@@ -94,11 +88,9 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products', 'id_products')->cascadeOnDelete();
         });
 
-        // ==========================================
         // DATA STOK PRODUK DAN REQUEST
-        // ==========================================
         
-        // Tabel untuk mencatat pengajuan restock dari Manager Cabang ke Admin Pusat
+        // Tabel ini untuk mencatat pengajuan restock dari Manager Cabang ke Admin Pusat
         Schema::create('request_log', function (Blueprint $table) {
             $table->id('id_request_log');
             $table->foreignId('branch_id')->constrained('branches', 'id_branches');
@@ -107,7 +99,7 @@ return new class extends Migration
             $table->foreignId('admin_id')->nullable()->constrained('users', 'id_users'); // Siapa yang ACC
             $table->integer('requested_qty');
             $table->text('notes')->nullable();
-            // Alur bisnis: pending -> disetujui (stok otomatis nambah) atau ditolak
+            // Alur bisnis: pending -> disetujui (stok otomatis akan nambah) atau ditolak
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
@@ -136,9 +128,7 @@ return new class extends Migration
             $table->integer('reserved_qty')->default(0);
         });
 
-        // ==========================================
         // SALES DAN TRANSAKSI
-        // ==========================================
         
         // Buku Induk Pendapatan / Transaksi
         Schema::create('orders', function (Blueprint $table) {
@@ -153,7 +143,7 @@ return new class extends Migration
             $table->decimal('grand_total', 15, 2); // Nilai uang final yang masuk ke kas
             // Siklus pesanan: unpaid -> paid -> cooking -> completed or canceled.
             $table->enum('status', ['pending_payment', 'paid', 'cooking', 'completed', 'canceled'])->default('pending_payment');
-            $table->string('cancel_reason')->nullable(); // Wajib diisi manager jika terjadi pembatalan darurat
+            $table->string('cancel_reason')->nullable(); // Wajib diisi manual oleh manager jika terjadi pembatalan darurat
             $table->timestamps();
         });
 
