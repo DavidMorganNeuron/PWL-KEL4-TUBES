@@ -91,23 +91,5 @@ class PodsSeeder extends Seeder
             ['name' => 'Non-Coffee'],
             ['name' => 'Food'],
         ]);
-
-        // 5. Insert Produk Awal (Sebagai dummy data untuk diuji di halaman pelanggan)
-        DB::table('products')->insert([
-            [
-                'category_id' => 1,
-                'name' => 'Americano',
-                'image_url' => null,
-                'base_price' => 22000.00,
-                'is_available' => true,
-            ],
-            [
-                'category_id' => 2,
-                'name' => 'Oreo Shake',
-                'image_url' => null,
-                'base_price' => 26000.00,
-                'is_available' => true,
-            ]
-        ]);
     }
 }

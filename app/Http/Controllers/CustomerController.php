@@ -21,7 +21,7 @@ class CustomerController extends Controller
         $orders = Order::with(['branch', 'items.product'])
                        ->where('user_id', Auth::id())
                        ->orderBy('created_at', 'desc')
-                       ->get();
+                       ->paginate(10);
 
         return view('customer.history', compact('orders'));
     }

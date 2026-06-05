@@ -11,357 +11,456 @@ class ManagerSeeder extends Seeder
 {
     public function run(): void
     {
-        // ================================================================
-        // PRODUK AWAL
-        // ================================================================
-        // PodsSeeder sudah insert: Americano (id 1), Oreo Shake (id 2)
-        DB::table('products')->insert([
-            // -- Coffee (category_id: 1) --
-            ['category_id' => 1, 'name' => 'Caramel Macchiato', 'image_url' => null, 'base_price' => 28000, 'is_available' => true],
-            ['category_id' => 1, 'name' => 'Brown Sugar Latte',  'image_url' => null, 'base_price' => 29000, 'is_available' => true],
-            ['category_id' => 1, 'name' => 'Cold Brew',          'image_url' => null, 'base_price' => 26000, 'is_available' => true],
-            ['category_id' => 1, 'name' => 'Cappuccino',         'image_url' => null, 'base_price' => 25000, 'is_available' => true],
-            // -- Non-Coffee (category_id: 2) --
-            ['category_id' => 2, 'name' => 'Matcha Latte',       'image_url' => null, 'base_price' => 29000, 'is_available' => true],
-            ['category_id' => 2, 'name' => 'Taro Latte',         'image_url' => null, 'base_price' => 28000, 'is_available' => true],
-            ['category_id' => 2, 'name' => 'Chocolate Frappe',   'image_url' => null, 'base_price' => 30000, 'is_available' => true],
-            // -- Food (category_id: 3) --
-            ['category_id' => 3, 'name' => 'Croissant Plain',    'image_url' => null, 'base_price' => 22000, 'is_available' => true],
-            ['category_id' => 3, 'name' => 'Croissant Almond',   'image_url' => null, 'base_price' => 24000, 'is_available' => true],
-            ['category_id' => 3, 'name' => 'Banana Cake',        'image_url' => null, 'base_price' => 20000, 'is_available' => true],
-        ]);
+        // nonaktifkan foreign key sementara untuk truncate
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-        // Customer Seed
-        DB::table('users')->insert([
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Andi Wijaya',    'email' => 'andi@gmail.com',    'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Sari Dewi',      'email' => 'sari@gmail.com',    'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Benny Kusuma',   'email' => 'benny@gmail.com',   'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Diana Putri',    'email' => 'diana@gmail.com',   'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Rizky Hamdani',  'email' => 'rizky@gmail.com',   'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Lina Hartati',   'email' => 'lina@gmail.com',    'password' => Hash::make('customer123'), 'created_at' => now()],
-            ['role_id' => 3, 'branch_id' => null, 'name' => 'Fajar Nugroho',  'email' => 'fajar@gmail.com',   'password' => Hash::make('customer123'), 'created_at' => now()],
-        ]);
+        DB::table('stock_log')->truncate();
+        DB::table('payments')->truncate();
+        DB::table('order_items')->truncate();
+        DB::table('orders')->truncate();
+        DB::table('request_log')->truncate();
+        DB::table('promo_products')->truncate();
+        DB::table('promos')->truncate();
+        DB::table('stock_branch_dr_mansyur')->truncate();
+        DB::table('stock_branch_jamin_ginting')->truncate();
+        DB::table('stock_branch_gatot_subroto')->truncate();
+        DB::table('products')->truncate();
+        DB::table('users')->where('role_id', 3)->delete();
 
-        // ================================================================
-        // STOK FISIK KETIGA CABANG
-        // ================================================================
-        $allProductIds = range(1, 12);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-        $stockDrMansyur = [
-            // [product_id, physical_qty, reserved_qty]
-            [1,  5,  0],  
-            [2,  30, 2],
-            [3,  8,  1],  
-            [4,  20, 3],
-            [5,  15, 0],  
-            [6,  25, 0],
-            [7,  3,  0],  
-            [8,  18, 2],
-            [9,  22, 0],
-            [10, 40, 5],
-            [11, 28, 3],
-            [12, 35, 0],
+        // produk
+        $products = [
+            // Coffee
+            [1, 'Ristretto Bianco',               63000, 50],
+            [1, 'Americano',                      45000, 10],
+            [1, 'Pumpkin Spice Latte',            65000, 50],
+            [1, 'Spanish Aren Latte',             63000,  5],
+            [1, 'Caramel Macchiato',              65000, 10],
+            [1, 'Cold Brew Coffee',               50000,  5],
+            [1, 'Salted Caramel Latte',           65000, 10],
+            [1, 'Asian Dolce',                    65000,  5],
+            [1, 'Flat White',                     60000,  5],
+            [1, 'Cortado',                        70000,  5],
+            [1, 'White Almond Milk Cappuccino',   71000,  5],
+            [1, 'Butterscotch Sea Salt Latte',    62000, 10],
+            [1, 'Praline Latte',                  62000, 10],
+            [1, 'Mocha Latte',                    62000,  5],
+            [1, 'Espresso',                       20000, 30],
+            // Non-Coffee
+            [2, 'Ceremonial Matcha',              75000, 30],
+            [2, 'Signature Chocolate',            70000, 30],
+            [2, 'Chai Tea Latte',                 62000, 10],
+            [2, 'Deep Roast Oolong Milk Tea',     55000, 10],
+            [2, 'Deep Roast Oolong Tea',          50000,  5],
+            [2, 'Deep Roast Black Tea',           50000,  5],
+            [2, 'Deep Roast Black Milk Tea',      55000, 10],
+            [2, 'English Breakfast Tea',          50000, 20],
+            [2, 'Signature Indonesian Teh Tarik', 55000, 10],
+            // Food
+            [3, 'Signature Beef Lasagna',         70000, 20],
+            [3, 'Mac & Cheese',                   56000, 10],
+            [3, 'Cheese Cake',                    70000, 10],
+            [3, 'Espresso Brownies',              55000, 10],
+            [3, 'Beef & Fries',                   55000, 20],
+            [3, 'Chocolate Croissant',            55000, 20],
+            [3, 'Cheesy Croissant',               55000, 20],
+            [3, 'Butter Croissant',               50000, 20],
         ];
 
-        $stockJaminGinting = [
-            [1,  22, 0], [2,  18, 1], [3,  30, 2],
-            [4,  25, 0], [5,  20, 0], [6,  28, 1],
-            [7,  15, 0], [8,  22, 0], [9,  19, 0],
-            [10, 50, 4], [11, 35, 2], [12, 40, 0],
-        ];
-
-        $stockGatotSubroto = [
-            [1,  18, 0], [2,  7,  0],
-            [3,  12, 1], [4,  6,  0],
-            [5,  25, 0], [6,  20, 0],
-            [7,  9,  0],
-            [8,  15, 1], [9,  11, 0],
-            [10, 32, 2], [11, 20, 1], [12, 28, 0],
-        ];
-
-        foreach ($stockDrMansyur as [$productId, $physical, $reserved]) {
-            DB::table('stock_branch_dr_mansyur')->insert([
-                'product_id'   => $productId,
-                'physical_qty' => $physical,
-                'reserved_qty' => $reserved,
+        $prices = [];
+        foreach ($products as $i => $p) {
+            $id = DB::table('products')->insertGetId([
+                'category_id'  => $p[0],
+                'name'         => $p[1],
+                'image_url'    => null,
+                'base_price'   => $p[2],
+                'is_available' => true,
             ]);
+            $prices[$id] = $p[2];
         }
 
-        foreach ($stockJaminGinting as [$productId, $physical, $reserved]) {
-            DB::table('stock_branch_jamin_ginting')->insert([
-                'product_id'   => $productId,
-                'physical_qty' => $physical,
-                'reserved_qty' => $reserved,
-            ]);
-        }
-
-        foreach ($stockGatotSubroto as [$productId, $physical, $reserved]) {
-            DB::table('stock_branch_gatot_subroto')->insert([
-                'product_id'   => $productId,
-                'physical_qty' => $physical,
-                'reserved_qty' => $reserved,
-            ]);
-        }
-
-        // ================================================================
-        // PROMO TESTING
-        // ================================================================
-        DB::table('promos')->insert([
-            [
-                // promo nasional: berlaku di semua cabang
-                'branch_id'      => null,
-                'name'           => 'Happy Hour',
-                'discount_type'  => 'percentage',
-                'discount_value' => 15,
-                'start_date'     => Carbon::now()->startOfDay(),
-                'end_date'       => Carbon::now()->addDays(30),
-                'is_active'      => true,
-            ],
-            [
-                // promo lokal: hanya cabang Dr. Mansyur
-                'branch_id'      => 1,
-                'name'           => 'Weekend Deal',
-                'discount_type'  => 'nominal',
-                'discount_value' => 5000,
-                'start_date'     => Carbon::now()->startOfDay(),
-                'end_date'       => Carbon::now()->addDays(7),
-                'is_active'      => true,
-            ],
-        ]);
-
-        DB::table('promo_products')->insert([
-            ['promo_id' => 1, 'product_id' => 1],
-            ['promo_id' => 1, 'product_id' => 3],
-            ['promo_id' => 1, 'product_id' => 7],
-        ]);
-
-        DB::table('promo_products')->insert([
-            ['promo_id' => 2, 'product_id' => 10],
-            ['promo_id' => 2, 'product_id' => 11],
-            ['promo_id' => 2, 'product_id' => 12],
-        ]);
-
-        // ================================================================
-        // ORDERS, ORDER_ITEMS, DAN PAYMENTS
-        // ================================================================
-        // Membuat 10 order historis (selesai) + 5 order hari ini (berbagai status aktif)
-        // untuk mensimulasikan kondisi KDS dan laporan yang realistis.
-
-        $today     = Carbon::now();
-        $yesterday = Carbon::now()->subDay();
-
-        $ordersData = [
-            // --- ORDER HISTORIS (kemarin, status completed) ---
-            // order 1: Andi di Dr. Mansyur
-            [
-                'branch_id' => 1, 'user_id' => 5, 'order_number' => 'PODS-' . Carbon::yesterday()->format('Ymd') . '-AA0001',
-                'promo_id' => null, 'subtotal' => 56000, 'total_discount' => 0, 'grand_total' => 56000,
-                'status' => 'completed', 'cancel_reason' => null,
-                'created_at' => $yesterday->copy()->setTime(10, 15),
-                'items' => [
-                    ['product_id' => 1, 'qty' => 2, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 44000],
-                    ['product_id' => 10,'qty' => 1, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 22000],
-                ],
-            ],
-            // order 2: Sari di Dr. Mansyur
-            [
-                'branch_id' => 1, 'user_id' => 6, 'order_number' => 'PODS-' . Carbon::yesterday()->format('Ymd') . '-AA0002',
-                'promo_id' => 1, 'subtotal' => 57000, 'total_discount' => 4200, 'grand_total' => 52800,
-                'status' => 'completed', 'cancel_reason' => null,
-                'created_at' => $yesterday->copy()->setTime(11, 30),
-                'items' => [
-                    ['product_id' => 3, 'qty' => 1, 'base_price' => 28000, 'discount_amount' => 4200, 'subtotal_price' => 23800],
-                    ['product_id' => 2, 'qty' => 1, 'base_price' => 26000, 'discount_amount' => 0,    'subtotal_price' => 26000],
-                    ['product_id' => 7, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0,    'subtotal_price' => 29000],
-                ],
-            ],
-            // order 3: Benny di Dr. Mansyur, canceled
-            [
-                'branch_id' => 1, 'user_id' => 7, 'order_number' => 'PODS-' . Carbon::yesterday()->format('Ymd') . '-AA0003',
-                'promo_id' => null, 'subtotal' => 55000, 'total_discount' => 0, 'grand_total' => 55000,
-                'status' => 'canceled', 'cancel_reason' => 'Bahan matcha habis mendadak.',
-                'created_at' => $yesterday->copy()->setTime(13, 0),
-                'items' => [
-                    ['product_id' => 7, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 29000],
-                    ['product_id' => 4, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 29000],
-                ],
-            ],
-            // order 4: Diana di Dr. Mansyur
-            [
-                'branch_id' => 1, 'user_id' => 8, 'order_number' => 'PODS-' . Carbon::yesterday()->format('Ymd') . '-AA0004',
-                'promo_id' => null, 'subtotal' => 52000, 'total_discount' => 0, 'grand_total' => 52000,
-                'status' => 'completed', 'cancel_reason' => null,
-                'created_at' => $yesterday->copy()->setTime(14, 20),
-                'items' => [
-                    ['product_id' => 1, 'qty' => 1, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 22000],
-                    ['product_id' => 9, 'qty' => 1, 'base_price' => 30000, 'discount_amount' => 0, 'subtotal_price' => 30000],
-                ],
-            ],
-            // order 5: Rizky di Dr. Mansyur
-            [
-                'branch_id' => 1, 'user_id' => 9, 'order_number' => 'PODS-' . Carbon::yesterday()->format('Ymd') . '-AA0005',
-                'promo_id' => 2, 'subtotal' => 73000, 'total_discount' => 5000, 'grand_total' => 68000,
-                'status' => 'completed', 'cancel_reason' => null,
-                'created_at' => $yesterday->copy()->setTime(15, 45),
-                'items' => [
-                    ['product_id' => 3,  'qty' => 2, 'base_price' => 28000, 'discount_amount' => 0,    'subtotal_price' => 56000],
-                    ['product_id' => 11, 'qty' => 1, 'base_price' => 24000, 'discount_amount' => 5000, 'subtotal_price' => 19000],
-                ],
-            ],
-
-            // --- ORDER HARI INI: berbagai status untuk testing KDS ---
-
-            // order 6: Diana — PAID (menunggu diproses)
-            [
-                'branch_id' => 1, 'user_id' => 8, 'order_number' => 'PODS-' . $today->format('Ymd') . '-BB0001',
-                'promo_id' => null, 'subtotal' => 78000, 'total_discount' => 0, 'grand_total' => 78000,
-                'status' => 'paid', 'cancel_reason' => null,
-                'created_at' => $today->copy()->setTime(14, 5),
-                'items' => [
-                    ['product_id' => 4, 'qty' => 2, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 58000],
-                    ['product_id' => 11,'qty' => 1, 'base_price' => 24000, 'discount_amount' => 0, 'subtotal_price' => 24000],
-                ],
-            ],
-            // order 7: Benny — PAID (menunggu diproses)
-            [
-                'branch_id' => 1, 'user_id' => 7, 'order_number' => 'PODS-' . $today->format('Ymd') . '-BB0002',
-                'promo_id' => null, 'subtotal' => 130000, 'total_discount' => 0, 'grand_total' => 130000,
-                'status' => 'paid', 'cancel_reason' => null,
-                'created_at' => $today->copy()->setTime(14, 10),
-                'items' => [
-                    ['product_id' => 4, 'qty' => 2, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 58000],
-                    ['product_id' => 1, 'qty' => 1, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 22000],
-                    ['product_id' => 7, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 29000],
-                    ['product_id' => 12,'qty' => 1, 'base_price' => 20000, 'discount_amount' => 0, 'subtotal_price' => 20000],
-                ],
-            ],
-            // order 8: Sari — COOKING (sedang dimasak)
-            [
-                'branch_id' => 1, 'user_id' => 6, 'order_number' => 'PODS-' . $today->format('Ymd') . '-BB0003',
-                'promo_id' => null, 'subtotal' => 52000, 'total_discount' => 0, 'grand_total' => 52000,
-                'status' => 'cooking', 'cancel_reason' => null,
-                'created_at' => $today->copy()->setTime(14, 18),
-                'items' => [
-                    ['product_id' => 1, 'qty' => 1, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 22000],
-                    ['product_id' => 7, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 29000],
-                ],
-            ],
-            // order 9: Andi — COOKING (sedang dimasak)
-            [
-                'branch_id' => 1, 'user_id' => 5, 'order_number' => 'PODS-' . $today->format('Ymd') . '-BB0004',
-                'promo_id' => null, 'subtotal' => 95000, 'total_discount' => 0, 'grand_total' => 95000,
-                'status' => 'cooking', 'cancel_reason' => null,
-                'created_at' => $today->copy()->setTime(14, 22),
-                'items' => [
-                    ['product_id' => 3, 'qty' => 1, 'base_price' => 28000, 'discount_amount' => 0, 'subtotal_price' => 28000],
-                    ['product_id' => 4, 'qty' => 2, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 58000],
-                ],
-            ],
-            // order 10: Lina — COMPLETED (selesai hari ini)
-            [
-                'branch_id' => 1, 'user_id' => 10, 'order_number' => 'PODS-' . $today->format('Ymd') . '-BB0005',
-                'promo_id' => null, 'subtotal' => 63000, 'total_discount' => 0, 'grand_total' => 63000,
-                'status' => 'completed', 'cancel_reason' => null,
-                'created_at' => $today->copy()->setTime(13, 31),
-                'items' => [
-                    ['product_id' => 7, 'qty' => 1, 'base_price' => 29000, 'discount_amount' => 0, 'subtotal_price' => 29000],
-                    ['product_id' => 10,'qty' => 1, 'base_price' => 22000, 'discount_amount' => 0, 'subtotal_price' => 22000],
-                ],
-            ],
+        // Customer
+        $customers = [
+            [5,  'David Morgan',        'david@gmail.com'],
+            [6,  'Salvario Demenico',   'salvario@gmail.com'],
+            [7,  'Danielle Sugeharto',  'danielle@gmail.com'],
+            [8,  'Hannan Rava',         'hannan@gmail.com'],
+            [9,  'Nathan Charlie',      'nathan@gmail.com'],
+            [10, 'Audrey Syantika',     'audrey@gmail.com'],
+            [11, 'Timotius Gultom',     'timotius@gmail.com'],
+            [12, 'Sarah Fivemin',       'sarah@gmail.com'],
+            [13, 'Marco Sidauruk',      'marco@gmail.com'],
+            [14, 'Leo Sipahutar',       'leo@gmail.com'],
         ];
 
-        foreach ($ordersData as $orderData) {
-            $items = $orderData['items'];
-            unset($orderData['items']);
+        $customerIds = [];
+        foreach ($customers as $c) {
+            DB::table('users')->insert([
+                'id_users'   => $c[0],
+                'role_id'    => 3,
+                'branch_id'  => null,
+                'name'       => $c[1],
+                'email'      => $c[2],
+                'password'   => Hash::make('customer123'),
+                'created_at' => now(),
+            ]);
+            $customerIds[] = $c[0];
+        }
 
-            $orderId = DB::table('orders')->insertGetId(array_merge($orderData, [
-                'updated_at' => $orderData['created_at'],
-            ]));
+        // stok
+        $stockTables = [
+            3 => 'stock_branch_gatot_subroto',
+            1 => 'stock_branch_dr_mansyur',
+            2 => 'stock_branch_jamin_ginting',
+        ];
 
-            foreach ($items as $item) {
-                DB::table('order_items')->insert(array_merge($item, [
-                    'order_id' => $orderId,
-                ]));
-            }
+        $stockDistribution = [
+             1 => [20, 15, 15],
+             2 => [ 4,  3,  3],
+             3 => [20, 15, 15],
+             4 => [ 2,  2,  1],
+             5 => [ 4,  3,  3],
+             6 => [ 2,  2,  1],
+             7 => [ 4,  3,  3],
+             8 => [ 2,  2,  1],
+             9 => [ 2,  2,  1],
+            10 => [ 2,  2,  1],
+            11 => [ 2,  2,  1],
+            12 => [ 4,  3,  3],
+            13 => [ 4,  3,  3],
+            14 => [ 2,  2,  1],
+            15 => [12, 10,  8],
+            16 => [12, 10,  8],
+            17 => [12, 10,  8],
+            18 => [ 4,  3,  3],
+            19 => [ 4,  3,  3],
+            20 => [ 2,  2,  1],
+            21 => [ 2,  2,  1],
+            22 => [ 4,  3,  3],
+            23 => [ 8,  7,  5],
+            24 => [ 4,  3,  3],
+            25 => [ 8,  7,  5],
+            26 => [ 4,  3,  3],
+            27 => [ 4,  3,  3],
+            28 => [ 4,  3,  3],
+            29 => [ 8,  7,  5],
+            30 => [ 8,  7,  5],
+            31 => [ 8,  7,  5],
+            32 => [ 8,  7,  5],
+        ];
 
-            // payments: semua order kecuali yang canceled punya record payment success
-            if ($orderData['status'] !== 'canceled') {
-                DB::table('payments')->insert([
-                    'order_id' => $orderId,
-                    'method'   => 'QRIS',
-                    'status'   => 'success',
-                    'paid_at'  => $orderData['created_at'],
+        $branchStockMap = [
+            1 => 0, 2 => 1, 3 => 2,
+        ];
+
+        foreach ($stockTables as $branchId => $table) {
+            $col = $branchStockMap[$branchId];
+            for ($pid = 1; $pid <= 32; $pid++) {
+                $physical = $stockDistribution[$pid][$col];
+                $reserved = 0; // semua completed, tidak ada pemesanan aktif
+                DB::table($table)->insert([
+                    'product_id'   => $pid,
+                    'physical_qty' => $physical,
+                    'reserved_qty' => $reserved,
                 ]);
             }
         }
 
-        // ================================================================
-        // REQUEST_LOG
-        // ================================================================
-        DB::table('request_log')->insert([
-            [
-                // pengajuan lama: sudah disetujui admin
-                'branch_id'     => 1,
-                'product_id'    => 2,
-                'manager_id'    => 2,
-                'admin_id'      => 1,
-                'requested_qty' => 20,
-                'status'        => 'approved',
-                'created_at'    => Carbon::now()->subDays(4),
-                'updated_at'    => Carbon::now()->subDays(4)->addHours(2),
-            ],
-            [
-                // pengajuan yang ditolak admin
-                'branch_id'     => 1,
-                'product_id'    => 8,
-                'manager_id'    => 2,
-                'admin_id'      => 1,
-                'requested_qty' => 10,
-                'status'        => 'rejected',
-                'created_at'    => Carbon::now()->subDays(2),
-                'updated_at'    => Carbon::now()->subDays(2)->addHours(5),
-            ],
-            [
-                // pengajuan baru: masih pending
-                'branch_id'     => 1,
-                'product_id'    => 7,
-                'manager_id'    => 2,
-                'admin_id'      => null,
-                'requested_qty' => 30,
-                'status'        => 'pending',
-                'created_at'    => Carbon::now()->subHours(3),
-                'updated_at'    => Carbon::now()->subHours(3),
-            ],
-            [
-                // pengajuan kedua pending
-                'branch_id'     => 1,
-                'product_id'    => 1,
-                'manager_id'    => 2,
-                'admin_id'      => null,
-                'requested_qty' => 25,
-                'status'        => 'pending',
-                'created_at'    => Carbon::now()->subHours(1),
-                'updated_at'    => Carbon::now()->subHours(1),
-            ],
-        ]);
+        // promo 11
+        $promos = [
+            // dr. mansyur
+            [1, 'Mansyur Morning Deal',     'percentage', 15, [3, 15, 23, 27]],
+            [1, 'Mansyur Coffee Lover',     'nominal',  5000, [1, 5, 9, 13]],
+            [1, 'Mansyur Student Hour',     'percentage', 20, [16, 18, 22, 24]],
+            // jamin ginting
+            [2, 'Ginting Combo Hemat',       'nominal',  7000, [2, 6, 25, 30]],
+            [2, 'Ginting Afternoon Tea',     'percentage', 10, [19, 23, 24, 31]],
+            [2, 'Ginting Weekend Special',   'nominal',  8000, [7, 12, 26, 32]],
+            // gatot subroto
+            [3, 'Subroto Breakfast Set',     'percentage', 12, [4, 8, 29, 30]],
+            [3, 'Subroto Signature',         'nominal', 10000, [10, 11, 14, 17]],
+            [3, 'Subroto Happy Hour',        'percentage', 25, [1, 15, 20, 21, 28]],
+            // global
+            [null, 'Nasional Spesial',       'percentage', 20, [3, 5, 7, 16, 25]],
+            [null, 'PayDay Fest',            'nominal', 15000, [1, 9, 13, 17, 22, 29]],
+        ];
 
-        // ================================================================
-        // STOCK_LOG
-        // ================================================================
-        // Mencerminkan penjualan dari order historis dan restock yang disetujui
-        DB::table('stock_log')->insert([
-            ['branch_id' => 1, 'product_id' => 1,  'user_id' => 5,  'order_id' => 1, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -2,  'created_at' => $yesterday->copy()->setTime(10, 15)],
-            ['branch_id' => 1, 'product_id' => 10, 'user_id' => 5,  'order_id' => 1, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(10, 15)],
-            ['branch_id' => 1, 'product_id' => 3,  'user_id' => 6,  'order_id' => 2, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(11, 30)],
-            ['branch_id' => 1, 'product_id' => 2,  'user_id' => 6,  'order_id' => 2, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(11, 30)],
-            ['branch_id' => 1, 'product_id' => 7,  'user_id' => 6,  'order_id' => 2, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(11, 30)],
-            ['branch_id' => 1, 'product_id' => 7,  'user_id' => 2,  'order_id' => 3, 'request_id' => null, 'activity_type' => 'waste',             'quantity_change' => 0,   'created_at' => $yesterday->copy()->setTime(13, 5)],
-            ['branch_id' => 1, 'product_id' => 4,  'user_id' => 2,  'order_id' => 3, 'request_id' => null, 'activity_type' => 'waste',             'quantity_change' => 0,   'created_at' => $yesterday->copy()->setTime(13, 5)],
-            ['branch_id' => 1, 'product_id' => 2,  'user_id' => 1,  'order_id' => null, 'request_id' => 1, 'activity_type' => 'restock_approved',  'quantity_change' => +20, 'created_at' => Carbon::now()->subDays(4)->addHours(2)],
-            ['branch_id' => 1, 'product_id' => 1,  'user_id' => 8,  'order_id' => 4, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(14, 20)],
-            ['branch_id' => 1, 'product_id' => 9,  'user_id' => 8,  'order_id' => 4, 'request_id' => null, 'activity_type' => 'sale',              'quantity_change' => -1,  'created_at' => $yesterday->copy()->setTime(14, 20)],
-            ['branch_id' => 1, 'product_id' => 7,  'user_id' => 10, 'order_id' => 10, 'request_id' => null, 'activity_type' => 'sale',             'quantity_change' => -1,  'created_at' => $today->copy()->setTime(13, 31)],
-            ['branch_id' => 1, 'product_id' => 10, 'user_id' => 10, 'order_id' => 10, 'request_id' => null, 'activity_type' => 'sale',             'quantity_change' => -1,  'created_at' => $today->copy()->setTime(13, 31)],
-        ]);
+        $promoIds = [];
+        foreach ($promos as $p) {
+            $pid = DB::table('promos')->insertGetId([
+                'branch_id'      => $p[0],
+                'name'           => $p[1],
+                'discount_type'  => $p[2],
+                'discount_value' => $p[3],
+                'start_date'     => Carbon::parse('2026-04-01'),
+                'end_date'       => Carbon::now(),
+                'is_active'      => true,
+            ]);
+            $promoIds[] = $pid;
+
+            foreach ($p[4] as $prodId) {
+                DB::table('promo_products')->insert([
+                    'promo_id'   => $pid,
+                    'product_id' => $prodId,
+                ]);
+            }
+        }
+
+        // order
+        $start = Carbon::parse('2026-04-01');
+        $end   = Carbon::now();
+
+        $orderTemplates = [
+            [1 => 1, 15 => 1],
+            [3 => 2],
+            [2 => 1, 23 => 1, 25 => 1],
+            [5 => 1, 18 => 1],
+            [7 => 1, 26 => 1],
+            [15 => 1, 16 => 1, 27 => 1],
+            [9 => 1, 30 => 1],
+            [1 => 2, 32 => 1],
+            [3 => 1, 17 => 1, 28 => 1],
+            [10 => 1, 22 => 1],
+            [6 => 1, 29 => 1],
+            [4 => 1, 31 => 1],
+            [13 => 1, 19 => 1],
+            [8 => 1, 20 => 1, 24 => 1],
+            [11 => 1, 12 => 1],
+            [2 => 1, 14 => 1, 21 => 1],
+        ];
+
+        $orderIds = [];
+        $orderDataForLog = [];
+        $orderIdx = 0;
+
+        $totalDays = (int) $start->diffInDays($end);
+
+        for ($branchId = 1; $branchId <= 3; $branchId++) {
+            for ($localIdx = 0; $localIdx < 100; $localIdx++) {
+                $orderIdx++;
+
+                $dayOffset = (int) round($localIdx * $totalDays / 100);
+                $date = $start->copy()->addDays($dayOffset);
+                if ($date->gt($end)) $date = $end->copy();
+
+                $tmpl = $orderTemplates[$orderIdx % count($orderTemplates)];
+                $userId = $customerIds[$orderIdx % count($customerIds)];
+
+                $items = [];
+                $subtotal = 0;
+                foreach ($tmpl as $pid => $qty) {
+                    $price = $prices[$pid];
+                    $lineTotal = $price * $qty;
+                    $subtotal += $lineTotal;
+                    $items[] = [
+                        'product_id'      => $pid,
+                        'qty'             => $qty,
+                        'base_price'      => $price,
+                        'discount_amount' => 0,
+                        'subtotal_price'  => $lineTotal,
+                    ];
+                }
+
+                $appliedPromoId = null;
+                $totalDiscount = 0;
+                if ($orderIdx % 5 === 0) {
+                    $branchPromos = DB::table('promos')
+                        ->where(function ($q) use ($branchId) {
+                            $q->where('branch_id', $branchId)->orWhereNull('branch_id');
+                        })->where('is_active', true)->pluck('id_promos')->toArray();
+                    if (!empty($branchPromos)) {
+                        $appliedPromoId = $branchPromos[$orderIdx % count($branchPromos)];
+                        $promo = DB::table('promos')->where('id_promos', $appliedPromoId)->first();
+                        if ($promo->discount_type === 'percentage') {
+                            $totalDiscount = (int) round($subtotal * $promo->discount_value / 100);
+                        } else {
+                            $totalDiscount = min((int) $promo->discount_value, $subtotal);
+                        }
+                    }
+                }
+
+                $grandTotal = $subtotal - $totalDiscount;
+                $orderNumber = 'PODS-' . $date->format('Ymd') . '-' . chr(64 + $branchId) . str_pad($localIdx + 1, 4, '0', STR_PAD_LEFT);
+
+                $oid = DB::table('orders')->insertGetId([
+                    'branch_id'      => $branchId,
+                    'user_id'        => $userId,
+                    'order_number'   => $orderNumber,
+                    'promo_id'       => $appliedPromoId,
+                    'subtotal'       => $subtotal,
+                    'total_discount' => $totalDiscount,
+                    'grand_total'    => $grandTotal,
+                    'status'         => 'completed',
+                    'cancel_reason'  => null,
+                    'created_at'     => $date->setTime(8 + ($orderIdx % 12), ($orderIdx * 7) % 60),
+                    'updated_at'     => $date->setTime(8 + ($orderIdx % 12), ($orderIdx * 7) % 60),
+                ]);
+                $orderIds[] = $oid;
+                $orderDataForLog[] = [
+                    'id' => $oid,
+                    'branch_id' => $branchId,
+                    'user_id' => $userId,
+                    'created_at' => $date,
+                ];
+
+                // insert item pesanan
+                foreach ($items as $it) {
+                    DB::table('order_items')->insert([
+                        'order_id'        => $oid,
+                        'product_id'      => $it['product_id'],
+                        'qty'             => $it['qty'],
+                        'base_price'      => $it['base_price'],
+                        'discount_amount' => $it['discount_amount'],
+                        'subtotal_price'  => $it['subtotal_price'],
+                    ]);
+                }
+
+                DB::table('payments')->insert([
+                    'order_id' => $oid,
+                    'method'   => $orderIdx % 3 === 0 ? 'E_Wallet' : 'QRIS',
+                    'status'   => 'success',
+                    'paid_at'  => $date,
+                ]);
+            }
+        }
+
+        // request_log
+        $requestLogs = [
+            // dr. mansyur
+            [1,  2, 2, 1, 20, 'approved',  10, 8],
+            [1,  8, 2, 1, 10, 'rejected',   5, 2],
+            [1,  7, 2, null, 30, 'pending',  1, 1],
+            [1,  1, 2, null, 25, 'pending',  0, 0],
+            // jamin ginting
+            [2,  5, 3, 1, 15, 'approved',   7, 5],
+            [2, 12, 3, 1,  8, 'rejected',   9, 7],
+            [2,  3, 3, null, 20, 'pending',  2, 2],
+            // gatot subroto
+            [3, 10, 4, 1, 12, 'approved',   6, 4],
+            [3,  6, 4, null, 18, 'pending',  3, 3],
+            [3, 15, 4, null, 10, 'pending',  1, 1],
+        ];
+
+        $requestIds = [];
+        foreach ($requestLogs as $rl) {
+            $createdAt = Carbon::parse('2026-04-01')->addDays($rl[6])->addHours(8 + $rl[7]);
+            $updatedAt = $rl[3]
+                ? Carbon::parse('2026-04-01')->addDays($rl[6])->addHours(8 + $rl[7] + 2)
+                : $createdAt;
+
+            $rid = DB::table('request_log')->insertGetId([
+                'branch_id'     => $rl[0],
+                'product_id'    => $rl[1],
+                'manager_id'    => $rl[2],
+                'admin_id'      => $rl[3],
+                'requested_qty' => $rl[4],
+                'notes'         => null,
+                'status'        => $rl[5],
+                'created_at'    => $createdAt,
+                'updated_at'    => $updatedAt,
+            ]);
+            $requestIds[] = $rid;
+        }
+
+        // stock_log
+        $stockLogs = [];
+
+        $saleCount = 0;
+        foreach ($orderDataForLog as $od) {
+            if ($saleCount >= 80) break;
+
+            $items = DB::table('order_items')
+                ->where('order_id', $od['id'])
+                ->get();
+            if ($items->isEmpty()) continue;
+
+            $firstItem = $items->first();
+            $totalQty = $items->sum('qty');
+            $stockLogs[] = [
+                'branch_id'       => $od['branch_id'],
+                'product_id'      => $firstItem->product_id,
+                'user_id'         => $od['user_id'],
+                'order_id'        => $od['id'],
+                'request_id'      => null,
+                'activity_type'   => 'sale',
+                'quantity_change' => -$totalQty,
+                'created_at'      => $od['created_at'],
+            ];
+            $saleCount++;
+        }
+
+        $restockProducts = [1, 3, 15, 16, 17, 23, 25, 29, 30, 31, 32, 5, 7, 12, 18];
+        foreach ($restockProducts as $i => $pid) {
+            $branchId = ($i % 3) + 1;
+            $qty = 10 + ($i * 2);
+            $stockLogs[] = [
+                'branch_id'       => $branchId,
+                'product_id'      => $pid,
+                'user_id'         => 1,
+                'order_id'        => null,
+                'request_id'      => $requestIds[$i % count($requestIds)],
+                'activity_type'   => 'restock_approved',
+                'quantity_change' => $qty,
+                'created_at'      => Carbon::parse('2026-04-01')->addDays(5 + $i * 4)->addHours(10),
+            ];
+        }
+
+        $adjProducts = [2, 6, 8, 9, 10, 11, 14, 19, 20, 21, 22, 24, 26, 27, 28];
+        foreach ($adjProducts as $i => $pid) {
+            $branchId = (($i + 1) % 3) + 1;
+            $qty = 3 + ($i % 5);
+            $stockLogs[] = [
+                'branch_id'       => $branchId,
+                'product_id'      => $pid,
+                'user_id'         => 1,
+                'order_id'        => null,
+                'request_id'      => null,
+                'activity_type'   => 'adjustment',
+                'quantity_change' => $qty,
+                'created_at'      => Carbon::parse('2026-04-01')->addDays(3 + $i * 4)->addHours(14),
+            ];
+        }
+
+        $wasteProducts = [4, 13, 20, 21, 26, 27, 28, 30, 31, 32];
+        foreach ($wasteProducts as $i => $pid) {
+            $branchId = (($i + 2) % 3) + 1;
+            $managerId = [2, 3, 4][$i % 3];
+            $qty = 1 + ($i % 3);
+            $stockLogs[] = [
+                'branch_id'       => $branchId,
+                'product_id'      => $pid,
+                'user_id'         => $managerId,
+                'order_id'        => null,
+                'request_id'      => null,
+                'activity_type'   => 'waste',
+                'quantity_change' => -$qty,
+                'created_at'      => Carbon::parse('2026-04-01')->addDays(8 + $i * 5)->addHours(16),
+            ];
+        }
+
+        DB::table('stock_log')->insert($stockLogs);
+
+        $this->rebuildGlobalStocksView();
+    }
+
+    // view
+    private function rebuildGlobalStocksView(): void
+    {
+        $branches = DB::table('branches')->where('is_active', true)->get(['name']);
+        $unions = [];
+
+        foreach ($branches as $branch) {
+            $tableName = 'stock_branch_' . strtolower(preg_replace('/[\s.]+/', '_', trim($branch->name)));
+            $tableName = preg_replace('/[^a-z0-9_]/', '', $tableName);
+            $safeName = addslashes($branch->name);
+            $unions[] = "SELECT '{$safeName}' AS branch_name, product_id, physical_qty, reserved_qty FROM {$tableName}";
+        }
+
+        if (empty($unions)) {
+            DB::statement("CREATE OR REPLACE VIEW global_stocks_view AS SELECT NULL AS branch_name, NULL AS product_id, NULL AS physical_qty, NULL AS reserved_qty WHERE 1=0");
+        } else {
+            DB::statement("CREATE OR REPLACE VIEW global_stocks_view AS " . implode(" UNION ALL ", $unions));
+        }
     }
 }

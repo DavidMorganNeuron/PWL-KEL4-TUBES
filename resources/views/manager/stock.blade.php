@@ -10,7 +10,7 @@
     const STOCK_THRESHOLD = 10;
 
     $stockLevel = function ($item) {
-        $ratio = $item->physical_qty / max(STOCK_THRESHOLD, 1);
+        $ratio = $item->available_qty / max(STOCK_THRESHOLD, 1);
         if ($ratio <= 0.3) return ['level' => 'critical', 'label' => 'Kritis',  'bar' => '#DC2626', 'bg' => '#FEE2E2', 'text' => '#991B1B'];
         if ($ratio <= 0.6) return ['level' => 'low',      'label' => 'Rendah',  'bar' => '#D97706', 'bg' => '#FEF3C7', 'text' => '#92400E'];
         if ($ratio <= 0.9) return ['level' => 'medium',   'label' => 'Sedang',  'bar' => '#2563EB', 'bg' => '#DBEAFE', 'text' => '#1E40AF'];
@@ -79,14 +79,12 @@
     ================================================================ --}}
     <div class="mgr-card mgr-animate" style="overflow: hidden;">
         <div style="overflow-x: auto;">
-            <table id="stock-table" style="width: 100%; border-collapse: collapse; text-align: left;" role="table" aria-label="Tabel stok fisik lokal cabang">
+            <table id="stock-table" style="width: 100%; border-collapse: collapse; text-align: left;" role="table" aria-label="Tabel stok tersedia lokal cabang">
                 <thead>
                     <tr style="background: var(--pods-espresso);">
-                        <th style="padding: 0.75rem 1.5rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6); white-space: nowrap;">#</th>
+                        <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6); white-space: nowrap; width: 48px;">#</th>
                         <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6);">Nama Produk</th>
                         <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6);">Kategori</th>
-                        <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6); text-align: center;">Stok Fisik</th>
-                        <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6); text-align: center;">Ditahan</th>
                         <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6); text-align: center;">Tersedia</th>
                         <th style="padding: 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6);">Level</th>
                         <th style="padding: 0.75rem 1.5rem 0.75rem 1rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,233,211,0.6);">Aksi</th>
@@ -96,7 +94,7 @@
                     @forelse($stocks as $idx => $item)
                     @php
                         $lvl    = $stockLevel($item);
-                        $barPct = min(100, round(($item->physical_qty / STOCK_THRESHOLD) * 100));
+                        $barPct = min(100, round(($item->available_qty / STOCK_THRESHOLD) * 100));
                     @endphp
                     <tr
                         class="stock-row"
@@ -115,14 +113,6 @@
                             <span style="display: inline-block; padding: 2px 10px; border-radius: 9999px; background: rgba(200,129,59,0.1); border: 1px solid rgba(200,129,59,0.2); font-size: 0.6875rem; font-weight: 600; color: #92400E; white-space: nowrap;">
                                 {{ $item->category_name }}
                             </span>
-                        </td>
-
-                        <td style="padding: 1rem; text-align: center; font-size: 0.9375rem; font-weight: 700; color: var(--pods-espresso); font-variant-numeric: tabular-nums;">
-                            {{ $item->physical_qty }}
-                        </td>
-
-                        <td style="padding: 1rem; text-align: center; font-size: 0.875rem; font-weight: 400; color: var(--pods-muted); font-variant-numeric: tabular-nums;">
-                            {{ $item->reserved_qty }}
                         </td>
 
                         <td style="padding: 1rem; text-align: center; font-size: 0.9375rem; font-weight: 700; color: {{ $item->available_qty <= 0 ? '#DC2626' : 'var(--pods-espresso)' }}; font-variant-numeric: tabular-nums;">
@@ -160,7 +150,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" style="padding: 2.5rem; text-align: center; font-size: 0.875rem; color: var(--pods-muted); font-weight: 300;">
+                        <td colspan="6" style="padding: 2.5rem; text-align: center; font-size: 0.875rem; color: var(--pods-muted); font-weight: 300;">
                             Data stok tidak ditemukan.
                         </td>
                     </tr>

@@ -324,8 +324,7 @@ class ManagerController extends Controller
     public function stock()
     {
         $stockTable = $this->stockTable();
- 
-        /* ambil seluruh stok cabang ini */
+
         $stocks = DB::table($stockTable)
             ->join('products', 'products.id_products', '=', "{$stockTable}.product_id")
             ->join('categories', 'categories.id_categories', '=', 'products.category_id')
@@ -333,14 +332,12 @@ class ManagerController extends Controller
                 "{$stockTable}.product_id",
                 'products.name as product_name',
                 'categories.name as category_name',
-                "{$stockTable}.physical_qty",
-                "{$stockTable}.reserved_qty",
                 DB::raw("({$stockTable}.physical_qty - {$stockTable}.reserved_qty) as available_qty")
             )
             ->orderBy('categories.name')
             ->orderBy('products.name')
             ->get();
- 
+
         return view('manager.stock', compact('stocks'));
     }
  

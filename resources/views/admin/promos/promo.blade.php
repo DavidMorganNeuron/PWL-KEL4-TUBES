@@ -156,8 +156,9 @@
         </div>
 
         <div style="padding:0.75rem 1.5rem; background:#FBF6EE; border-top:1px solid #EDE0CC;">
-            <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">Total {{ count($promos) }} promo terdaftar</p>
+            <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">Total {{ $promos->total() }} promo terdaftar</p>
         </div>
+        {{ $promos->links() }}
     </div>
 
 </div>

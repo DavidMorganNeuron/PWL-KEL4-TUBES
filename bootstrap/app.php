@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Mendaftarkan alias 'role' untuk RoleMiddleware.
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'branch.open' => \App\Http\Middleware\CheckAnyBranchOpen::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

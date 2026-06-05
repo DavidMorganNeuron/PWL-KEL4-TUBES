@@ -12,7 +12,7 @@
     <div style="background: #3D1F0F; padding: 0.75rem 0 2rem; border-bottom: 1px solid rgba(245,233,211,0.07);">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin: 1.75rem 0 0.375rem;">
-                Langkah 4 dari 4
+                Langkah 3 dari 3
             </p>
             <h1 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 900; color: #F5E9D3; margin-bottom: 0.375rem;">
                 Konfirmasi Pembayaran
@@ -68,9 +68,9 @@
                         <div style="display: flex; gap: 0.875rem; padding: 1rem; background: rgba(200,129,59,0.08); border-radius: 0.875rem; border: 1px solid rgba(200,129,59,0.2);">
                             <span style="font-size: 1.375rem; flex-shrink: 0; margin-top: 0.1rem;" aria-hidden="true">📱</span>
                             <div>
-                                <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.25rem;">Scan QR Code</p>
+                                <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.375rem;">Pembayaran QRIS</p>
                                 <p style="font-size: 0.875rem; color: #A08060; font-weight: 300; line-height: 1.6;">
-                                    Buka app pembayaran digital dan scan QR Code di front desk kasir cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
+                                    Scan QR Code yang ditunjukkan oleh kasir di cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch?->name ?? $order->branch_id }}</strong> menggunakan aplikasi pembayaran digital.
                                 </p>
                             </div>
                         </div>
@@ -86,9 +86,9 @@
                         <div style="display: flex; gap: 0.875rem; padding: 1rem; background: rgba(200,129,59,0.08); border-radius: 0.875rem; border: 1px solid rgba(200,129,59,0.2);">
                             <span style="font-size: 1.375rem; flex-shrink: 0; margin-top: 0.1rem;" aria-hidden="true">💳</span>
                             <div>
-                                <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.25rem;">E-Wallet</p>
+                                <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A; margin-bottom: 0.375rem;">Pembayaran E-Wallet</p>
                                 <p style="font-size: 0.875rem; color: #A08060; font-weight: 300; line-height: 1.6;">
-                                    Lakukan pembayaran via GoPay, OVO, atau Dana di front desk cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</strong>.
+                                    Lakukan pembayaran melalui E-Wallet (GoPay, OVO, Dana, dll) dengan melakukan scan QR Code yang tersedia di kasir cabang <strong style="font-weight: 600; color: #1C0F0A;">{{ $order->branch?->name ?? $order->branch_id }}</strong>.
                                 </p>
                             </div>
                         </div>

@@ -20,14 +20,12 @@ class OrderFlowController extends Controller
 {
     use ResolvesStockTable;
     /* ================================================================
-       STEP 1: PILIH CABANG
+       STEP 1: PILIH CABANG (sekarang menyatu dengan halaman Menu)
     ================================================================ */
     public function branch()
     {
-        // load semua cabang sekaligus
-        $branches = Branch::orderBy('name')->get();
-
-        return view('customer.orders.branch', compact('branches'));
+        // jika sudah masuk menu, tetap di menu — redirect saja
+        return redirect()->route('orders.menu');
     }
 
     public function setBranch(Request $request)
@@ -44,16 +42,30 @@ class OrderFlowController extends Controller
     }
 
     /* ================================================================
-       STEP 2: MENU + CART
+       STEP 2: MENU + CART (dengan pemilihan cabang terintegrasi)
     ================================================================ */
     public function menu()
     {
-        if (!session('branch_id')) {
-            return redirect()->route('orders.branch')
-                             ->with('error', 'Silakan pilih cabang terlebih dahulu.');
+        // load daftar cabang untuk selector
+        $branches = Branch::where('is_active', true)
+            ->where('is_closing', false)
+            ->orderBy('name')
+            ->get();
+
+        $branch = null;
+        if (session('branch_id')) {
+            $branch = Branch::find(session('branch_id'));
+            if (!$branch) {
+                session()->forget('branch_id');
+            }
         }
 
-        // load kategori sekaligus
+        // jika belum pilih cabang, tampilkan halaman pemilihan cabang
+        if (!$branch) {
+            return view('customer.orders.menu', compact('branches', 'branch'));
+        }
+
+        // load semua produk yang tersedia
         $products = Product::where('is_available', true)
                            ->with('category')
                            ->orderBy('name')
@@ -61,7 +73,22 @@ class OrderFlowController extends Controller
 
         $cart = session('cart', []);
 
-        return view('customer.orders.menu', compact('products', 'cart'));
+        // resolve nama tabel stok cabang
+        $stockTable = $this->resolveStockTable($branch->name);
+
+        // ambil data stok untuk cabang terpilih
+        $stocks = DB::table($stockTable)
+            ->select('product_id', DB::raw('(physical_qty - reserved_qty) as available_qty'))
+            ->get()
+            ->keyBy('product_id');
+
+        // hitung diskon dari promo aktif — untuk SEMUA produk, bukan hanya cart
+        $allProductIds = $products->pluck('id_products')->toArray();
+        $promoDetails = $this->calculatePromoDetails($allProductIds, $branch->id_branches);
+        $promoDiscounts = $promoDetails['amounts'];
+        $promoDescriptions = $promoDetails['descriptions'];
+
+        return view('customer.orders.menu', compact('products', 'cart', 'branches', 'branch', 'stocks', 'promoDiscounts', 'promoDescriptions'));
     }
 
     public function addToCart(Request $request)
@@ -136,6 +163,28 @@ class OrderFlowController extends Controller
                              ->with('error', 'Sesi cabang tidak valid, silakan pilih ulang.');
         }
 
+        // validasi jam operasional
+        if (!$branch->isOpen()) {
+            return redirect()->route('orders.menu')
+                ->with('error', "Cabang {$branch->name} sedang tutup. Silakan pilih cabang lain atau pesan di jam operasional.");
+        }
+
+        // validasi stok: cek apakah ada item yang melebihi stok tersedia
+        $stockTable = $this->resolveStockTable($branch->name);
+        $stocks = DB::table($stockTable)
+            ->select('product_id', DB::raw('(physical_qty - reserved_qty) as available_qty'))
+            ->get()
+            ->keyBy('product_id');
+
+        foreach ($cart as $productId => $qty) {
+            $avail = (int) ($stocks[$productId]->available_qty ?? 0);
+            if ($qty > $avail) {
+                $productName = $products->has($productId) ? $products[$productId]->name : 'Produk';
+                return redirect()->route('orders.menu')
+                    ->with('error', "{$productName} hanya tersedia {$avail} item. Jumlah pesanan ({$qty}) melebihi stok.");
+            }
+        }
+
         // hitung diskon dari promo aktif yang relevan
         $promoDiscounts = $this->calculatePromoDiscounts($productIds, $branch->id_branches);
 
@@ -165,6 +214,11 @@ class OrderFlowController extends Controller
         if (!$branch) {
             return redirect()->route('orders.branch')
                              ->with('error', 'Sesi cabang tidak valid, silakan pilih ulang.');
+        }
+
+        if (!$branch->isOpen()) {
+            return redirect()->route('orders.menu')
+                ->with('error', "Cabang {$branch->name} sedang tutup. Silakan pilih cabang lain.");
         }
 
         // resolve nama tabel stok cabang menggunakan helper terpusat
@@ -293,6 +347,54 @@ class OrderFlowController extends Controller
         }
 
         return $discounts;
+    }
+
+    // menghitung diskon + deskripsi promo untuk ditampilkan di grid menu
+    private function calculatePromoDetails(array $productIds, int $branchId): array
+    {
+        $now = now();
+        $promos = Promo::where('is_active', true)
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->where(function ($q) use ($branchId) {
+                $q->whereNull('branch_id')->orWhere('branch_id', $branchId);
+            })
+            ->with('products')
+            ->get();
+
+        $amounts = [];
+        $descriptions = [];
+        foreach ($productIds as $pid) {
+            $amounts[$pid] = 0;
+            $descriptions[$pid] = '';
+        }
+
+        foreach ($promos as $promo) {
+            $promoProductIds = $promo->products->pluck('id_products')->toArray();
+
+            foreach ($productIds as $pid) {
+                if (!in_array($pid, $promoProductIds, true)) continue;
+
+                $product = Product::find($pid);
+                if (!$product) continue;
+
+                if ($promo->discount_type === 'percentage') {
+                    $disc = round($product->base_price * $promo->discount_value / 100);
+                    $desc = "Diskon {$promo->discount_value}%";
+                } else {
+                    $disc = (int) $promo->discount_value;
+                    $desc = "Pot. Rp" . number_format($promo->discount_value, 0, ',', '.');
+                }
+
+                // ambil diskon terbesar + deskripsi promo terbaik
+                if ($disc > $amounts[$pid]) {
+                    $amounts[$pid] = $disc;
+                    $descriptions[$pid] = $desc;
+                }
+            }
+        }
+
+        return ['amounts' => $amounts, 'descriptions' => $descriptions];
     }
 
     // menghasilkan order number unik. format: PODS-YYYYMMDD-XXXXXX (6 karakter hex uppercase)

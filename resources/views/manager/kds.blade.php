@@ -93,15 +93,6 @@
 @push('scripts')
 <script>
 (function () {
-    const el = document.getElementById('kds-refresh-countdown');
-    if (!el) return;
-    let seconds = 30;
-    setInterval(function () {
-        seconds--;
-        if (seconds <= 0) seconds = 30;
-        el.textContent = '· refresh dalam ' + seconds + 's';
-    }, 1000);
-
     document.addEventListener('click', function (e) {
 
         const btnCook = e.target.closest('.kds-btn-cook');

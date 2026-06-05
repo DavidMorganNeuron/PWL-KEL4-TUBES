@@ -15,8 +15,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category')->orderBy('name')->get();
-        return view('admin.catalogs.product', compact('products'));
+        $products = Product::with('category')->orderBy('name')->paginate(10);
+        $categories = Category::orderBy('name')->get();
+        return view('admin.catalogs.product', compact('products', 'categories'));
     }
 
     public function create()
@@ -103,6 +104,30 @@ class ProductController extends Controller
 
         if ($product->getRawOriginal('image_url')) {
             Storage::disk('public')->delete($product->getRawOriginal('image_url'));
+        }
+
+        // nullify FK request_id di stock_log sebelum hapus request_log
+        $requestIds = DB::table('request_log')
+            ->where('product_id', $id)
+            ->pluck('id_request_log');
+
+        if ($requestIds->isNotEmpty()) {
+            DB::table('stock_log')
+                ->whereIn('request_id', $requestIds)
+                ->update(['request_id' => null]);
+        }
+
+        // hapus relasi agar tidak terhalang FK constraint
+        DB::table('order_items')->where('product_id', $id)->delete();
+        DB::table('stock_log')->where('product_id', $id)->delete();
+        DB::table('request_log')->where('product_id', $id)->delete();
+        DB::table('promo_products')->where('product_id', $id)->delete();
+
+        // hapus dari semua tabel stok cabang (cascadeOnDelete, tapi amankan manual)
+        $branches = Branch::orderBy('name')->get();
+        foreach ($branches as $branch) {
+            $table = $this->resolveStockTable($branch->name);
+            DB::table($table)->where('product_id', $id)->delete();
         }
 
         $product->delete();

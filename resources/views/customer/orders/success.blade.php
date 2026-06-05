@@ -70,7 +70,7 @@
                     <div style="padding: 1.25rem 1.75rem; border-bottom: 1px dashed #EDE0CC; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <p style="font-size: 0.7rem; color: #A08060; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem;">Cabang</p>
-                            <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A;">{{ $order->branch->name }}</p>
+                            <p style="font-size: 0.9375rem; font-weight: 600; color: #1C0F0A;">{{ $order->branch?->name ?? 'Cabang telah ditutup' }}</p>
                         </div>
                         <div>
                             <p style="font-size: 0.7rem; color: #A08060; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem;">Waktu</p>

@@ -116,9 +116,10 @@
 
         <div style="padding:0.75rem 1.5rem; background:#FBF6EE; border-top:1px solid #EDE0CC;">
             <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
-                Menampilkan <span id="req-visible-count">{{ count($requests) }}</span> dari {{ count($requests) }} pengajuan
+                Menampilkan <span id="req-visible-count">{{ count($requests) }}</span> dari {{ $requests->total() }} pengajuan
             </p>
         </div>
+        {{ $requests->links() }}
     </div>
 
 </div>

@@ -77,7 +77,7 @@
                                 <p style="font-size: 0.75rem; color: #A08060; font-weight: 300;">{{ $order->created_at->format('H:i') }} WIB</p>
                             </td>
                             <td style="padding: 1rem 1.375rem; white-space: nowrap;">
-                                <span style="font-size: 0.875rem; color: #1C0F0A; font-weight: 500;">{{ $order->branch->name ?? '—' }}</span>
+                                <span style="font-size: 0.875rem; color: #1C0F0A; font-weight: 500;">{{ $order->branch?->name ?? '—' }}</span>
                             </td>
                             <td style="padding: 1rem 1.375rem;">
                                 @php
@@ -113,12 +113,13 @@
 
             <div style="padding: 0.875rem 1.375rem; background: #FBF6EE; border-top: 1px solid #EDE0CC; display: flex; align-items: center; justify-content: space-between;">
                 <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300;">
-                    Menampilkan <strong style="font-weight: 600; color: #3D1F0F;">{{ $orders->count() }}</strong> pesanan terakhir
+                    Menampilkan <strong style="font-weight: 600; color: #3D1F0F;">{{ $orders->count() }}</strong> dari {{ $orders->total() }} pesanan
                 </p>
                 <a href="{{ route('orders.branch') }}" style="font-size: 0.8125rem; font-weight: 600; color: #C8813B; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                     + Buat Pesanan Baru
                 </a>
             </div>
+            {{ $orders->links() }}
         </div>
 
         @endif

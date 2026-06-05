@@ -56,7 +56,7 @@
 @endphp
 
 <div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
-<div style="max-width: 1024px;">
+<div style="width: 100%; max-width: 1800px;">
 
     {{-- ================================================================
          SECTION 1: STAT CARDS

@@ -16,7 +16,7 @@
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
-<div style="max-width:1100px;">
+<div style="width: 100%; max-width: 1800px;">
 
     {{-- ================================================================
          SECTION 1: STAT CARDS GLOBAL
@@ -122,7 +122,7 @@
             ['label' => 'Tambah Produk',     'route' => 'admin.catalogs.create',  'icon' => '+ Produk'],
             ['label' => 'Buat Promo Baru',   'route' => 'admin.promos.create',    'icon' => '+ Promo'],
             ['label' => 'Validasi Request',  'route' => 'admin.requests.index',   'icon' => '2 Pending'],
-            ['label' => 'Data Manager',      'route' => 'admin.managers.index',   'icon' => '3 Manager'],
+            ['label' => 'Manajemen Cabang',  'route' => 'admin.branches.index',  'icon' => 'Cabang'],
         ] as $i => $shortcut)
         <a
             href="{{ route($shortcut['route']) }}"

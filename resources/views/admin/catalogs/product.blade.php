@@ -7,7 +7,7 @@
 @section('content')
 
 @php
-    $categories = $products->pluck('category.name')->unique()->filter()->sort()->values();
+    $categories = $categories ?? collect();
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
@@ -36,24 +36,6 @@
             </svg>
             Tambah Produk
         </a>
-    </div>
-
-    {{-- ================================================================
-         FILTER KATEGORI
-    ================================================================ --}}
-    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;">
-        <button type="button" class="cat-filter-btn cat-filter-active" data-cat="all"
-            style="padding:0.4375rem 1rem; border-radius:9999px; font-size:0.8125rem; font-weight:600; border:1.5px solid #C8813B; background:#C8813B; color:#1C0F0A; cursor:pointer; transition:all 0.15s;">
-            Semua
-        </button>
-        @foreach($categories as $cat)
-        <button type="button" class="cat-filter-btn" data-cat="{{ $cat }}"
-            style="padding:0.4375rem 1rem; border-radius:9999px; font-size:0.8125rem; font-weight:500; border:1.5px solid #D4C4AE; background:#FFFDF9; color:var(--pods-espresso); cursor:pointer; transition:all 0.15s;"
-            onmouseover="if(!this.classList.contains('cat-filter-active'))this.style.borderColor='#C8813B';"
-            onmouseout="if(!this.classList.contains('cat-filter-active'))this.style.borderColor='#D4C4AE';">
-            {{ $cat }}
-        </button>
-        @endforeach
     </div>
 
     {{-- ================================================================
@@ -166,13 +148,14 @@
         </div>
 
         <div style="padding:0.75rem 1.5rem; background:#FBF6EE; border-top:1px solid #EDE0CC; display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
-                Menampilkan <span id="product-count">{{ $products->count() }}</span> dari {{ $products->count() }} produk
+            <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
+                Menampilkan <span id="product-count">{{ $products->count() }}</span> dari {{ $products->total() }} produk
             </p>
             <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
                 Data diperbarui: {{ now()->format('d M Y, H:i') }} WIB
             </p>
         </div>
+        {{ $products->links() }}
     </div>
 
 </div>

@@ -15,21 +15,22 @@ class PromoController extends Controller
     {
         $promos = Promo::with(['branch', 'products'])
             ->orderByDesc('id_promos')
-            ->get()
-            ->map(function ($promo) {
-                return [
-                    'id'             => $promo->id_promos,
-                    'name'           => $promo->name,
-                    'branch'         => $promo->branch?->name ?? null,
-                    'branch_id'      => $promo->branch_id,
-                    'discount_type'  => $promo->discount_type,
-                    'discount_value' => (float) $promo->discount_value,
-                    'start_date'     => $promo->start_date->format('Y-m-d'),
-                    'end_date'       => $promo->end_date->format('Y-m-d'),
-                    'is_active'      => $promo->is_active,
-                    'products'       => $promo->products->pluck('name')->toArray(),
-                ];
-            });
+            ->paginate(10);
+
+        $promos->getCollection()->transform(function ($promo) {
+            return [
+                'id'             => $promo->id_promos,
+                'name'           => $promo->name,
+                'branch'         => $promo->branch?->name ?? null,
+                'branch_id'      => $promo->branch_id,
+                'discount_type'  => $promo->discount_type,
+                'discount_value' => (float) $promo->discount_value,
+                'start_date'     => $promo->start_date->format('Y-m-d'),
+                'end_date'       => $promo->end_date->format('Y-m-d'),
+                'is_active'      => $promo->is_active,
+                'products'       => $promo->products->pluck('name')->toArray(),
+            ];
+        });
 
         return view('admin.promos.promo', compact('promos'));
     }

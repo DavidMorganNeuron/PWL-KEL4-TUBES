@@ -178,9 +178,11 @@ class AdminController extends Controller
         ));
     }
 
-    public function assets()
+    public function assets(Request $request)
     {
-        $rows = DB::table('global_stocks_view')
+        $selectedBranch = $request->query('branch', '');
+
+        $query = DB::table('global_stocks_view')
             ->join('products', 'global_stocks_view.product_id', '=', 'products.id_products')
             ->join('categories', 'products.category_id', '=', 'categories.id_categories')
             ->select(
@@ -189,8 +191,13 @@ class AdminController extends Controller
                 'categories.name as category',
                 'global_stocks_view.physical_qty',
                 'global_stocks_view.reserved_qty',
-            )
-            ->orderBy('global_stocks_view.branch_name')
+            );
+
+        if ($selectedBranch) {
+            $query->where('global_stocks_view.branch_name', $selectedBranch);
+        }
+
+        $rows = $query->orderBy('global_stocks_view.branch_name')
             ->orderBy('categories.name')
             ->orderBy('products.name')
             ->get()
@@ -219,9 +226,17 @@ class AdminController extends Controller
         $categories = array_unique(array_column($globalStocks, 'category'));
         sort($categories);
 
+        // daftar cabang untuk filter dropdown
+        $branchNames = DB::table('global_stocks_view')
+            ->select('branch_name')
+            ->distinct()
+            ->orderBy('branch_name')
+            ->pluck('branch_name');
+
         return view('admin.reports.assets', compact(
             'globalStocks', 'threshold', 'totalPhysical', 'totalReserved',
             'totalAvailable', 'criticalCount', 'byBranch', 'categories',
+            'selectedBranch', 'branchNames',
         ));
     }
 
@@ -264,19 +279,20 @@ class AdminController extends Controller
     {
         $requests = RequestLog::with(['branch', 'product', 'manager'])
             ->orderByDesc('created_at')
-            ->get()
-            ->map(fn($r) => [
-                'id'            => $r->id_request_log,
-                'branch'        => $r->branch?->name ?? '-',
-                'branch_id'     => $r->branch_id,
-                'manager'       => $r->manager?->name ?? '-',
-                'product'       => $r->product?->name ?? '-',
-                'product_id'    => $r->product_id,
-                'requested_qty' => $r->requested_qty,
-                'status'        => $r->status,
-                'notes'         => $r->notes,
-                'created_at'    => $r->created_at?->format('Y-m-d H:i') ?? '-',
-            ]);
+            ->paginate(10);
+
+        $requests->getCollection()->transform(fn($r) => [
+            'id'            => $r->id_request_log,
+            'branch'        => $r->branch?->name ?? '-',
+            'branch_id'     => $r->branch_id,
+            'manager'       => $r->manager?->name ?? '-',
+            'product'       => $r->product?->name ?? '-',
+            'product_id'    => $r->product_id,
+            'requested_qty' => $r->requested_qty,
+            'status'        => $r->status,
+            'notes'         => $r->notes,
+            'created_at'    => $r->created_at?->format('Y-m-d H:i') ?? '-',
+        ]);
 
         return view('admin.requests.request', compact('requests'));
     }

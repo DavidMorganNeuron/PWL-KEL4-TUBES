@@ -9,6 +9,8 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BranchController;
+use App\Http\Middleware\CheckAnyBranchOpen;
 
 // login, register, logout
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -60,8 +62,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::patch('/{id}/reject', [AdminController::class, 'rejectRequest'])->name('reject');
     });
 
-    // data manajer cabang
-    Route::get('/managers', [AdminController::class, 'managers'])->name('managers.index');
+    // manajemen cabang
+    Route::prefix('branches')->name('branches.')->group(function () {
+        Route::get('/',              [BranchController::class, 'index'])->name('index');
+        Route::get('/create',        [BranchController::class, 'create'])->name('create');
+        Route::post('/',             [BranchController::class, 'store'])->name('store');
+        Route::get('/{id}/edit',     [BranchController::class, 'edit'])->name('edit');
+        Route::put('/{id}',          [BranchController::class, 'update'])->name('update');
+        Route::get('/{id}/close',    [BranchController::class, 'initiateClose'])->name('close');
+        Route::post('/{id}/close',   [BranchController::class, 'executeClose'])->name('executeClose');
+    });
 
     // laporan
     Route::prefix('reports')->name('reports.')->group(function () {
@@ -97,6 +107,11 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 });
 
 
+// halaman ketika semua cabang tutup
+Route::get('/closed', function () {
+    return view('customer.closed');
+})->name('pods.closed');
+
 // role = customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
 
@@ -105,25 +120,26 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         return view('customer.main');
     })->name('main');
 
-    // Fitur Akun & Riwayat
+    // Fitur Akun & Riwayat (tidak perlu middleware cabang buka)
     Route::get('/history', [CustomerController::class, 'history'])->name('history');
     Route::get('/account', [CustomerController::class, 'account'])->name('account');
 
-    Route::get('/order/branch', [OrderFlowController::class, 'branch'])->name('orders.branch');
-    Route::post('/order/branch', [OrderFlowController::class, 'setBranch']);
+    // Fitur Order (wajib ada cabang buka)
+    Route::middleware([CheckAnyBranchOpen::class])->group(function () {
+        Route::get('/order/branch', [OrderFlowController::class, 'branch'])->name('orders.branch');
+        Route::post('/order/branch', [OrderFlowController::class, 'setBranch']);
 
-    // Fitur Order
-    Route::get('/order/menu', [OrderFlowController::class, 'menu'])->name('orders.menu');
-    Route::post('/order/cart/add', [OrderFlowController::class, 'addToCart']);
-    Route::post('/order/cart/remove', [OrderFlowController::class, 'removeFromCart']);
+        Route::get('/order/menu', [OrderFlowController::class, 'menu'])->name('orders.menu');
+        Route::post('/order/cart/add', [OrderFlowController::class, 'addToCart']);
+        Route::post('/order/cart/remove', [OrderFlowController::class, 'removeFromCart']);
 
-    Route::get('/order/checkout', [OrderFlowController::class, 'checkout'])->name('orders.checkout');
-    Route::post('/order/checkout', [OrderFlowController::class, 'storeOrder']);
+        Route::get('/order/checkout', [OrderFlowController::class, 'checkout'])->name('orders.checkout');
+        Route::post('/order/checkout', [OrderFlowController::class, 'storeOrder']);
 
-    Route::get('/payment/{id}', [PaymentController::class, 'show']);
-    Route::post('/payment/{id}', [PaymentController::class, 'confirm']);
-    Route::get('/success/{id}', [PaymentController::class, 'success']);
+        Route::get('/payment/{id}', [PaymentController::class, 'show']);
+        Route::post('/payment/{id}', [PaymentController::class, 'confirm']);
+        Route::get('/success/{id}', [PaymentController::class, 'success']);
 
-    // dipanggil saat customer meninggalkan halaman payment
-    Route::post('/payment/{id}/abandon', [PaymentController::class, 'abandon'])->name('payment.abandon');
+        Route::post('/payment/{id}/abandon', [PaymentController::class, 'abandon'])->name('payment.abandon');
+    });
 });
