@@ -214,7 +214,7 @@
                 <h2 class="font-serif" style="font-size: 1rem; font-weight: 700; color: var(--pods-espresso);">Aktivitas Pesanan Terbaru</h2>
             </div>
             <a href="{{ route('manager.kds') }}" style="font-size: 0.75rem; color: var(--pods-caramel); font-weight: 500; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
-                Buka KDS →
+                Buka KDS
             </a>
         </div>
 

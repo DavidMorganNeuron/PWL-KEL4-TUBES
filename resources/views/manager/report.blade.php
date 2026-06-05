@@ -173,7 +173,7 @@
                                 {{ $trx->created_at->translatedFormat('d M Y, H:i') }}
                             </td>
                             <td style="padding: 0.875rem 1.375rem 0.875rem 1rem;">
-                                <span style="font-size: 0.8125rem; font-weight: 500; color: var(--pods-caramel); text-decoration: underline; white-space: nowrap;">Detail →</span>
+                                <span style="font-size: 0.8125rem; font-weight: 500; color: var(--pods-caramel); text-decoration: underline; white-space: nowrap;">Detail</span>
                             </td>
                         </tr>
                         @empty

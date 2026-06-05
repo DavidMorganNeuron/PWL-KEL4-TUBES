@@ -103,7 +103,7 @@
                                 @include('customer.layouts.status_badge', ['status' => $order->status])
                             </td>
                             <td style="padding: 1rem 1.375rem; text-align: center;">
-                                <span style="font-size: 0.8125rem; font-weight: 500; color: #C8813B; text-decoration: underline;">Lihat →</span>
+                                <span style="font-size: 0.8125rem; font-weight: 500; color: #C8813B; text-decoration: underline;">Lihat</span>
                             </td>
                         </tr>
                         @endforeach
@@ -116,7 +116,7 @@
                     Menampilkan <strong style="font-weight: 600; color: #3D1F0F;">{{ $orders->count() }}</strong> dari {{ $orders->total() }} pesanan
                 </p>
                 <a href="{{ route('orders.branch') }}" style="font-size: 0.8125rem; font-weight: 600; color: #C8813B; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
-                    + Buat Pesanan Baru
+                    Buat Pesanan Baru
                 </a>
             </div>
             {{ $orders->links() }}

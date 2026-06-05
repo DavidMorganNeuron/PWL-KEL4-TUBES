@@ -72,7 +72,7 @@ class PodsSeeder extends Seeder
                 'branch_id' => 2, // Cabang Jamin Ginting
                 'name' => 'Manager Jamin Ginting',
                 'email' => 'managerjamin@gmail.com',
-                'password' => Hash::make('ginting123'),
+                'password' => Hash::make('jamin123'),
                 'created_at' => now(),
             ],
             [
@@ -80,7 +80,7 @@ class PodsSeeder extends Seeder
                 'branch_id' => 3, // Cabang Gatot Subroto
                 'name' => 'Manager Gatot Subroto',
                 'email' => 'managergatot@gmail.com',
-                'password' => Hash::make('subroto123'),
+                'password' => Hash::make('gatot123'),
                 'created_at' => now(),
             ]
         ]);

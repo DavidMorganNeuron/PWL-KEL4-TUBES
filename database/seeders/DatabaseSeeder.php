@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             PodsSeeder::class,    // data awal: roles, branches, manager, categories, 2 produk
-            ManagerSeeder::class, // data testing: produk lengkap, stok, orders, request_log, stock_log
+            DataSeeder::class, // data testing: produk lengkap, stok, orders, request_log, stock_log
         ]);
     }
 }

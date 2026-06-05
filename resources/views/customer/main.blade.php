@@ -280,7 +280,7 @@
             @foreach([
                 ['🫘', 'Premium Beans',  'Biji kopi pilihan dari perkebunan terbaik Nusantara, diroasting segar setiap hari untuk menjaga karakternya.'],
                 ['👨‍🍳', 'Expert Barista', 'Tim barista bersertifikat dengan passion sama besarnya dengan cangkir terbaik yang pernah mereka buat.'],
-                ['⚡', 'Fast Ordering',  'Sistem pemesanan digital memastikan kopimu siap sebelum kamu sempat mengedip — efisien & akurat.'],
+                ['⚡', 'Fast Ordering',  'Sistem pemesanan digital memastikan kopimu siap sebelum kamu sempat mengedip, efisien & akurat.'],
             ] as [$icon, $title, $desc])
             <div style="padding: 2rem 1.5rem;">
                 <div style="font-size: 2.75rem; margin-bottom: 1.125rem; line-height: 1;" aria-hidden="true">{{ $icon }}</div>

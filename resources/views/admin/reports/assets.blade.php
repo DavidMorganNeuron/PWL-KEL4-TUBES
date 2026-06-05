@@ -24,7 +24,6 @@
     <div class="adm-card adm-animate" style="overflow:hidden; margin-bottom:1.5rem; animation-delay:0.24s;">
         <div style="padding:1.125rem 1.375rem 0.875rem; border-bottom:1px solid #F0E8DC; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
             <div>
-                <p style="font-size:0.6875rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--pods-muted); margin-bottom:0.125rem;">global_stocks_view</p>
                 <h2 class="font-serif" style="font-size:1rem; font-weight:700; color:var(--pods-espresso);">Stok Fisik Semua Cabang</h2>
             </div>
 
@@ -113,7 +112,7 @@
                 Menampilkan <span id="asset-visible-count">{{ count($globalStocks) }}</span> dari {{ count($globalStocks) }} entri stok
             </p>
             <p style="font-size:0.75rem; color:var(--pods-muted); font-weight:300;">
-                Sumber: <code style="font-size:0.6875rem; background:#EDE0CC; padding:1px 5px; border-radius:4px;">global_stocks_view</code> · Diperbarui: {{ now()->format('d M Y, H:i') }} WIB
+                 Diperbarui: {{ now()->format('d M Y, H:i') }} WIB
             </p>
         </div>
     </div>

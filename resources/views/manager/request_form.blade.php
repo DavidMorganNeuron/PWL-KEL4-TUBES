@@ -49,7 +49,7 @@
                             onblur="this.style.borderColor='{{ $errors->has('product_id') ? '#DC2626' : '#D4C4AE' }}'; this.style.boxShadow='none';"
                             onchange="updateStockPreview(this.value)"
                         >
-                            <option value="" disabled {{ old('product_id', $preselectedId) ? '' : 'selected' }}>-- Pilih produk --</option>
+                            <option value="" disabled {{ old('product_id', $preselectedId) ? '' : 'selected' }}>-- Pilih Produk --</option>
 
                             @php $currentCat = null; @endphp
                             @foreach($products as $product)
@@ -108,11 +108,11 @@
                         @enderror
                     </div>
 
-                    {{-- CATATAN (opsional) --}}
+                    {{-- CATATAN (Opsional) --}}
                     <div style="margin-bottom: 2rem;">
                         <label for="notes" style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--pods-espresso); margin-bottom: 0.5rem;">
                             Catatan Tambahan
-                            <span style="font-size: 0.75rem; font-weight: 300; color: var(--pods-muted);">(opsional)</span>
+                            <span style="font-size: 0.75rem; font-weight: 300; color: var(--pods-muted);">(Opsional)</span>
                         </label>
                         <textarea
                             name="notes"

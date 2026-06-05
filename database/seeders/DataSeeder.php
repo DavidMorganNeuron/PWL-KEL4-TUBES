@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
-class ManagerSeeder extends Seeder
+class DataSeeder extends Seeder
 {
     public function run(): void
     {
