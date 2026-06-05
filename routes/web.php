@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // dashboard eksekutif global
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
- 
+
     // manajemen katalog
     Route::prefix('catalogs')->name('catalogs.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
@@ -39,7 +39,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::patch('/{id}/toggle', [ProductController::class, 'toggleAvailability'])->name('toggle');
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
     });
- 
+
     // manajemen promo
     Route::prefix('promos')->name('promos.')->group(function () {
         Route::get('/', [PromoController::class, 'index'])->name('index');
@@ -50,7 +50,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::put('/{id}', [PromoController::class, 'update'])->name('update');
         Route::delete('/{id}', [PromoController::class, 'destroy'])->name('destroy');
     });
- 
+
     // validasi request
     Route::prefix('requests')->name('requests.')->group(function () {
         Route::get('/', [AdminController::class, 'requests'])->name('index');
@@ -59,10 +59,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::patch('/{id}/approve', [AdminController::class, 'approveRequest'])->name('approve');
         Route::patch('/{id}/reject', [AdminController::class, 'rejectRequest'])->name('reject');
     });
- 
+
     // data manajer cabang
     Route::get('/managers', [AdminController::class, 'managers'])->name('managers.index');
- 
+
     // laporan
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
@@ -73,24 +73,24 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // role = manager
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
- 
+
     // dashboard
     Route::get('/dashboard', [ManagerController::class, 'dashboard'])->name('dashboard');
- 
+
     // kitchen display system
     Route::get('/kds', [ManagerController::class, 'kds'])->name('kds');
- 
+
     // aksi status pesanan
     Route::post('/orders/{id}/cook',   [ManagerController::class, 'cookOrder'])->name('orders.cook');
     Route::post('/orders/{id}/done',   [ManagerController::class, 'doneOrder'])->name('orders.done');
     Route::post('/orders/{id}/cancel', [ManagerController::class, 'cancelOrder'])->name('orders.cancel');
- 
+
     // monitoring stok lokal
     Route::get('/stock', [ManagerController::class, 'stock'])->name('stock');
- 
+
     // laporan penjualan
     Route::get('/report', [ManagerController::class, 'report'])->name('report');
- 
+
     // pengajuan restock
     Route::get('/request',  [ManagerController::class, 'requestForm'])->name('request_form');
     Route::post('/request', [ManagerController::class, 'storeRequest'])->name('request_form.store');
@@ -99,22 +99,24 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 
 // role = customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    
+
     // Halaman Utama
-    Route::get('/', function () { return view('customer.main'); })->name('main');
-    
+    Route::get('/', function () {
+        return view('customer.main');
+    })->name('main');
+
     // Fitur Akun & Riwayat
     Route::get('/history', [CustomerController::class, 'history'])->name('history');
     Route::get('/account', [CustomerController::class, 'account'])->name('account');
 
     Route::get('/order/branch', [OrderFlowController::class, 'branch'])->name('orders.branch');
     Route::post('/order/branch', [OrderFlowController::class, 'setBranch']);
- 
+
     // Fitur Order
     Route::get('/order/menu', [OrderFlowController::class, 'menu'])->name('orders.menu');
     Route::post('/order/cart/add', [OrderFlowController::class, 'addToCart']);
     Route::post('/order/cart/remove', [OrderFlowController::class, 'removeFromCart']);
-    
+
     Route::get('/order/checkout', [OrderFlowController::class, 'checkout'])->name('orders.checkout');
     Route::post('/order/checkout', [OrderFlowController::class, 'storeOrder']);
 

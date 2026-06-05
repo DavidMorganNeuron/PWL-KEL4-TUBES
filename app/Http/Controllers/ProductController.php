@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Category;
 
@@ -20,7 +22,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name')->get();
-        return view('admin.catalogs.form', compact('categories'));
+        $branches   = Branch::orderBy('name')->get();
+        return view('admin.catalogs.form', compact('categories', 'branches'));
     }
 
     public function store(Request $request)
@@ -39,7 +42,20 @@ class ProductController extends Controller
             $validated['image_url'] = $request->file('image')->store('products', 'public');
         }
 
-        Product::create($validated);
+        $product = Product::create($validated);
+
+        // sisip stok awal ke seluruh tabel stok cabang
+        $branches = Branch::orderBy('name')->get();
+        foreach ($branches as $branch) {
+            $stockField = 'stock_' . $branch->id_branches;
+            $qty = max(0, (int) $request->input($stockField, 0));
+
+            DB::table($this->resolveStockTable($branch->name))->insert([
+                'product_id'   => $product->id_products,
+                'physical_qty' => $qty,
+                'reserved_qty' => 0,
+            ]);
+        }
 
         return redirect()->route('admin.catalogs.index')
             ->with('toast', 'Produk berhasil ditambahkan.');
@@ -49,7 +65,8 @@ class ProductController extends Controller
     {
         $product   = Product::findOrFail($id);
         $categories = Category::orderBy('name')->get();
-        return view('admin.catalogs.form', compact('product', 'categories'));
+        $branches   = Branch::orderBy('name')->get();
+        return view('admin.catalogs.form', compact('product', 'categories', 'branches'));
     }
 
     public function update(Request $request, $id)
@@ -102,5 +119,13 @@ class ProductController extends Controller
         $status = $product->is_available ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->route('admin.catalogs.index')
             ->with('toast', "Produk {$product->name} berhasil {$status}.");
+    }
+
+    // menentukan nama tabel stok dari nama cabang
+    private function resolveStockTable(string $branchName): string
+    {
+        $normalized = strtolower(preg_replace('/[\s.]+/', '_', trim($branchName)));
+        $normalized = preg_replace('/[^a-z0-9_]/', '', $normalized);
+        return 'stock_branch_' . $normalized;
     }
 }

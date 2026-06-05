@@ -94,7 +94,7 @@
                 </thead>
                 <tbody>
                     @foreach($perBranch as $b)
-                    @php $pct = round(($b['revenue'] / $totalRevenue) * 100); @endphp
+                    @php $pct = $totalRevenue > 0 ? round(($b['revenue'] / $totalRevenue) * 100) : 0; @endphp
                     <tr style="border-top:1px solid #F0E8DC; transition:background 0.15s;" onmouseover="this.style.background='#FFFBF4'" onmouseout="this.style.background='transparent'">
                         <td style="padding:1rem 1.375rem; font-size:0.9375rem; font-weight:600; color:var(--pods-espresso); white-space:nowrap;">{{ $b['branch'] }}</td>
                         <td style="padding:1rem; text-align:center; font-size:0.9375rem; font-weight:600; color:var(--pods-espresso); font-variant-numeric:tabular-nums;">{{ number_format($b['completed'], 0, ',', '.') }}</td>

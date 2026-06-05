@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Concerns\ResolvesStockTable;
 use App\Models\Branch;
 use App\Models\Product;
+use App\Models\Promo;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
@@ -135,7 +136,10 @@ class OrderFlowController extends Controller
                              ->with('error', 'Sesi cabang tidak valid, silakan pilih ulang.');
         }
 
-        return view('customer.orders.checkout', compact('cart', 'products', 'branch'));
+        // hitung diskon dari promo aktif yang relevan
+        $promoDiscounts = $this->calculatePromoDiscounts($productIds, $branch->id_branches);
+
+        return view('customer.orders.checkout', compact('cart', 'products', 'branch', 'promoDiscounts'));
     }
 
     /* ================================================================
@@ -180,10 +184,14 @@ class OrderFlowController extends Controller
             }
         }
 
-        // hitung subtotal
+        // hitung subtotal dan diskon dari promo aktif
         $subtotal = 0;
+        $totalDiscount = 0;
+        $promoDiscounts = $this->calculatePromoDiscounts($productIds, $branchId);
+
         foreach ($cart as $productId => $qty) {
             $subtotal += $products[$productId]->base_price * $qty;
+            $totalDiscount += ($promoDiscounts[$productId] ?? 0) * $qty;
         }
 
         // buat nota order
@@ -192,22 +200,23 @@ class OrderFlowController extends Controller
             'user_id'        => Auth::id(),
             'order_number'   => $this->generateOrderNumber(),
             'subtotal'       => $subtotal,
-            'total_discount' => 0,
-            'grand_total'    => $subtotal,
+            'total_discount' => $totalDiscount,
+            'grand_total'    => max(0, $subtotal - $totalDiscount),
             'status'         => 'pending_payment',
         ]);
 
         // insert order_items + soft-lock stok
         foreach ($cart as $productId => $qty) {
             $product = $products[$productId];
+            $discountPerItem = $promoDiscounts[$productId] ?? 0;
 
             OrderItem::create([
                 'order_id'       => $order->id_orders,
                 'product_id'     => $productId,
                 'qty'            => $qty,
                 'base_price'     => $product->base_price,
-                'discount_amount'=> 0,
-                'subtotal_price' => $product->base_price * $qty,
+                'discount_amount'=> $discountPerItem,
+                'subtotal_price' => max(0, ($product->base_price - $discountPerItem) * $qty),
             ]);
 
             // soft-lock: tambah reserved_qty, tidak boleh melebihi physical_qty
@@ -239,6 +248,51 @@ class OrderFlowController extends Controller
         session()->forget('cart');
 
         return redirect('/payment/' . $order->id_orders);
+    }
+
+    // menghitung diskon per produk dari promo aktif yang relevan (nasional + lokal cabang)
+    private function calculatePromoDiscounts(array $productIds, int $branchId): array
+    {
+        $now = now();
+        $promos = Promo::where('is_active', true)
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->where(function ($q) use ($branchId) {
+                $q->whereNull('branch_id')->orWhere('branch_id', $branchId);
+            })
+            ->with('products')
+            ->get();
+
+        $discounts = [];
+        foreach ($productIds as $pid) {
+            $discounts[$pid] = 0;
+        }
+
+        foreach ($promos as $promo) {
+            $promoProductIds = $promo->products->pluck('id_products')->toArray();
+
+            foreach ($productIds as $pid) {
+                if (!in_array($pid, $promoProductIds, true)) {
+                    continue;
+                }
+
+                $product = Product::find($pid);
+                if (!$product) continue;
+
+                if ($promo->discount_type === 'percentage') {
+                    $disc = round($product->base_price * $promo->discount_value / 100);
+                } else {
+                    $disc = (int) $promo->discount_value;
+                }
+
+                // ambil diskon terbesar jika ada beberapa promo untuk produk yg sama
+                if ($disc > $discounts[$pid]) {
+                    $discounts[$pid] = $disc;
+                }
+            }
+        }
+
+        return $discounts;
     }
 
     // menghasilkan order number unik. format: PODS-YYYYMMDD-XXXXXX (6 karakter hex uppercase)

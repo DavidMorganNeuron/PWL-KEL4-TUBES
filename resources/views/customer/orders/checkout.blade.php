@@ -76,17 +76,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = 0; @endphp
+                        @php
+                            $grandTotal = 0;
+                            $totalDiscount = 0;
+                        @endphp
                         @foreach($cart as $productId => $qty)
                         @php
                             $p = $products->get($productId);
                             if (!$p) continue;
-                            $lineTotal  = $p->base_price * $qty;
+                            $discPerItem = $promoDiscounts[$productId] ?? 0;
+                            $effectivePrice = max(0, $p->base_price - $discPerItem);
+                            $lineTotal  = $effectivePrice * $qty;
                             $grandTotal += $lineTotal;
+                            $totalDiscount += $discPerItem * $qty;
                         @endphp
                         <tr style="border-bottom: 1px solid #EDE0CC;">
                             <td style="padding: 1rem 1.5rem;">
                                 <p style="font-size: 0.9375rem; font-weight: 500; color: #1C0F0A; margin-bottom: 0.125rem;">{{ $p->name }}</p>
+                                @if($discPerItem > 0)
+                                <p style="font-size: 0.75rem; color: #059669; font-weight: 500;">Diskon: -Rp {{ number_format($discPerItem, 0, ',', '.') }}/item</p>
+                                @endif
                                 <p style="font-size: 0.75rem; color: #A08060; font-weight: 300;">{{ $p->category->name ?? '' }}</p>
                             </td>
                             <td style="padding: 1rem; text-align: center;">
@@ -94,6 +103,9 @@
                             </td>
                             <td style="padding: 1rem; text-align: right; white-space: nowrap;">
                                 <span style="font-size: 0.875rem; color: #A08060;">Rp {{ number_format($p->base_price, 0, ',', '.') }}</span>
+                                @if($discPerItem > 0)
+                                <br><span style="font-size: 0.75rem; color: #059669;">Rp {{ number_format($effectivePrice, 0, ',', '.') }}/pc</span>
+                                @endif
                             </td>
                             <td style="padding: 1rem 1.5rem; text-align: right; white-space: nowrap;">
                                 <span style="font-size: 0.9375rem; font-weight: 600; color: #3D1F0F;">Rp {{ number_format($lineTotal, 0, ',', '.') }}</span>
@@ -103,6 +115,18 @@
                     </tbody>
                     {{-- baris total --}}
                     <tfoot>
+                        @if($totalDiscount > 0)
+                        <tr style="background: #FBF6EE;">
+                            <td colspan="3" style="padding: 0.5rem 1rem 0.5rem 1.5rem; font-size: 0.8125rem; font-weight: 500; color: #059669; text-align: right;">
+                                Diskon Promo
+                            </td>
+                            <td style="padding: 0.5rem 1.5rem; text-align: right; white-space: nowrap;">
+                                <span style="font-size: 0.875rem; font-weight: 600; color: #059669;">
+                                    -Rp {{ number_format($totalDiscount, 0, ',', '.') }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endif
                         <tr style="background: #FBF6EE;">
                             <td colspan="3" style="padding: 1rem 1rem 1rem 1.5rem; font-size: 0.9375rem; font-weight: 600; color: #A08060; text-align: right;">
                                 Total Pembayaran
@@ -190,10 +214,25 @@
 
                     {{-- divider + total ringkas --}}
                     <div style="margin: 0 1.375rem; border-top: 1px solid #EDE0CC; padding: 1rem 0;">
+                        @php
+                            $sidebarTotal = 0;
+                            foreach ($cart as $pid => $qty) {
+                                $p = $products->get($pid);
+                                if (!$p) continue;
+                                $disc = $promoDiscounts[$pid] ?? 0;
+                                $sidebarTotal += max(0, $p->base_price - $disc) * $qty;
+                            }
+                        @endphp
+                        @if(($totalDiscount ?? 0) > 0)
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.375rem;">
+                            <span style="font-size: 0.75rem; color: #059669;">Diskon Promo</span>
+                            <span style="font-size: 0.8125rem; font-weight: 600; color: #059669;">-Rp {{ number_format($totalDiscount, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-size: 0.875rem; color: #A08060;">Total</span>
                             <span style="font-family: var(--font-serif); font-size: 1.125rem; font-weight: 900; color: #1C0F0A;">
-                                Rp {{ number_format($grandTotal, 0, ',', '.') }}
+                                Rp {{ number_format($sidebarTotal, 0, ',', '.') }}
                             </span>
                         </div>
                     </div>

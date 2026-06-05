@@ -12,6 +12,7 @@
     $formAction = $isEdit
         ? route('admin.catalogs.update', $product->id_products)
         : route('admin.catalogs.store');
+    $branches = $branches ?? collect();
 @endphp
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
@@ -200,6 +201,28 @@
                         <span style="font-size:0.875rem; font-weight:500; color:var(--pods-espresso);">Aktif (tersedia di menu)</span>
                     </label>
                 </div>
+
+                {{-- stok awal per cabang (hanya saat create) --}}
+                @if(!$isEdit)
+                <div style="margin-bottom:2rem; padding:1.125rem 1.25rem; background:#FFFBF4; border-radius:10px; border:1px solid #D4C4AE;">
+                    <p style="font-size:0.8125rem; font-weight:600; color:var(--pods-espresso); margin-bottom:0.75rem;">
+                        Stok Awal per Cabang
+                        <span style="font-size:0.75rem; font-weight:300; color:var(--pods-muted);">(isi 0 jika belum tersedia)</span>
+                    </p>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.875rem;">
+                        @foreach($branches as $branch)
+                        <div>
+                            <label for="stock_{{ $branch->id_branches }}" style="display:block; font-size:0.6875rem; font-weight:600; color:var(--pods-espresso); margin-bottom:0.375rem;">{{ $branch->name }}</label>
+                            <div style="position:relative;">
+                                <input type="number" id="stock_{{ $branch->id_branches }}" name="stock_{{ $branch->id_branches }}" value="0" min="0"
+                                    style="width:100%; padding:0.5rem 0.75rem; border:1.5px solid #D4C4AE; border-radius:8px; background:#FFFDF9; color:var(--pods-espresso); font-size:0.875rem; font-variant-numeric:tabular-nums; transition:border-color 0.15s;"
+                                    onfocus="this.style.borderColor='#C8813B'" onblur="this.style.borderColor='#D4C4AE'">
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
 
                 {{-- tombol aksi --}}
                 <div style="display:flex; align-items:center; justify-content:flex-end; gap:0.75rem; padding-top:1.25rem; border-top:1px solid #F0E8DC;">

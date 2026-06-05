@@ -368,6 +368,7 @@
 
             group.style.display = hasVisible ? '' : 'none';
         });
+    }
 
     var debounceTimer;
     searchInput.addEventListener('input', function () {
