@@ -1,253 +1,286 @@
-# 🍽️ Multi-Branch Point of Sales System for Modern F&B - Pod's
+# Pod's — Multi-Branch Point of Sale System
 
-Sistem Point of Sale (POS) berbasis web untuk bisnis Food & Beverage (F&B) yang mendukung multi-cabang, manajemen pesanan, stok, dan operasional secara real-time.
-
-Project ini dikembangkan dengan pendekatan **real-world scenario**, sehingga alur sistem menyesuaikan kondisi operasional bisnis F&B sebenarnya, bukan sekadar implementasi teoritis.
+Sistem POS berbasis web untuk bisnis F&B yang punya lebih dari satu cabang. Dibangun dengan pendekatan operasional nyata: stok terkunci saat checkout, pesanan terlacak dari dapur ke meja, dan semua laporan terpusat di satu dashboard.
 
 ---
 
-## 🚀 Teknologi yang Digunakan
+## Latar Belakang
 
-- **Laravel 12** → Backend framework
-- **PHP** → Server-side language
-- **MySQL** → Database
-- **Tailwind CSS** → Styling
-- **Blade Template** → View engine Laravel
-- **JavaScript** → Interaksi frontend
+Bisnis F&B multi-cabang punya masalah yang tidak bisa diselesaikan dengan kasir biasa — stok di satu cabang tidak sinkron dengan cabang lain, promo berjalan tanpa koordinasi pusat, dan tidak ada visibilitas real-time soal dapur. Pod's dibangun untuk menyelesaikan persis masalah itu.
 
 ---
 
-## 👥 Aktor Sistem
+## Fitur Utama
 
-### 1. Admin Pusat (role: admin)
+### Admin Pusat
+Admin tidak terikat ke cabang manapun, sehingga bisa melihat dan mengelola keseluruhan sistem.
 
-**Deskripsi:**
-Pemegang otoritas tertinggi yang mengelola seluruh cabang dan kebijakan sistem.
+**Dashboard Global**
+- Total pendapatan seluruh cabang
+- Jumlah transaksi dan outlet aktif
+- Ringkasan stok seluruh cabang dan monitoring stok kritis
 
-**Batasan Data:**
-Tidak memiliki `branch_id` (NULL) → akses global.
+**Manajemen Cabang**
+- Tambah, edit, dan hapus cabang
+- Atur alamat dan jam operasional (termasuk opsi buka 24 jam)
+- Aktifkan, nonaktifkan, atau tutup cabang (soft delete)
+- Saat membuat cabang baru, admin langsung bisa membuat akun manager-nya sekaligus — sistem otomatis menghubungkan keduanya
 
-**Fitur:**
-- **Manajemen Outlet**
-  - Edit alamat cabang
-  - Mengubah status cabang (Open / Closed)
-  - Jika Closed → tidak bisa dipilih oleh customer (readonly + label “Closed”)
+**Manajemen Katalog**
+- CRUD kategori dan produk
+- Upload dan ganti gambar produk
+- Atur harga dan ketersediaan menu (`is_available`) — jika dimatikan, menu hilang dari semua cabang
 
-- **Manajemen Katalog Menu**
-  - CRUD produk dan kategori
-  - Upload & update gambar produk
-  - Kontrol ketersediaan menu (`is_available`)
+**Manajemen Promo**
+- Promo **nasional** berlaku untuk semua cabang (`scope = national`)
+- Promo **lokal** hanya berlaku di cabang tertentu (`scope = local`)
+- Tipe diskon: persentase atau nominal
+- Satu promo bisa mencakup banyak produk sekaligus
+- Promo hanya bisa dibuat oleh admin untuk menjaga konsistensi laporan keuangan
 
-- **Manajemen Promo (Terpusat)**
-  - Membuat promo (persentase / nominal)
-  - Mengatur periode aktif
-  - Menentukan produk yang terkena promo  
-  ⚠️ Promo hanya dapat dibuat oleh admin pusat untuk menjaga konsistensi laporan
+**Validasi Request Restock**
+- Approve atau reject pengajuan restock dari manager cabang
+- Status: `pending` → `approved` / `rejected`
+- Jika disetujui, stok fisik cabang otomatis bertambah
 
-- **Validasi Request**
-  - Approve / Reject:
-    - Restock produk
-  - Tercatat di `request_log`
-
-- **Manajemen Manager Cabang**
-  - Hanya melihat daftar manager
-  - 1 cabang = 1 manager
-
-- **Laporan Global**
-  - Total pendapatan seluruh cabang
-  - Pendapatan per cabang
-  - Nilai aset stok fisik (global & per cabang)
+**Laporan Global**
+- Pendapatan per cabang dan total keseluruhan
+- Produk terlaris
+- Nilai aset stok (global dan per cabang)
+- Performa tiap cabang
 
 ---
 
-### 2. Manager Cabang (role: manager)
+### Manager Cabang
+Manager hanya bisa mengakses data cabangnya sendiri, sesuai `branch_id` yang terikat ke akunnya.
 
-**Deskripsi:**
-Penanggung jawab operasional cabang dan eksekusi pesanan.
+**Dashboard Cabang**
+- Penjualan hari ini, total order, dan order yang sedang aktif
+- Notifikasi stok kritis cabang
+- Status buka/tutup cabang
 
-**Batasan Data:**
-Hanya dapat mengakses data sesuai `branch_id`.
+**Kitchen Display System (KDS)**
+- Tampilan antrian pesanan secara real-time
+- Menampilkan semua order berstatus `paid` yang menunggu diproses
+- Update status: `paid → cooking → completed`
+- Pembatalan darurat (`cooking → cancelled`) — wajib mengisi alasan, semua aktivitas tercatat di `stock_log`
 
-**Fitur:**
-- **Pemantauan Stok Real-Time**
-  - Melihat `physical_qty` stok cabang
+**Monitoring Stok**
+- Melihat `physical_qty` (stok nyata di dapur) dan `reserved_qty` (stok yang sedang di-hold oleh order aktif) secara real-time
 
-- **Request Restock**
-  - Mengajukan restock ke admin pusat
-  - Diproses otomatis jika disetujui
+**Request Restock**
+- Ajukan permintaan penambahan stok ke admin pusat
+- Permintaan masuk ke `request_log` dan bisa dilacak statusnya
 
-- **Laporan Penjualan Cabang**
-  - Data transaksi (`orders`)
-  - Best seller (`order_items`)
-
-- **Antrean Pesanan**
-  - Menampilkan pesanan dengan status `paid`
-
-- **Update Status Pesanan**
-  - `paid → cooking → completed`
-
-- **Pembatalan Darurat**
-  - Mengubah status ke `cancelled`
-  - Wajib isi `cancel_reason`
-  - Sistem mencatat ke `stock_log`
+**Laporan Cabang**
+- Pendapatan dan total transaksi cabang
+- Best seller produk
+- Riwayat pesanan lengkap
 
 ---
 
-### 3. Customer (role: customer)
+### Customer
+Customer wajib punya akun untuk bisa melakukan transaksi.
 
-**Deskripsi:**
-Pengguna utama yang melakukan pemesanan.
+**Landing Page**
+- Informasi cabang yang tersedia
+- Promo aktif (nasional dan lokal)
+- Katalog menu lengkap
 
-⚠️ Wajib memiliki akun untuk melakukan transaksi.
+**Alur Pemesanan**
+1. Pilih cabang — cabang yang tutup, tidak aktif, atau sedang closing tidak bisa dipilih
+2. Browse menu berdasarkan kategori, lihat harga dan promo yang sedang berlaku
+3. Tambah produk ke cart, ubah jumlah, atau hapus item
+4. Checkout — pilih metode pembayaran (QRIS atau E-Wallet), lihat ringkasan pesanan, dan terapkan promo aktif
+5. Bayar dan pantau status pesanan secara real-time
 
-**Fitur:**
-- **Pemilihan Cabang**
-- **Katalog & Pemesanan**
-- **Cart (Keranjang)**
-- **Checkout & Pembayaran (QRIS / E-Wallet)**
-- **Live Tracking Pesanan**
-- **Riwayat Transaksi**
+**Live Order Tracking**
+Setelah bayar, customer bisa memantau statusnya langsung: `pending_payment` → `paid` → `cooking` → `completed` (atau `cancelled` jika ada masalah di dapur).
 
----
+**Validasi Cart**
+- Jika stok tidak mencukupi: customer tetap di halaman cart, sistem menampilkan jumlah stok yang tersedia
+- Jika semua item habis: customer diarahkan kembali ke katalog
 
-## 🔄 Alur Order
-
-1. Customer checkout → `pending_payment`  
-2. Payment sukses → `paid`  
-3. Manager:
-   - `paid → cooking`
-   - `cooking → completed`  
-4. Jika gagal:
-   - `cooking → cancelled`
-
----
-
-## 🛒 Validasi Cart (User Experience)
-
-- Jika stok tidak mencukupi:
-  - User tetap di halaman cart
-  - Sistem menampilkan notifikasi jumlah stok tersedia
-
-- Jika hanya 1 item dan stok habis:
-  - User diarahkan ke katalog
-
-Tujuan:
-➡️ Mencegah user keluar dari sistem secara tiba-tiba
+**Fitur Akun**
+- Riwayat transaksi lengkap beserta detail tiap pesanan
+- Edit profil akun
 
 ---
 
-## 📦 Manajemen Stok
+## Alur Order & Mekanisme Stok
 
-Konsep utama:
+```
+Customer checkout
+   └─ Status: pending_payment
+   └─ Stok: reserved_qty += qty (stok di-hold)
 
-- `physical_qty` → stok nyata
-- `reserved_qty` → stok yang sedang dipesan
+Pembayaran berhasil
+   └─ Status: paid
+   └─ Stok: physical_qty -= qty, reserved_qty -= qty
 
-### Mekanisme:
-- Checkout → tambah `reserved_qty`
-- Payment sukses → kurangi `physical_qty`
-- Payment gagal / cancel → release `reserved_qty`
+Manager proses di KDS
+   └─ paid → cooking → completed
 
----
+Jika dibatalkan
+   └─ cooking → cancelled
+   └─ Stok: reserved_qty dikembalikan
+```
 
-## 🗄️ Struktur Database
+**Abandoned Payment Handling:** Jika customer meninggalkan halaman pembayaran tanpa menyelesaikannya, sistem otomatis membatalkan order dan mengembalikan reserved stock — mencegah stok terkunci permanen.
 
-Beberapa tabel utama:
+**Critical Stock Monitoring:** Sistem mendeteksi dan menandai produk dengan stok rendah (contoh: `physical_qty < 10`) sebagai `critical_stock`.
 
-- **users** → data pengguna
-- **branches** → data cabang
-- **products** → data menu
-- **categories** → kategori produk
-- **promos** → data promo
-- **promo_products** → relasi promo & produk
-- **orders** → transaksi
-- **order_items** → detail pesanan
-- **payments** → pembayaran
-- **stocks** → stok per cabang *(disarankan satu tabel terpusat)*
-- **stock_log** → histori perubahan stok
-- **request_log** → pengajuan restock
+**Branch Availability:** Jika seluruh cabang sedang tutup, customer diarahkan ke halaman `/closed` dan tidak bisa melakukan pemesanan sama sekali.
 
 ---
 
-## 🧩 Enum yang Digunakan
+## Tech Stack
 
-### Order Status
-- `pending_payment`
-- `paid`
-- `cooking`
-- `completed`
-- `cancelled`
-
-### Payment Status
-- `pending`
-- `success`
-- `failed`
-
-### Payment Method
-- `QRIS`
-- `E_Wallet`
-
-### Request Status
-- `pending`
-- `approved`
-- `rejected`
-
-### Activity Type (Stock Log)
-- `sale`
-- `restock_approved`
-- `adjustment`
-- `waste`
+| Layer | Teknologi | Alasan |
+|---|---|---|
+| Backend | Laravel 12 (PHP 8.2) | Framework PHP yang mature dengan ekosistem lengkap — routing, ORM, middleware, semuanya sudah ada |
+| Database | MySQL | Relational database yang cocok untuk sistem transaksi dengan banyak relasi antar tabel |
+| Frontend | Tailwind CSS v4 | Utility-first CSS yang bikin styling cepat tanpa perlu keluar dari HTML |
+| View Engine | Blade Templates | Template engine bawaan Laravel, mudah diintegrasikan dengan data dari controller |
+| Build Tool | Vite 6 | Bundler modern yang jauh lebih cepat dari Webpack untuk development |
+| JS | Axios | HTTP client untuk request AJAX di frontend |
 
 ---
 
-## 📊 Catatan Desain Sistem
+## Struktur Database
 
-- Tidak menggunakan role **Kitchen**
-  → Digantikan oleh Manager Cabang
+```
+Master Data         Transaksi           Stok & Request
+─────────────       ─────────────       ──────────────────
+users               orders              stocks (per cabang)
+branches            order_items         stock_log
+categories          payments            request_log
+products
+promos
+promo_products
+```
 
-- Tidak ada fitur delivery
-  → Fokus pada:
-  - Order
-  - Pembayaran
-  - Stok
+**Enum yang digunakan:**
 
-- Promo hanya dikelola oleh Admin Pusat
-  → Menghindari inkonsistensi laporan keuangan
-
----
-
-## 📌 Saran & Arahan Dosen (Penting)
-
-Project ini telah disesuaikan berdasarkan masukan dosen:
-
-1. **User Experience Cart**
-   - Jika stok tidak cukup, user tetap di cart
-   - Sistem harus memberi informasi, bukan memaksa keluar
-
-2. **Fokus Sistem**
-   - Tidak perlu fitur delivery
-   - Fokus pada:
-     - Order
-     - Pembayaran
-     - Dampak ke stok
-
-3. **Role Sistem**
-   - Tidak perlu role "Kitchen"
-   - Digantikan oleh **Manager Cabang**
-   - Manager bertanggung jawab atas:
-     - Proses memasak
-     - Update status pesanan
-     - Pembatalan jika terjadi masalah
+| Konteks | Nilai |
+|---|---|
+| Order Status | `pending_payment`, `paid`, `cooking`, `completed`, `cancelled` |
+| Payment Status | `pending`, `success`, `failed` |
+| Payment Method | `QRIS`, `E_Wallet` |
+| Request Status | `pending`, `approved`, `rejected` |
+| Stock Activity | `sale`, `restock_approved`, `adjustment`, `waste` |
 
 ---
 
-## ⚙️ Cara Menjalankan Project
+## Cara Menjalankan Lokal
+
+### 1. Clone repository
 
 ```bash
 git clone https://github.com/DavidMorganNeuron/PWL-KEL4-TUBES.git
-cd repository
+cd PWL-KEL4-TUBES
+```
+
+### 2. Install dependencies
+
+```bash
 composer install
+npm install
+```
+
+### 3. Setup environment
+
+```bash
 cp .env.example .env
 php artisan key:generate
+```
+
+Buka file `.env` dan sesuaikan konfigurasi database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pods_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Jalankan migrasi dan seeder
+
+```bash
 php artisan migrate
+php artisan db:seed
+```
+
+Seeder akan otomatis membuat:
+- Data awal: roles, cabang, akun manager, kategori, dan 2 produk
+- Data testing: produk lengkap, stok, orders, request log, dan stock log
+
+### 5. Jalankan server
+
+```bash
 php artisan serve
+npm run dev
+```
+
+Buka `http://localhost:8000` di browser.
+
+---
+
+## Akun Default (setelah seeder)
+
+| Role | Email | Password |
+|---|---|---|
+| Admin Pusat | *(cek PodsSeeder.php)* | *(cek PodsSeeder.php)* |
+| Manager Cabang | *(cek PodsSeeder.php)* | *(cek PodsSeeder.php)* |
+
+---
+
+## Struktur Folder Penting
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── AdminController.php
+│   │   ├── ManagerController.php
+│   │   ├── CustomerController.php
+│   │   ├── OrderFlowController.php
+│   │   ├── PaymentController.php
+│   │   ├── ProductController.php
+│   │   ├── PromoController.php
+│   │   └── BranchController.php
+│   └── Middleware/
+├── Models/
+resources/views/
+├── admin/
+├── manager/
+└── customer/
+database/
+├── migrations/
+└── seeders/
+```
+
+---
+
+## Catatan Desain
+
+- **Tidak ada role Kitchen** — fungsinya digantikan oleh Manager Cabang yang mengelola KDS langsung
+- **Tidak ada fitur delivery** — sistem fokus pada order, pembayaran, dan manajemen stok
+- **Promo hanya dari Admin Pusat** — untuk menghindari inkonsistensi laporan keuangan antar cabang
+- **Stok per cabang terpisah** — tiap cabang punya tabel stok sendiri untuk mencegah konflik data
+
+---
+
+## Tim Pengembang
+
+**Kelompok 4 — Pemrograman Web Lanjut**  
+Fakultas Ilmu Komputer dan Teknologi Informasi  
+Universitas Sumatera Utara
+
+---
+
+## Lisensi
+
+MIT
