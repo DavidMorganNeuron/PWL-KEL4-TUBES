@@ -11,7 +11,7 @@ class ManagerSeeder extends Seeder
 {
     public function run(): void
     {
-        // nonaktifkan foreign key sementara untuk truncate
+        // ini supaya nonaktifkan foreign key sementara untuk truncate
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
         DB::table('stock_log')->truncate();

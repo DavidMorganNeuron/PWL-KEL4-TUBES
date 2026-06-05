@@ -17,9 +17,7 @@
 <div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
 <div style="display: grid; grid-template-columns: 1fr 380px; gap: 1.25rem; align-items: flex-start;">
 
-    {{-- ================================================================
-         FORMULIR PENGAJUAN
-    ================================================================ --}}
+         {{-- FORMULIR PENGAJUAN --}}
     <div>
 
         <div class="mgr-card mgr-animate" style="overflow: hidden; margin-bottom: 1.25rem;">
@@ -141,9 +139,7 @@
 
     </div>
 
-    {{-- ================================================================
-         RIWAYAT PENGAJUAN
-    ================================================================ --}}
+         {{-- RIWAYAT PENGAJUAN --}}
     <div class="mgr-card mgr-animate" style="animation-delay: 0.18s; overflow: hidden; position: sticky; top: calc(64px + 2rem);">
 
         <div style="padding: 1.125rem 1.375rem 0.875rem; border-bottom: 1px solid #F0E8DC; background: var(--pods-espresso);">

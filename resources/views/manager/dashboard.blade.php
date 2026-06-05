@@ -58,9 +58,7 @@
 <div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
 <div style="width: 100%; max-width: 1800px;">
 
-    {{-- ================================================================
-         SECTION 1: STAT CARDS
-    ================================================================ --}}
+         {{-- SECTION 1: STAT CARDS --}}
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
         @foreach($statCards as $i => $stat)
         <div class="mgr-card mgr-animate" style="padding: 1.25rem 1.375rem; animation-delay: {{ $i * 0.06 }}s;">
@@ -85,9 +83,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         SECTION 2: Best Seller + Stok Kritis
-    ================================================================ --}}
+         {{-- SECTION 2: Best Seller + Stok Kritis --}}
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.75rem;">
 
         {{-- BEST SELLER HARI INI --}}
@@ -165,9 +161,7 @@
 
     </div>
 
-    {{-- ================================================================
-         SECTION 3: GRAFIK PENDAPATAN
-    ================================================================ --}}
+         {{-- SECTION 3: GRAFIK PENDAPATAN --}}
     <div class="mgr-card mgr-animate" style="animation-delay: 0.36s; overflow: hidden; margin-bottom: 1.75rem;">
 
         <div style="padding: 1.125rem 1.375rem 0.875rem; border-bottom: 1px solid #F0E8DC; display: flex; align-items: center; justify-content: space-between;">
@@ -204,9 +198,7 @@
         </div>
     </div>
 
-    {{-- ================================================================
-         SECTION 4: AKTIVITAS PESANAN TERBARU
-    ================================================================ --}}
+         {{-- SECTION 4: AKTIVITAS PESANAN TERBARU --}}
     <div class="mgr-card mgr-animate" style="animation-delay: 0.36s; overflow: hidden;">
         <div style="padding: 1.125rem 1.375rem 0.75rem; border-bottom: 1px solid #F0E8DC; display: flex; align-items: center; justify-content: space-between;">
             <div>

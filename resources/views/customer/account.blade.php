@@ -7,9 +7,8 @@
 
 <div style="padding-top: 72px; min-height: 100vh; background: #FBF6EE;">
 
-    {{-- ================================================================
-         PAGE HEADER
-    ================================================================ --}}
+         {{-- PAGE HEADER --}}
+
     <div style="background: #FBF6EE; padding: 2.5rem 0 0;">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
             <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: #C8813B; margin-bottom: 0.25rem;">
@@ -21,15 +20,13 @@
         </div>
     </div>
 
-    {{-- ================================================================
-         MAIN CONTENT: grid 3 kolom statis
-    ================================================================ --}}
+         {{-- MAIN CONTENT: grid 3 kolom statis --}}
+
     <div style="width: 1280px; margin: 0 auto; padding: 2rem 2.5rem 4rem;">
         <div style="display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; align-items: start;">
 
-            {{-- ==========================================
-                 KOLOM KIRI — Kartu Identitas User
-            ========================================== --}}
+                 {{-- KOLOM KIRI — Kartu Identitas User --}}
+
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
                 {{-- KARTU: Avatar + Nama --}}
@@ -105,9 +102,8 @@
 
             </div>
 
-            {{-- ==========================================
-                 KOLOM KANAN — Detail & Aksi
-            ========================================== --}}
+                 {{-- KOLOM KANAN — Detail & Aksi --}}
+                 
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
                 {{-- KARTU: Informasi Pribadi — grid 2 kolom statis --}}

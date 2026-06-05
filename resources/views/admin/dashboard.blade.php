@@ -18,9 +18,7 @@
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 <div style="width: 100%; max-width: 1800px;">
 
-    {{-- ================================================================
-         SECTION 1: STAT CARDS GLOBAL
-    ================================================================ --}}
+         {{-- SECTION 1: STAT CARDS GLOBAL --}}
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.75rem;">
         @foreach($globalStats as $i => $stat)
         <div class="adm-card adm-animate" style="padding:1.25rem 1.375rem; animation-delay:{{ $i * 0.06 }}s;">
@@ -32,9 +30,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         SECTION 2: PERBANDINGAN PENDAPATAN ANTAR CABANG
-    ================================================================ --}}
+         {{-- SECTION 2: PERBANDINGAN PENDAPATAN ANTAR CABANG --}}
     <div style="display:grid; grid-template-columns:1fr 320px; gap:1rem; margin-bottom:1.75rem; align-items:start;">
 
         {{-- kartu perbandingan cabang --}}
@@ -44,7 +40,7 @@
                     <p style="font-size:0.6875rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--pods-muted); margin-bottom:0.125rem;">Bulan Ini</p>
                     <h2 class="font-serif" style="font-size:1rem; font-weight:700; color:var(--pods-espresso);">Perbandingan Pendapatan Cabang</h2>
                 </div>
-                <a href="{{ route('admin.reports.sales') }}" style="font-size:0.75rem; color:var(--pods-caramel); font-weight:500; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Laporan Lengkap →</a>
+                <a href="{{ route('admin.reports.sales') }}" style="font-size:0.75rem; color:var(--pods-caramel); font-weight:500; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Laporan Lengkap</a>
             </div>
             <div style="padding:1.25rem 1.375rem; display:flex; flex-direction:column; gap:1.125rem;">
                 @foreach($branchRevenue as $branch)
@@ -88,9 +84,7 @@
 
     </div>
 
-    {{-- ================================================================
-         SECTION 3: TOP SELLER PER CABANG
-    ================================================================ --}}
+         {{-- SECTION 3: TOP SELLER PER CABANG --}}
     <div class="adm-card adm-animate" style="animation-delay:0.36s; overflow:hidden; margin-bottom:1.75rem;">
         <div style="padding:1.125rem 1.375rem 0.875rem; border-bottom:1px solid #F0E8DC;">
             <p style="font-size:0.6875rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--pods-muted); margin-bottom:0.125rem;">Breakdown</p>
@@ -114,14 +108,12 @@
         </div>
     </div>
 
-    {{-- ================================================================
-         SECTION 4: SHORTCUT AKSI CEPAT
-    ================================================================ --}}
+         {{-- SECTION 4: SHORTCUT AKSI CEPAT --}}
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;">
         @foreach([
             ['label' => 'Tambah Produk',     'route' => 'admin.catalogs.create',  'icon' => '+ Produk'],
             ['label' => 'Buat Promo Baru',   'route' => 'admin.promos.create',    'icon' => '+ Promo'],
-            ['label' => 'Validasi Request',  'route' => 'admin.requests.index',   'icon' => '2 Pending'],
+            ['label' => 'Validasi Request',  'route' => 'admin.requests.index',   'icon' => 'Validasi'],
             ['label' => 'Manajemen Cabang',  'route' => 'admin.branches.index',  'icon' => 'Cabang'],
         ] as $i => $shortcut)
         <a
@@ -132,7 +124,7 @@
             onmouseout="this.style.boxShadow='';this.style.transform='';"
         >
             <span style="font-size:0.875rem; font-weight:600; color:var(--pods-espresso);">{{ $shortcut['label'] }}</span>
-            <span style="font-size:0.75rem; font-weight:600; color:var(--pods-caramel);">{{ $shortcut['icon'] }} →</span>
+            <span style="font-size:0.75rem; font-weight:600; color:var(--pods-caramel);">{{ $shortcut['icon'] }}</span>
         </a>
         @endforeach
     </div>

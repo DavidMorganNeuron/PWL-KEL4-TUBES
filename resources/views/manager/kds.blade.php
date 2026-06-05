@@ -35,9 +35,7 @@
 
 <div style="padding: 1.5rem 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
 
-    {{-- ================================================================
-         SUBHEADER: ringkasan antrean
-    ================================================================ --}}
+         {{-- SUBHEADER: ringkasan antrean --}}
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
 
         <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -49,9 +47,7 @@
 
     </div>
 
-    {{-- ================================================================
-         KOLOM KITCHEN DISPLAY
-    ================================================================ --}}
+         {{-- KOLOM KITCHEN DISPLAY --}}
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; align-items: flex-start;">
 
         @foreach($columns as $col)

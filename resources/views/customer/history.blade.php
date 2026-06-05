@@ -7,9 +7,8 @@
 
 <div style="padding-top: 72px; min-height: 100vh; background: #FBF6EE;">
 
-    {{-- ================================================================
-         PAGE HEADER
-    ================================================================ --}}
+         {{-- PAGE HEADER --}}
+
     <div style="background: #FBF6EE; padding: 2.5rem 0 0;">
         <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
             <div style="display: flex; align-items: flex-end; justify-content: space-between;">
@@ -25,9 +24,8 @@
         </div>
     </div>
 
-    {{-- ================================================================
-         MAIN CONTENT AREA
-    ================================================================ --}}
+         {{-- MAIN CONTENT AREA --}}
+
     <div style="width: 1280px; margin: 0 auto; padding: 2rem 2.5rem 4rem;">
 
         @if($orders->isEmpty())
@@ -126,9 +124,8 @@
     </div>
 </div>
 
-{{-- ================================================================
-     DETAIL ORDER
-================================================================ --}}
+     {{-- DETAIL ORDER --}}
+     
 <div id="order-detail-overlay" style="display:none; position:fixed; inset:0; background:rgba(28,15,10,0.55); z-index:9000; overflow-y:auto; padding: 2rem;" aria-modal="true" role="dialog" aria-label="Detail pesanan">
     <div id="order-detail-modal" style="background:#FFFFFF; border-radius:1.25rem; max-width:560px; margin:0 auto; overflow:hidden; box-shadow: 0 24px 60px rgba(28,15,10,0.25);">
 

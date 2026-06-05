@@ -17,9 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* ================================================================
-           DESIGN TOKENS — satu sumber untuk seluruh role manager
-        ================================================================ */
+           /* DESIGN TOKENS — satu sumber untuk seluruh role manager */
         :root {
             --font-serif:    'Playfair Display', Georgia, serif;
             --font-sans:     'DM Sans', system-ui, sans-serif;
@@ -60,9 +58,8 @@
             border-radius: 4px;
         }
 
-        /* ================================================================
-           SHELL LAYOUT: sidebar kiri fixed + konten utama mengisi sisa
-        ================================================================ */
+           /* SHELL LAYOUT: sidebar kiri fixed + konten utama mengisi sisa */
+
         .mgr-shell {
             display: flex;
             min-height: 100vh;
@@ -99,9 +96,7 @@
             flex: 1;
         }
 
-        /* ================================================================
-           KOMPONEN SHARED: pods-btn
-        ================================================================ */
+           /* KOMPONEN SHARED: pods-btn */
         .pods-btn-primary {
             display: inline-flex;
             align-items: center;
@@ -157,9 +152,7 @@
         }
         .pods-btn-danger:hover { background: #FCA5A5; border-color: #F87171; }
 
-        /* ================================================================
-           KOMPONEN SHARED: mgr-card
-        ================================================================ */
+           /* KOMPONEN SHARED: mgr-card */
         .mgr-card {
             background: #FFFDF9;
             border-radius: 12px;
@@ -208,12 +201,10 @@
     </div>
 </div>
 
-{{-- ================================================================
-     VARIASI NOTIFIKASI:
+     {{-- VARIASI NOTIFIKASI:
      SwalModal  — aksi kritikal: konfirmasi cancel, approve, logout
      SwalToast  — feedback sukses non-blocking: update status berhasil
-     Inline error — validasi form: di blade masing-masing, BUKAN di sini
-================================================================ --}}
+     Inline error — validasi form: di blade masing-masing, BUKAN di sini --}}
 <script>
     /* toast global: non-blocking, top-end, auto-dismiss */
     window.SwalToast = Swal.mixin({

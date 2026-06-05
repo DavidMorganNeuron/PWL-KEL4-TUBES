@@ -18,9 +18,7 @@
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- ================================================================
-         SECTION 2: FILTER KATEGORI + TABEL GLOBAL STOCKS VIEW
-    ================================================================ --}}
+         {{-- SECTION 2: FILTER KATEGORI + TABEL GLOBAL STOCKS VIEW --}}
     <div class="adm-card adm-animate" style="overflow:hidden; margin-bottom:1.5rem; animation-delay:0.24s;">
         <div style="padding:1.125rem 1.375rem 0.875rem; border-bottom:1px solid #F0E8DC; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
             <div>

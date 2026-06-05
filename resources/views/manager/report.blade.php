@@ -24,9 +24,7 @@
 
 <div style="padding: 2rem; background: #F0E8DC; min-height: calc(100vh - 64px);">
 
-    {{-- ================================================================
-         SECTION 1: FILTER PERIODE
-    ================================================================ --}}
+         {{-- SECTION 1: FILTER PERIODE --}}
     <form method="GET" action="{{ route('manager.report') }}" id="report-filter-form">
     <div class="mgr-card mgr-animate" style="padding: 1.125rem 1.375rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.25rem;">
 
@@ -88,9 +86,7 @@
     </div>
     </form>
 
-    {{-- ================================================================
-         SECTION 2: STAT CARDS PERIODE
-    ================================================================ --}}
+         {{-- SECTION 2: STAT CARDS PERIODE --}}
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
         @foreach($periodStats as $i => $stat)
         <div class="mgr-card mgr-animate" style="padding: 1.25rem 1.375rem; animation-delay: {{ $i * 0.06 }}s;">
@@ -102,9 +98,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         SECTION 3: Tabel Transaksi + Top Seller
-    ================================================================ --}}
+         {{-- SECTION 3: Tabel Transaksi + Top Seller --}}
     <div style="display: grid; grid-template-columns: 1fr 320px; gap: 1rem; align-items: flex-start;">
 
         {{-- TABEL TRANSAKSI --}}
@@ -249,9 +243,7 @@
 
 @endsection
 
-{{-- ================================================================
-     DETAIL TRANSAKSI MANAGER
-================================================================ --}}
+     {{-- DETAIL TRANSAKSI MANAGER --}}
 <div id="trx-overlay" style="display:none; position:fixed; inset:0; background:rgba(28,15,10,0.6); z-index:9000; overflow-y:auto; padding:2rem;" aria-modal="true" role="dialog">
     <div style="background:#FFFDF9; border-radius:1.25rem; max-width:540px; margin:0 auto; overflow:hidden; box-shadow:0 24px 60px rgba(28,15,10,0.25);">
         <div style="background:var(--pods-espresso); padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">

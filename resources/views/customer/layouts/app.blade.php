@@ -17,9 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* ================================================================
-           DESIGN TOKENS — satu sumber untuk seluruh role customer
-        ================================================================ */
+           /* DESIGN TOKENS — satu sumber untuk seluruh role customer */
         :root {
             --font-serif:    'Playfair Display', Georgia, serif;
             --font-sans:     'DM Sans', system-ui, sans-serif;
@@ -62,10 +60,9 @@
             border-radius: 4px;
         }
 
-        /* ================================================================
-           KOMPONEN SHARED: pods-input
-           didefinisikan di sini agar tidak duplikat di setiap halaman
-        ================================================================ */
+           /* KOMPONEN SHARED: pods-input
+           didefinisikan di sini agar tidak duplikat di setiap halaman */
+
         .pods-input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -114,12 +111,11 @@
     {{-- FOOTER --}}
     @include('customer.layouts.footer')
 
-    {{-- ================================================================
-         VARIASI NOTIFIKASI:
+         {{-- VARIASI NOTIFIKASI:
          SwalModal  — aksi kritikal: konfirmasi delete/logout, pembayaran berhasil
          SwalToast  — feedback non-blocking: sukses CRUD
-         Inline error — validasi form: di blade masing-masing
-    ================================================================ --}}
+         Inline error — validasi form: di blade masing-masing --}}
+         
     <script>
         /* toast global: non-blocking, top-end, auto-dismiss */
         window.SwalToast = Swal.mixin({

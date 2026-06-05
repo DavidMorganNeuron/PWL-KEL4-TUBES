@@ -6,9 +6,8 @@
 
 @section('content')
 
-{{-- ================================================================
-     SECTION 1: HERO SECTION
-================================================================ --}}
+     {{-- SECTION 1: HERO SECTION --}}
+
 <section
     style="
         position: relative;
@@ -156,9 +155,8 @@
     </div>
 </section>
 
-{{-- ================================================================
-     SECTION 2: FEATURED MENU
-================================================================ --}}
+     {{-- SECTION 2: FEATURED MENU --}}
+
 <section id="featured" style="background: #FBF6EE; padding: 6rem 0;" aria-label="Menu unggulan Pod's">
     <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
 
@@ -260,9 +258,8 @@
     </div>
 </section>
 
-{{-- ================================================================
-     SECTION 3: WHY CHOOSE US
-================================================================ --}}
+     {{-- SECTION 3: WHY CHOOSE US --}}
+     
 <section style="background: #3D1F0F; padding: 6rem 0;" aria-label="Keunggulan Pod's">
     <div style="width: 1280px; margin: 0 auto; padding: 0 2.5rem;">
 

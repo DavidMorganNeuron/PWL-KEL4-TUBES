@@ -73,9 +73,8 @@
 
 <div style="width: 100%; min-width: 1280px; min-height: 100vh; display: flex;">
 
-    {{-- ==========================================
-         KOLOM KIRI — Hero Image + Branding
-    ========================================== --}}
+         {{-- KOLOM KIRI — Hero Image + Branding --}}
+
     <div
         style="width: 55%; flex-shrink: 0; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; overflow: hidden;"
         aria-hidden="true"
@@ -127,9 +126,8 @@
         </div>
     </div>
 
-    {{-- ==========================================
-         KOLOM KANAN — Form Login
-    ========================================== --}}
+         {{-- KOLOM KANAN — Form Login --}}
+         
     <div
         style="width: 45%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3rem 3.5rem; background: #FBF6EE;"
     >

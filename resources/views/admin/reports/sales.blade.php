@@ -24,9 +24,9 @@
 
 <div style="padding:2rem; background:#F0E8DC; min-height:calc(100vh - 64px);">
 
-    {{-- ================================================================
-         FILTER PERIODE
-    ================================================================ --}}
+
+         {{-- FILTER PERIODE --}}
+
     <form method="GET" action="{{ route('admin.reports.sales') }}" id="sales-filter-form">
         <div class="adm-card adm-animate" style="padding:1rem 1.375rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:1.25rem;">
             <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
@@ -57,9 +57,8 @@
         </div>
     </form>
 
-    {{-- ================================================================
-         SECTION 1: STAT CARDS GLOBAL
-    ================================================================ --}}
+         {{-- SECTION 1: STAT CARDS GLOBAL --}}
+
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;">
         @foreach($globalSummary as $i => $stat)
         <div class="adm-card adm-animate" style="padding:1.25rem 1.375rem; animation-delay:{{ $i * 0.06 }}s;">
@@ -71,9 +70,7 @@
         @endforeach
     </div>
 
-    {{-- ================================================================
-         SECTION 2: TABEL PENDAPATAN PER CABANG
-    ================================================================ --}}
+         {{-- SECTION 2: TABEL PENDAPATAN PER CABANG --}}
     <div class="adm-card adm-animate" style="overflow:hidden; margin-bottom:1.5rem; animation-delay:0.24s;">
         <div style="padding:1.125rem 1.375rem 0.875rem; border-bottom:1px solid #F0E8DC;">
             <p style="font-size:0.6875rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--pods-muted); margin-bottom:0.125rem;">Breakdown</p>
@@ -128,9 +125,8 @@
         </div>
     </div>
 
-    {{-- ================================================================
-         SECTION 3: Transaksi Terbaru + Top Seller per Cabang
-    ================================================================ --}}
+         {{-- SECTION 3: Transaksi Terbaru + Top Seller per Cabang --}}
+         
     <div style="display:grid; grid-template-columns:1fr 340px; gap:1.25rem; align-items:flex-start;">
 
         {{-- TRANSAKSI LINTAS CABANG TERBARU --}}
