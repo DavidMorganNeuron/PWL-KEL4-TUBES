@@ -228,12 +228,12 @@ Buka `http://localhost:8000` di browser.
 
 ---
 
-## Akun Default (setelah seeder)
+## Akun Default
 
 | Role | Email | Password |
 |---|---|---|
-| Admin Pusat | *(cek PodsSeeder.php)* | *(cek PodsSeeder.php)* |
-| Manager Cabang | *(cek PodsSeeder.php)* | *(cek PodsSeeder.php)* |
+| Admin Pusat | *admin@gmail.com* | *admin123* |
+| Manager Cabang | *managermansyur@gmail.com* | *mansyur123* |
 
 ---
 
@@ -275,7 +275,7 @@ database/
 
 ## Tim Pengembang
 
-**Kelompok 4 — Pemrograman Web Lanjut**  
+**Kelompok 4 — Pemrograman Web Lanjutan**  
 Fakultas Ilmu Komputer dan Teknologi Informasi  
 Universitas Sumatera Utara
 
