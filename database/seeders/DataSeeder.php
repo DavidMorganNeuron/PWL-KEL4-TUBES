@@ -194,7 +194,7 @@ class DataSeeder extends Seeder
                 'discount_type'  => $p[2],
                 'discount_value' => $p[3],
                 'start_date'     => Carbon::parse('2026-04-01'),
-                'end_date'       => Carbon::now(),
+                'end_date'       => Carbon::parse('2026-06-10'),
                 'is_active'      => true,
             ]);
             $promoIds[] = $pid;

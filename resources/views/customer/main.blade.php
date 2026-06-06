@@ -174,61 +174,100 @@
         </div>
 
         {{-- grid 3 kolom statis --}}
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-            @foreach([
-                ['Signature Espresso', 'Coffee',     'Rp 35.000', 'Pekat, bold, dan tak terlupakan. Karakter kopi yang sesungguhnya.'],
-                ['Iced Caramel Latte', 'Coffee',     'Rp 42.000', 'Karamel manis, susu dingin yang lembut di setiap tegukan.'],
-                ['Matcha Oreo Shake',  'Non-Coffee', 'Rp 38.000', 'Matcha premium bertemu oreo renyah, sebuah perpaduan tak terduga.'],
-            ] as [$name, $category, $price, $desc])
-            <article
-                style="
-                    background: #FFFFFF;
-                    border-radius: 1.125rem;
-                    overflow: hidden;
-                    border: 1px solid #EDE0CC;
-                    box-shadow: 0 1px 4px rgba(28,15,10,0.06);
-                    transition: box-shadow 0.25s, transform 0.2s;
-                "
-                onmouseover="this.style.boxShadow='0 8px 28px rgba(28,15,10,0.12)'; this.style.transform='translateY(-2px)';"
-                onmouseout="this.style.boxShadow='0 1px 4px rgba(28,15,10,0.06)'; this.style.transform='translateY(0)';"
-            >
-                {{-- thumbnail placeholder estetis --}}
-                <div style="height: 180px; background: linear-gradient(135deg, rgba(61,31,15,0.1) 0%, rgba(200,129,59,0.2) 100%); position: relative; overflow: hidden;">
-                    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
-                        <span style="font-size: 3.5rem; opacity: 0.28;" aria-hidden="true">☕</span>
-                    </div>
-                    <span style="
-                        position: absolute; top: 0.75rem; left: 0.75rem;
-                        font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
-                        background: rgba(200,129,59,0.15); color: #C8813B;
-                        padding: 0.2rem 0.65rem; border-radius: 9999px;
-                    ">
-                        {{ $category }}
-                    </span>
-                </div>
-                <div style="padding: 1.25rem 1.375rem 1.375rem;">
-                    <h3 style="font-family: var(--font-serif); font-size: 1.125rem; font-weight: 700; color: #1C0F0A; margin-bottom: 0.375rem;">
-                        {{ $name }}
-                    </h3>
-                    <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300; line-height: 1.55; margin-bottom: 1.125rem;">
-                        {{ $desc }}
-                    </p>
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 0.9375rem; font-weight: 600; color: #3D1F0F;">{{ $price }}</span>
-                        <a
-                            href="{{ route('orders.branch') }}"
-                            style="font-size: 0.75rem; font-weight: 600; color: #C8813B; text-decoration: none; transition: text-decoration 0.15s;"
-                            onmouseover="this.style.textDecoration='underline'"
-                            onmouseout="this.style.textDecoration='none'"
-                            aria-label="Pesan {{ $name }}"
-                        >
-                            Order
-                        </a>
-                    </div>
-                </div>
-            </article>
-            @endforeach
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+    @foreach([
+        [
+            'Espresso',
+            'Coffee',
+            'Rp 20.000',
+            'Pekat, bold, dan tak terlupakan. Karakter kopi yang sesungguhnya.',
+            'https://i.pinimg.com/736x/e8/8c/96/e88c963b93c4ee2f3481b3576e2c9395.jpg'
+        ],
+        [
+            'Caramel Machiatto',
+            'Coffee',
+            'Rp 65.000',
+            'Karamel manis, susu dingin yang lembut di setiap tegukan.',
+            'https://b3fcdc12.delivery.rocketcdn.me/wp-content/uploads/2025/09/sunbutter-hot-chocolate-featured-image-360x480.jpg'
+        ],
+        [
+            'Signature Indonesian Teh Tarik',
+            'Non-Coffee',
+            'Rp 38.000',
+            'Racikan teh dan susu khas Nusantara yang menghasilkan rasa kaya, harum, dan menenangkan.',
+            'https://www.apasih.web.id/wp-content/uploads/2017/11/tarik2.jpg'
+        ],
+    ] as [$name, $category, $price, $desc, $image])
+    <article
+        style="
+            background: #FFFFFF;
+            border-radius: 1.125rem;
+            overflow: hidden;
+            border: 1px solid #EDE0CC;
+            box-shadow: 0 1px 4px rgba(28,15,10,0.06);
+            transition: box-shadow 0.25s, transform 0.2s;
+        "
+        onmouseover="this.style.boxShadow='0 8px 28px rgba(28,15,10,0.12)'; this.style.transform='translateY(-2px)';"
+        onmouseout="this.style.boxShadow='0 1px 4px rgba(28,15,10,0.06)'; this.style.transform='translateY(0)';"
+    >
+        {{-- Thumbnail: tampilkan gambar bila tersedia, fallback ke placeholder --}}
+        <div style="height: 180px; background: linear-gradient(135deg, rgba(61,31,15,0.1) 0%, rgba(200,129,59,0.2) 100%); position: relative; overflow: hidden;">
+
+            @if(!empty($image))
+                <img
+                    src="{{ $image }}"
+                    alt="{{ $name }}"
+                    loading="lazy"
+                    style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                    {{-- Fallback ke placeholder jika URL gambar 404 atau gagal dimuat --}}
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                >
+            @endif
+
+            {{-- Placeholder emoji; disembunyikan saat gambar berhasil dimuat --}}
+            <div style="position: absolute; inset: 0; display: {{ !empty($image) ? 'none' : 'flex' }}; align-items: center; justify-content: center;">
+                <span style="font-size: 3.5rem; opacity: 0.28;" aria-hidden="true">☕</span>
+            </div>
+
+            <span style="
+                position: absolute;
+                top: 0.625rem;
+                left: 0.625rem;
+                font-size: 0.6875rem;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                color: #3D1F0F;
+                background: rgba(255,255,255,0.82);
+                backdrop-filter: blur(4px);
+                padding: 0.2rem 0.55rem;
+                border-radius: 999px;
+                border: 1px solid rgba(200,129,59,0.25);
+            ">
+                {{ $category }}
+            </span>
         </div>
+
+        <div style="padding: 1.25rem 1.375rem 1.375rem;">
+            <h3 style="font-family: var(--font-serif); font-size: 1.125rem; font-weight: 700; color: #1C0F0A; margin-bottom: 0.375rem;">
+                {{ $name }}
+            </h3>
+            <p style="font-size: 0.8125rem; color: #A08060; font-weight: 300; line-height: 1.55; margin-bottom: 1.125rem;">
+                {{ $desc }}
+            </p>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.9375rem; font-weight: 600; color: #3D1F0F;">{{ $price }}</span>
+                <a href="{{ route('orders.branch') }}"
+                   style="font-size: 0.75rem; font-weight: 600; color: #C8813B; text-decoration: none; transition: text-decoration 0.15s;"
+                   onmouseover="this.style.textDecoration='underline'"
+                   onmouseout="this.style.textDecoration='none'"
+                   aria-label="Pesan {{ $name }}"
+                >Order</a>
+            </div>
+        </div>
+    </article>
+    @endforeach
+</div>
 
         {{-- CTA lihat semua --}}
         <div style="text-align: center; margin-top: 2.5rem;">
