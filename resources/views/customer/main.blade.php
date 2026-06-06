@@ -193,7 +193,7 @@
         [
             'Signature Indonesian Teh Tarik',
             'Non-Coffee',
-            'Rp 38.000',
+            'Rp 55.000',
             'Racikan teh dan susu khas Nusantara yang menghasilkan rasa kaya, harum, dan menenangkan.',
             'https://www.apasih.web.id/wp-content/uploads/2017/11/tarik2.jpg'
         ],
