@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Promo;
 use App\Models\Branch;
 use App\Models\Product;
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 
 // PromoController - CRUD promo nasional & lokal + assign produk
@@ -161,8 +163,15 @@ class PromoController extends Controller
     public function destroy($id)
     {
         $promo = Promo::findOrFail($id);
-        $promo->products()->detach();
-        $promo->delete();
+
+        DB::transaction(function () use ($promo) {
+            // lepaskan referensi promo dari pesanan yang masih menggunakannya
+            Order::where('promo_id', $promo->id_promos)
+                ->update(['promo_id' => null]);
+
+            $promo->products()->detach();
+            $promo->delete();
+        });
 
         return redirect()->route('admin.promos.index')
             ->with('toast', 'Promo berhasil dihapus.');
