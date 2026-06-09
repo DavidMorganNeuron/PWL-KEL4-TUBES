@@ -157,7 +157,7 @@ $otherBranches = $otherBranches ?? [];
 
     btn.addEventListener('click', function () {
         var nameInput = document.getElementById('confirm_name');
-        var expected = {{ json_encode($branch['name']) }};
+        var expected = {!! json_encode($branch['name']) !!};
         if (!nameInput || nameInput.value.trim() !== expected) {
             window.SwalModal.fire({
                 title: 'Konfirmasi Gagal',

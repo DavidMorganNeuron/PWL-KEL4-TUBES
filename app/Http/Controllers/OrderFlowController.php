@@ -241,18 +241,34 @@ class OrderFlowController extends Controller
         // hitung subtotal dan diskon dari promo aktif
         $subtotal = 0;
         $totalDiscount = 0;
-        $promoDiscounts = $this->calculatePromoDiscounts($productIds, $branchId);
+        $promoResult = $this->calculatePromoDiscounts($productIds, $branchId);
+        $promoDiscounts = $promoResult['discounts'];
+        $promoIds       = $promoResult['promoIds'];
 
+        // akumulasi diskon per promo untuk menentukan promo utama pesanan
+        $promoDiscountTotal = [];
         foreach ($cart as $productId => $qty) {
             $subtotal += $products[$productId]->base_price * $qty;
-            $totalDiscount += ($promoDiscounts[$productId] ?? 0) * $qty;
+            $discountLine = ($promoDiscounts[$productId] ?? 0) * $qty;
+            $totalDiscount += $discountLine;
+
+            if (isset($promoIds[$productId]) && $promoIds[$productId] !== null) {
+                $pid = $promoIds[$productId];
+                $promoDiscountTotal[$pid] = ($promoDiscountTotal[$pid] ?? 0) + $discountLine;
+            }
         }
+
+        // promo dengan kontribusi diskon terbesar menjadi promo_id pesanan
+        $bestPromoId = !empty($promoDiscountTotal)
+            ? array_keys($promoDiscountTotal, max($promoDiscountTotal))[0]
+            : null;
 
         // buat nota order
         $order = Order::create([
             'branch_id'      => $branchId,
             'user_id'        => Auth::id(),
             'order_number'   => $this->generateOrderNumber(),
+            'promo_id'       => $bestPromoId,
             'subtotal'       => $subtotal,
             'total_discount' => $totalDiscount,
             'grand_total'    => max(0, $subtotal - $totalDiscount),
@@ -305,6 +321,7 @@ class OrderFlowController extends Controller
     }
 
     // menghitung diskon per produk dari promo aktif yang relevan (nasional + lokal cabang)
+    // mengembalikan ['discounts' => [productId => amount], 'promo_ids' => [productId => promoId]]
     private function calculatePromoDiscounts(array $productIds, int $branchId): array
     {
         $now = now();
@@ -318,8 +335,10 @@ class OrderFlowController extends Controller
             ->get();
 
         $discounts = [];
+        $promoIds  = [];
         foreach ($productIds as $pid) {
             $discounts[$pid] = 0;
+            $promoIds[$pid]  = null;
         }
 
         foreach ($promos as $promo) {
@@ -342,11 +361,12 @@ class OrderFlowController extends Controller
                 // ambil diskon terbesar jika ada beberapa promo untuk produk yg sama
                 if ($disc > $discounts[$pid]) {
                     $discounts[$pid] = $disc;
+                    $promoIds[$pid]  = $promo->id_promos;
                 }
             }
         }
 
-        return $discounts;
+        return compact('discounts', 'promoIds');
     }
 
     // menghitung diskon + deskripsi promo untuk ditampilkan di grid menu

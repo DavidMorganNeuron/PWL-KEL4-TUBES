@@ -368,8 +368,8 @@ class ManagerController extends Controller
         $totalCanceled    = $periodOrders->where('status', 'canceled')->count();
         $avgPerOrder      = $totalCompleted > 0 ? round($totalRevenue / $totalCompleted) : 0;
  
-        /* daftar transaksi: load relasi items + user untuk tampilan tabel */
-        $transactions = Order::with(['items.product', 'user'])
+        /* daftar transaksi: load relasi items + user + promo untuk tampilan tabel */
+        $transactions = Order::with(['items.product', 'user', 'promo'])
             ->where('branch_id', $branchId)
             ->whereBetween(DB::raw('DATE(created_at)'), [$from, $to])
             ->orderByDesc('created_at')

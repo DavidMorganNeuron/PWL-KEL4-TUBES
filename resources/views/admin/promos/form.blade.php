@@ -128,7 +128,7 @@
                         Nilai Diskon <span style="color:#DC2626;" aria-hidden="true">*</span>
                     </label>
                     <div style="position:relative;">
-                        <span id="discount-unit-prefix" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:0.9375rem; font-weight:500; color:var(--pods-muted); pointer-events:none; display:{{ old('discount_type', $promo['discount_type'] ?? 'percentage') === 'nominal' ? 'block' : 'none' }};">Rp</span>
+                        <span id="discount-unit-prefix" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:0.9375rem; font-weight:500; color:var(--pods-muted); pointer-events:none; display:{{ old('discount_type', $promo['discount_type'] ?? 'percentage') === 'nominal' ? 'block' : 'none' }};"></span>
                         <input type="number" id="discount_value" name="discount_value"
                             value="{{ old('discount_value', $promo['discount_value'] ?? '') }}"
                             placeholder="{{ old('discount_type', $promo['discount_type'] ?? 'percentage') === 'percentage' ? 'Contoh: 15 (15%)' : 'Contoh: 5000' }}"
@@ -254,7 +254,7 @@
         var input    = document.getElementById('discount_value');
         prefix.style.display = isPct ? 'none' : 'block';
         suffix.style.display = isPct ? 'block' : 'none';
-        input.placeholder    = isPct ? 'Contoh: 15 (15%)' : 'Contoh: 5000';
+        input.placeholder    = isPct ? 'Contoh: 15' : 'Contoh: 5000';
         if (isPct) { input.max = 100; } else { input.removeAttribute('max'); }
     }
 
