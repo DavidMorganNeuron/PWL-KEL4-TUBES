@@ -10,11 +10,14 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\RequestLog;
 use App\Models\User;
+use App\Http\Controllers\Concerns\ResolvesStockTable;
 
 
 // AdminController - dashboard eksekutif + laporan penjualan & aset stok
 class AdminController extends Controller
 {
+    use ResolvesStockTable;
+
     public function dashboard()
     {
         $totalRevenue     = Order::where('status', 'completed')->sum('grand_total');
@@ -370,16 +373,6 @@ class AdminController extends Controller
 
         return redirect()->route('admin.requests.index')
             ->with('toast', 'Pengajuan restock ditolak.');
-    }
-
-    private function resolveStockTable(string $branchName): string
-    {
-        $map = [
-            'Dr. Mansyur'   => 'stock_branch_dr_mansyur',
-            'Jamin Ginting' => 'stock_branch_jamin_ginting',
-            'Gatot Subroto' => 'stock_branch_gatot_subroto',
-        ];
-        return $map[$branchName] ?? 'stock_branch_dr_mansyur';
     }
 
     private function resolveProductStock(int $branchId, int $productId): array
