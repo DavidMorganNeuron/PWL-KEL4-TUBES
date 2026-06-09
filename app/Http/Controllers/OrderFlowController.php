@@ -186,9 +186,11 @@ class OrderFlowController extends Controller
         }
 
         // hitung diskon dari promo aktif yang relevan
-        $promoDiscounts = $this->calculatePromoDiscounts($productIds, $branch->id_branches);
+        $promoResult = $this->calculatePromoDiscounts($productIds, $branch->id_branches);
+        $promoDiscounts    = $promoResult['discounts'];
+        $promoDescriptions = $promoResult['descriptions'] ?? [];
 
-        return view('customer.orders.checkout', compact('cart', 'products', 'branch', 'promoDiscounts'));
+        return view('customer.orders.checkout', compact('cart', 'products', 'branch', 'promoDiscounts', 'promoDescriptions'));
     }
 
     /* ================================================================
@@ -321,7 +323,6 @@ class OrderFlowController extends Controller
     }
 
     // menghitung diskon per produk dari promo aktif yang relevan (nasional + lokal cabang)
-    // mengembalikan ['discounts' => [productId => amount], 'promo_ids' => [productId => promoId]]
     private function calculatePromoDiscounts(array $productIds, int $branchId): array
     {
         $now = now();
@@ -334,11 +335,13 @@ class OrderFlowController extends Controller
             ->with('products')
             ->get();
 
-        $discounts = [];
-        $promoIds  = [];
+        $discounts    = [];
+        $promoIds     = [];
+        $descriptions = [];
         foreach ($productIds as $pid) {
-            $discounts[$pid] = 0;
-            $promoIds[$pid]  = null;
+            $discounts[$pid]    = 0;
+            $promoIds[$pid]     = null;
+            $descriptions[$pid] = '';
         }
 
         foreach ($promos as $promo) {
@@ -354,19 +357,22 @@ class OrderFlowController extends Controller
 
                 if ($promo->discount_type === 'percentage') {
                     $disc = round($product->base_price * $promo->discount_value / 100);
+                    $desc = "Diskon {$promo->discount_value}%";
                 } else {
                     $disc = (int) $promo->discount_value;
+                    $desc = "Pot. Rp" . number_format($promo->discount_value, 0, ',', '.');
                 }
 
                 // ambil diskon terbesar jika ada beberapa promo untuk produk yg sama
                 if ($disc > $discounts[$pid]) {
-                    $discounts[$pid] = $disc;
-                    $promoIds[$pid]  = $promo->id_promos;
+                    $discounts[$pid]    = $disc;
+                    $promoIds[$pid]     = $promo->id_promos;
+                    $descriptions[$pid] = $desc;
                 }
             }
         }
 
-        return compact('discounts', 'promoIds');
+        return compact('discounts', 'promoIds', 'descriptions');
     }
 
     // menghitung diskon + deskripsi promo untuk ditampilkan di grid menu

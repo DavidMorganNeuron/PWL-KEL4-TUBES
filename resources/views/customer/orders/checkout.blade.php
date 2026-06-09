@@ -91,7 +91,7 @@
                             <td style="padding: 1rem 1.5rem;">
                                 <p style="font-size: 0.9375rem; font-weight: 500; color: #1C0F0A; margin-bottom: 0.125rem;">{{ $p->name }}</p>
                                 @if($discPerItem > 0)
-                                <p style="font-size: 0.75rem; color: #059669; font-weight: 500;">Diskon: -Rp {{ number_format($discPerItem, 0, ',', '.') }}/item</p>
+                                <p style="font-size: 0.75rem; color: #059669; font-weight: 500;">{{ $promoDescriptions[$productId] ?? 'Diskon' }}: -Rp {{ number_format($discPerItem, 0, ',', '.') }}/item</p>
                                 @endif
                                 <p style="font-size: 0.75rem; color: #A08060; font-weight: 300;">{{ $p->category->name ?? '' }}</p>
                             </td>

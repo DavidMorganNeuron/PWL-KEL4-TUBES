@@ -256,104 +256,120 @@
         50%       { opacity: 0.4; transform: scale(0.85); }
     }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 @endpush
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 (function () {
     /* DATA GRAFIK DARI CONTROLLER */
     var chartDatasets = @json($chartData);
+    if (!chartDatasets || typeof chartDatasets.daily === 'undefined') {
+        console.warn('[Pods] chartData tidak valid atau kosong.');
+        return;
+    }
 
     var ctx = document.getElementById('revenue-chart');
-    if (!ctx) return;
+    if (!ctx) {
+        console.warn('[Pods] Elemen canvas #revenue-chart tidak ditemukan.');
+        return;
+    }
 
-    var chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels:   chartDatasets.daily.labels,
-            datasets: [{
-                label:           'Pendapatan Bersih',
-                data:            chartDatasets.daily.data,
-                borderColor:     '#C8813B',
-                backgroundColor: 'rgba(200,129,59,0.08)',
-                borderWidth:     2.5,
-                pointRadius:     3,
-                pointHoverRadius:6,
-                pointBackgroundColor: '#C8813B',
-                tension:         0.35,
-                fill:            true,
-            }],
-        },
-        options: {
-            responsive:          true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1C0F0A',
-                    titleColor:      'rgba(245,233,211,0.6)',
-                    bodyColor:       '#F5E9D3',
-                    padding:         10,
-                    cornerRadius:    8,
-                    callbacks: {
-                        label: function (ctx) {
-                            /* format angka ke Rupiah */
-                            return ' Rp ' + Number(ctx.parsed.y).toLocaleString('id-ID');
+    if (typeof Chart === 'undefined') {
+        console.warn('[Pods] Pustaka Chart.js tidak dimuat.');
+        return;
+    }
+
+    try {
+        var chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels:   chartDatasets.daily.labels,
+                datasets: [{
+                    label:           'Pendapatan Bersih',
+                    data:            chartDatasets.daily.data,
+                    borderColor:     '#C8813B',
+                    backgroundColor: 'rgba(200,129,59,0.08)',
+                    borderWidth:     2.5,
+                    pointRadius:     3,
+                    pointHoverRadius:6,
+                    pointBackgroundColor: '#C8813B',
+                    tension:         0.35,
+                    fill:            true,
+                }],
+            },
+            options: {
+                responsive:          true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1C0F0A',
+                        titleColor:      'rgba(245,233,211,0.6)',
+                        bodyColor:       '#F5E9D3',
+                        padding:         10,
+                        cornerRadius:    8,
+                        callbacks: {
+                            label: function (ctx) {
+                                /* format angka ke Rupiah */
+                                return ' Rp ' + Number(ctx.parsed.y).toLocaleString('id-ID');
+                            },
                         },
                     },
                 },
-            },
-            scales: {
-                x: {
-                    grid:  { color: 'rgba(160,128,96,0.1)' },
-                    ticks: { color: '#A08060', font: { size: 11 } },
-                },
-                y: {
-                    grid:  { color: 'rgba(160,128,96,0.1)' },
-                    ticks: {
-                        color: '#A08060',
-                        font:  { size: 11 },
-                        callback: function (val) {
-                            if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'jt';
-                            if (val >= 1000)    return 'Rp ' + (val / 1000).toFixed(0) + 'rb';
-                            return 'Rp ' + val;
-                        },
+                scales: {
+                    x: {
+                        grid:  { color: 'rgba(160,128,96,0.1)' },
+                        ticks: { color: '#A08060', font: { size: 11 } },
                     },
-                    beginAtZero: true,
+                    y: {
+                        grid:  { color: 'rgba(160,128,96,0.1)' },
+                        ticks: {
+                            color: '#A08060',
+                            font:  { size: 11 },
+                            callback: function (val) {
+                                if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'jt';
+                                if (val >= 1000)    return 'Rp ' + (val / 1000).toFixed(0) + 'rb';
+                                return 'Rp ' + val;
+                            },
+                        },
+                        beginAtZero: true,
+                    },
                 },
             },
-        },
-    });
-
-    /* TOGGLE PERIODE */
-    document.querySelectorAll('.chart-period-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var period = btn.dataset.period;
-            var ds     = chartDatasets[period];
-            if (!ds) return;
-
-            /* update data chart */
-            chartInstance.data.labels            = ds.labels;
-            chartInstance.data.datasets[0].data  = ds.data;
-            chartInstance.update('active');
-
-            /* gaya tombol aktif */
-            document.querySelectorAll('.chart-period-btn').forEach(function (b) {
-                b.classList.remove('chart-period-active');
-                b.style.background   = 'transparent';
-                b.style.borderColor  = '#D4C4AE';
-                b.style.color        = 'var(--pods-muted)';
-                b.style.fontWeight   = '500';
-            });
-            btn.classList.add('chart-period-active');
-            btn.style.background  = '#C8813B';
-            btn.style.borderColor = '#C8813B';
-            btn.style.color       = '#1C0F0A';
-            btn.style.fontWeight  = '600';
         });
-    });
+
+        /* TOGGLE PERIODE */
+        document.querySelectorAll('.chart-period-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var period = btn.dataset.period;
+                var ds     = chartDatasets[period];
+                if (!ds) return;
+
+                /* update data chart */
+                chartInstance.data.labels            = ds.labels;
+                chartInstance.data.datasets[0].data  = ds.data;
+                chartInstance.update('active');
+
+                /* gaya tombol aktif */
+                document.querySelectorAll('.chart-period-btn').forEach(function (b) {
+                    b.classList.remove('chart-period-active');
+                    b.style.background   = 'transparent';
+                    b.style.borderColor  = '#D4C4AE';
+                    b.style.color        = 'var(--pods-muted)';
+                    b.style.fontWeight   = '500';
+                });
+                btn.classList.add('chart-period-active');
+                btn.style.background  = '#C8813B';
+                btn.style.borderColor = '#C8813B';
+                btn.style.color       = '#1C0F0A';
+                btn.style.fontWeight  = '600';
+            });
+        });
+    } catch (e) {
+        console.error('[Pods] Gagal inisialisasi grafik:', e);
+    }
 }());
 </script>
 @endpush
