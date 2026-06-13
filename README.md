@@ -268,7 +268,7 @@ database/
 
 ---
 
-## 📝 Catatan Desain
+## 📝 Catatan Desain / Saran dari Bapak Rendra
 
 - **Tidak ada role Kitchen** — fungsinya digantikan oleh Manager Cabang yang mengelola KDS langsung
 - **Tidak ada fitur delivery** — sistem fokus pada order, pembayaran, dan manajemen stok
